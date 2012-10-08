@@ -7,7 +7,7 @@
     integer , parameter :: NON=2, DOF=3
 
     type :: element
-       real :: EA,EI,Len
+       real :: EA,EI,L
        integer :: Joints(NON)
     end type element
 

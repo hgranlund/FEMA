@@ -1,5 +1,5 @@
-GFORTRAN module version '6' created from FEMMethods.f90 on Sun Oct  7 23:40:25 2012
-MD5:b8198c3b4451df2c7b5690a274c92d39 -- If you edit this, you'll get what you deserve.
+GFORTRAN module version '6' created from FEMMethods.f90 on Mon Oct  8 16:29:29 2012
+MD5:4bed7806e93b37951c7fbf0cbcf701a6 -- If you edit this, you'll get what you deserve.
 
 (() () () () () () () () () () () () () () () () () () () () () () ()
 () () () ())
@@ -22,7 +22,7 @@ UNKNOWN UNKNOWN 0 0) (UNKNOWN 0 0 0 UNKNOWN ()) 0 0 () () 0 ((4 'ea' (
 REAL 4 0 0 REAL ()) () (UNKNOWN-FL UNKNOWN-INTENT UNKNOWN-PROC UNKNOWN
 UNKNOWN 0 0) UNKNOWN-ACCESS ()) (5 'ei' (REAL 4 0 0 REAL ()) () (
 UNKNOWN-FL UNKNOWN-INTENT UNKNOWN-PROC UNKNOWN UNKNOWN 0 0)
-UNKNOWN-ACCESS ()) (6 'len' (REAL 4 0 0 REAL ()) () (UNKNOWN-FL
+UNKNOWN-ACCESS ()) (6 'l' (REAL 4 0 0 REAL ()) () (UNKNOWN-FL
 UNKNOWN-INTENT UNKNOWN-PROC UNKNOWN UNKNOWN 0 0) UNKNOWN-ACCESS ()) (7
 'joints' (INTEGER 4 0 0 INTEGER ()) (1 0 EXPLICIT (CONSTANT (INTEGER 4 0
 0 INTEGER ()) 0 '1') (CONSTANT (INTEGER 4 0 0 INTEGER ()) 0 '2')) (
@@ -45,9 +45,8 @@ INTEGER ()) 0 '3')) (UNKNOWN-FL UNKNOWN-INTENT UNKNOWN-PROC UNKNOWN
 UNKNOWN 0 0 DIMENSION) UNKNOWN-ACCESS ())) PUBLIC (() () () ()) () 0 0
 87393206)
 14 'localstiffmatrix' 'femmethods' 'localstiffmatrix' 1 ((PROCEDURE
-UNKNOWN-INTENT MODULE-PROC DECL UNKNOWN 0 0 SUBROUTINE IMPLICIT_PURE
-ALWAYS_EXPLICIT) (UNKNOWN 0 0 0 UNKNOWN ()) 15 0 (16 17) () 0 () () () 0
-0)
+UNKNOWN-INTENT MODULE-PROC DECL UNKNOWN 0 0 SUBROUTINE ALWAYS_EXPLICIT)
+(UNKNOWN 0 0 0 UNKNOWN ()) 15 0 (16 17) () 0 () () () 0 0)
 18 'non' 'femtypes' 'non' 1 ((PARAMETER UNKNOWN-INTENT UNKNOWN-PROC
 UNKNOWN IMPLICIT-SAVE 0 0) (INTEGER 4 0 0 INTEGER ()) 0 0 () (CONSTANT (
 INTEGER 4 0 0 INTEGER ()) 0 '2') () 0 () () () 0 0)
