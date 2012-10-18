@@ -1,38 +1,52 @@
 program FEM
   use FEMMethods
   implicit none
-  integer ::  errorFlag, pr_switch, file_in, file_out, EI,EA,L
-  integer :: Joints(2)
+  integer ::  errorFlag, pr_switch,numberOfNodes,numberOfElm,numberOfLoads
+
   REAL, ALLOCATABLE, DIMENSION(:,:) :: A
   REAL,  ALLOCATABLE, DIMENSION(:) :: B
 
-  type (element) :: elm
+  type (element),ALLOCATABLE :: Elms(:)
+  type (node), ALLOCATABLE :: Nodes(:)
+  type (load), ALLOCATABLE :: Loads(:)
+
   errorFlag=0
   pr_switch=10; ! Denne brukes til å bestemme hvor mye som skal printes
-
-  file_in=10
-  file_out=11
-  open(file_in, file="input.dat",status="old")
-  open(file_out,file="output.dat")
-  allocate (A(6,6))
-  EI=2000
-  EA=1000
-  L=2
-  Joints(1)=1
-  Joints(2)=2
-  elm%EA=EA
-  elm%EI=EI
-  elm%L=L
-  elm%Joints=Joints
-  print *, elm%EA
-  call  LocalStiffMatrix(A,elm)
-  call  PrintMatrix(A,6,6)
-  if (errorFlag >= 0 ) then 
-     print *,'Marisen etter gauss........: '
+  call ReadInput()
+  if (errorFlag > 0 ) then 
+     print *,'Noe gikk feil '
   end if
+contains
 
 
-contains 
+
+  Subroutine ReadInput()
+    integer ::file_in,n
+    file_in=10
+    open(file_in, file="input.dat",status="old")
+    read(file_in,*) numberOfNodes, numberOfElm, numberOfLoads
+    allocate (Nodes(numberOfNodes))
+    allocate (Elms(numberOfElm))
+    allocate (Loads(numberOfLoads))
+    read (file_in,*) (Nodes(n), n=1,numberOfNodes)
+    read (file_in,*) (Elms(n),n=1,numberOfElm)
+    read (file_in,*) (Loads(n),n=1,numberOfLoads)
+      if (pr_switch >= 5 ) then 
+         print *,'ReadInput:'
+         print *, 'Antall noder........: ', numberOfNodes 
+         print *, 'Antall elementer....: ', numberOfElm 
+         print *, 'Antall krefter......: ', numberOfLoads
+      end if
+  end Subroutine ReadInput
+
+  Subroutine WriteOutput()
+    integer :: file_out
+    file_out = 11
+    open(file_out,file="output.dat")
+    !TODO: Skriv ut resultatene
+  end Subroutine WriteOutput
+
+
   Subroutine PrintMatrix(A,l,b)
     real, intent(inout) :: A(:,:)
     integer i,j,b,l

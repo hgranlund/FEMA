@@ -8,11 +8,16 @@
 
     type :: element
        real :: EA,EI,L
-       integer :: Joints(NON)
+       integer :: node1, node2
     end type element
 
-    type :: joint 
+    type :: node 
        real :: X,Y
        integer :: GDOF(DOF)
-    end type joint
+    end type node
+     
+    type :: load
+       !TODO: bestemme verdier.
+    end type load
+
   end module FEMTypes

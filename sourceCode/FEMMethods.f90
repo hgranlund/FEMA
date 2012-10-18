@@ -5,7 +5,11 @@
     implicit none
 
   contains
-    
+
+    !###############################
+    !LS LocalStiffnesMatrix er den genererte lokale stivhetsmatrisen
+    !Elm er elementet i fokus
+    !###############################
     subroutine LocalStiffMatrix(LS, Elm)
       real , intent(out) :: LS(:,:)
       type (element), intent(in):: Elm
@@ -44,4 +48,6 @@
       LS(5,6)=t3
       LS(6,5)=t3
     end subroutine LocalStiffMatrix
+
+
   end module FemMethods
