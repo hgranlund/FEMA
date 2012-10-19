@@ -3,6 +3,8 @@
 ### kode
 
 * forminske global ved å ikke ta md faste friheter, info i elm
+* sette matrisen initalverdi lik null
+* Kan lage flere likningsløsere, bestemme meg for en som programmet skal bruke
 
 
 ### Besvarelse
