@@ -2,9 +2,10 @@
   module FEMTypes
     implicit none
     
-    ! NON=Nomber Of Nodes/ Beam
+    ! pr_switch brukes til å bestemme hva som skal printes ut. 
     ! DOF= Degrace of freedom/node
-    integer , parameter :: NON=2, DOF=3
+
+    integer , parameter :: pr_switch=10, DOF=3
 
     type :: element
        real :: EA,EI,L

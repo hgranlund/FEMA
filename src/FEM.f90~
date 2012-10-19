@@ -1,17 +1,12 @@
 program FEM
   use FEMMethods
   implicit none
-  integer ::  errorFlag, pr_switch,numberOfNodes,numberOfElm,numberOfLoads
-
-  REAL, ALLOCATABLE, DIMENSION(:,:) :: A
-  REAL,  ALLOCATABLE, DIMENSION(:) :: B
-
+  integer ::  errorFlag,numberOfNodes,numberOfElm,numberOfLoads
   type (element),ALLOCATABLE :: Elms(:)
   type (node), ALLOCATABLE :: Nodes(:)
   type (load), ALLOCATABLE :: Loads(:)
 
   errorFlag=0
-  pr_switch=10; ! Denne brukes til å bestemme hvor mye som skal printes
   call ReadInput()
   if (errorFlag > 0 ) then 
      print *,'Noe gikk feil '
@@ -31,12 +26,12 @@ contains
     read (file_in,*) (Nodes(n), n=1,numberOfNodes)
     read (file_in,*) (Elms(n),n=1,numberOfElm)
     read (file_in,*) (Loads(n),n=1,numberOfLoads)
-      if (pr_switch >= 5 ) then 
-         print *,'ReadInput:'
-         print *, 'Antall noder........: ', numberOfNodes 
-         print *, 'Antall elementer....: ', numberOfElm 
-         print *, 'Antall krefter......: ', numberOfLoads
-      end if
+    if (pr_switch >= 5 ) then 
+       print *,'ReadInput:'
+       print *, 'Antall noder........: ', numberOfNodes 
+       print *, 'Antall elementer....: ', numberOfElm 
+       print *, 'Antall krefter......: ', numberOfLoads
+    end if
   end Subroutine ReadInput
 
   Subroutine WriteOutput()
