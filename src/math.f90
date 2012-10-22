@@ -25,7 +25,7 @@ contains
     integer i,j,k, pr_switch
     REAL tmp, lower_sigular_value, temp
     parameter (lower_sigular_value=1.0E-09)
-    pr_switch=10
+    pr_switch=0
    
 
     if (errorFlag < 0) return
