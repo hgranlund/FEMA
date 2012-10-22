@@ -1,4 +1,4 @@
-OBJECTS = ElmTypes.o ElmMethods.o
+OBJECTS = gauss.o
 
 #FFLAGS = -g
 
@@ -12,7 +12,7 @@ all: test
 
 # Husk at det skal være "tab" foran $(FC)
 test: ${OBJECTS}
-	$(FC) ${OBJECTS} -o Elm -lm
+	$(FC) ${OBJECTS} -o gauss -lm
 
 clean:
-	rm Elm *.o *.mod *.Mod ${OBJECTS}
+	rm gauss *.o *.mod *.Mod ${OBJECTS}

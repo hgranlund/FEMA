@@ -1,0 +1,177 @@
+simenhg@simenhg-VirtualBox:~/Documents/skole/prosedyreorientert/math$ gfortran gauss.f90
+gauss.f90:17.11:
+
+  else THEN
+           1
+Error: Unexpected junk after ELSE statement at (1)
+simenhg@simenhg-VirtualBox:~/Documents/skole/prosedyreorientert/math$ gfortran gauss.f90
+gauss.f90: command not found
+simenhg@simenhg-VirtualBox:~/Documents/skole/prosedyreorientert/math$ gfortran gauss.f90
+simenhg@simenhg-VirtualBox:~/Documents/skole/prosedyreorientert/math$ ./a.out 
+ Skriv inn størrelsen på matrisen (eller 0 for å vlege en predefinert)
+3
+ Skriv inn elemeter i matrisen radvis
+1 2 3 4
+5 6 7 8
+9 10 11 12
+ 
+ Matrisen før gauss........: 
+   1.0000000       2.0000000       3.0000000       0.0000000    
+   5.0000000       6.0000000       7.0000000       0.0000000    
+   9.0000000       10.000000       11.000000       0.0000000    
+  
+   5.0000000      er større enn   1.0000000    
+   9.0000000      er større enn   5.0000000    
+ readoberasjon nummber ......:            1
+   9.0000000       10.000000       11.000000       0.0000000    
+   0.0000000      0.88888884       1.7777778       0.0000000    
+   5.0000000       6.0000000       7.0000000       0.0000000    
+  
+ readoberasjon nummber ......:            1
+   9.0000000       10.000000       11.000000       0.0000000    
+   0.0000000      0.88888884       1.7777778       0.0000000    
+   0.0000000      0.44444418      0.88888884       0.0000000    
+  
+ readoberasjon nummber ......:            2
+   9.0000000       10.000000       11.000000       0.0000000    
+   0.0000000      0.88888884       1.7777778       0.0000000    
+   0.0000000       0.0000000      3.57627869E-07   0.0000000    
+  
+ Marisen etter gauss........: 
+   9.0000000       10.000000       11.000000       0.0000000    
+   0.0000000      0.88888884       1.7777778       0.0000000    
+   0.0000000       0.0000000      3.57627869E-07   0.0000000    
+  
+ løsning......:    0.0000000       0.0000000       0.0000000    
+simenhg@simenhg-VirtualBox:~/Documents/skole/prosedyreorientert/math$ gfortran gauss.f90; ./a.out 
+ Skriv inn størrelsen på matrisen (eller 0 for å vlege en predefinert)
+3
+ Skriv inn elemeter i matrisen radvis
+1 2 3 4 
+5 6 7 8
+9 10 11 12
+
+ Skriv inn størrelsen på matrisen (eller 0 for å vlege en predefinert)
+At line 21 of file gauss.f90 (unit = 5, file = 'stdin')
+Fortran runtime error: Bad real number in item 1 of list input
+simenhg@simenhg-VirtualBox:~/Documents/skole/prosedyreorientert/math$ gfortran gauss.f90 ; ./a.out 
+ Skriv inn størrelsen på matrisen (eller 0 for å vlege en predefinert)
+3
+ Skriv inn elemeter i matrisen radvis
+1 2 3 4
+5 6 7 8
+9 10 11 12
+ 
+ Matrisen før gauss........: 
+   1.0000000       2.0000000       3.0000000       4.0000000    
+   5.0000000       6.0000000       7.0000000       8.0000000    
+   9.0000000       10.000000       11.000000       12.000000    
+  
+   5.0000000      er større enn   1.0000000    
+   9.0000000      er større enn   5.0000000    
+ readoberasjon nummber ......:            1
+   9.0000000       10.000000       11.000000       12.000000    
+   0.0000000      0.88888884       1.7777778       2.6666665    
+   5.0000000       6.0000000       7.0000000       8.0000000    
+  
+ readoberasjon nummber ......:            1
+   9.0000000       10.000000       11.000000       12.000000    
+   0.0000000      0.88888884       1.7777778       2.6666665    
+   0.0000000      0.44444418      0.88888884       1.3333330    
+  
+ readoberasjon nummber ......:            2
+   9.0000000       10.000000       11.000000       12.000000    
+   0.0000000      0.88888884       1.7777778       2.6666665    
+   0.0000000       0.0000000      3.57627869E-07  4.76837158E-07
+  
+ Marisen etter gauss........: 
+   9.0000000       10.000000       11.000000       12.000000    
+   0.0000000      0.88888884       1.7777778       2.6666665    
+   0.0000000       0.0000000      3.57627869E-07  4.76837158E-07
+  
+ løsning......:  -0.66666645      0.33333316       1.3333334    
+simenhg@simenhg-VirtualBox:~/Documents/skole/prosedyreorientert/math$    0.0000000      0.44444418      0.88888884       1.3333330    
+0.0000000: command not found
+simenhg@simenhg-VirtualBox:~/Documents/skole/prosedyreorientert/math$ 
+simenhg@simenhg-VirtualBox:~/Documents/skole/prosedyreorientert/math$ gfortran gauss.f90; ./a.out 
+ Skriv inn størrelsen på matrisen (eller 0 for å vlege en predefinert)
+3
+ Skriv inn elemeter i matrisen radvis
+1 2 3 4 
+5 6 7 8 
+9 10 11 12
+ 
+ Matrisen før gauss........: 
+   1.0000000       2.0000000       3.0000000       4.0000000    
+   5.0000000       6.0000000       7.0000000       8.0000000    
+   9.0000000       10.000000       11.000000       12.000000    
+  
+   5.0000000      er større enn   1.0000000    
+   9.0000000      er større enn   5.0000000    
+ readoberasjon nummber ......: %d            1
+   9.0000000       10.000000       11.000000       12.000000    
+   0.0000000      0.88888884       1.7777778       2.6666665    
+   5.0000000       6.0000000       7.0000000       8.0000000    
+  
+ readoberasjon nummber ......: %d            1
+   9.0000000       10.000000       11.000000       12.000000    
+   0.0000000      0.88888884       1.7777778       2.6666665    
+   0.0000000      0.44444418      0.88888884       1.3333330    
+  
+ readoberasjon nummber ......: %d            2
+   9.0000000       10.000000       11.000000       12.000000    
+   0.0000000      0.88888884       1.7777778       2.6666665    
+   0.0000000       0.0000000      3.57627869E-07  4.76837158E-07
+  
+ Marisen etter gauss........: 
+   9.0000000       10.000000       11.000000       12.000000    
+   0.0000000      0.88888884       1.7777778       2.6666665    
+   0.0000000       0.0000000      3.57627869E-07  4.76837158E-07
+  
+ løsning......:  -0.66666645      0.33333316       1.3333334    
+simenhg@simenhg-VirtualBox:~/Documents/skole/prosedyreorientert/math$  Marisen etter gauss........: 
+Marisen: command not found
+simenhg@simenhg-VirtualBox:~/Documents/skole/prosedyreorientert/math$ 
+simenhg@simenhg-VirtualBox:~/Documents/skole/prosedyreorientert/math$ 
+simenhg@simenhg-VirtualBox:~/Documents/skole/prosedyreorientert/math$ gfortran gauss.f90; ./a.out 
+gauss.f90:69.65:
+
+       print *, 'Matrisen etter swap, iterasjon...: ' , k , call PrintMatrix(A,
+                                                                 1
+Error: Syntax error in PRINT statement at (1)
+ Skriv inn størrelsen på matrisen (eller 0 for å vlege en predefinert)
+3
+ Skriv inn elemeter i matrisen radvis
+1 2 3 4 
+5 6 7 8 
+9 10 11 12
+ 
+ Matrisen før gauss........: 
+   1.0000000       2.0000000       3.0000000       4.0000000    
+   5.0000000       6.0000000       7.0000000       8.0000000    
+   9.0000000       10.000000       11.000000       12.000000    
+  
+   5.0000000      er større enn   1.0000000    
+   9.0000000      er større enn   5.0000000    
+ readoberasjon nummber ......: %d            1
+   9.0000000       10.000000       11.000000       12.000000    
+   0.0000000      0.88888884       1.7777778       2.6666665    
+   5.0000000       6.0000000       7.0000000       8.0000000    
+  
+ readoberasjon nummber ......: %d            1
+   9.0000000       10.000000       11.000000       12.000000    
+   0.0000000      0.88888884       1.7777778       2.6666665    
+   0.0000000      0.44444418      0.88888884       1.3333330    
+  
+ readoberasjon nummber ......: %d            2
+   9.0000000       10.000000       11.000000       12.000000    
+   0.0000000      0.88888884       1.7777778       2.6666665    
+   0.0000000       0.0000000      3.57627869E-07  4.76837158E-07
+  
+ Marisen etter gauss........: 
+   9.0000000       10.000000       11.000000       12.000000    
+   0.0000000      0.88888884       1.7777778       2.6666665    
+   0.0000000       0.0000000      3.57627869E-07  4.76837158E-07
+  
+ løsning......:  -0.66666645      0.33333316       1.3333334    
+simenhg@simenhg-VirtualBox:~/Documents/skole/prosedyreorientert/math$ gauss.f90~
