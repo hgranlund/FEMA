@@ -4,6 +4,20 @@ module FemMethods
   use Math
   implicit none
 
+  ! interface 
+  !      subroutine GaussSolver(A,B,X,len, errorFlag) 
+  !        integer, intent(in) :: len
+  !        integer, intent(inout) :: errorFlag
+  !        real, intent(inout)  :: A(len,len), B(len)
+  !        REAL, intent(out) :: X(len)
+  !      end Subroutine GaussSolver
+
+  !      Subroutine PrintMatrix(A,l,b)
+  !        real, intent(inout) :: A(:,:)
+  !        integer , intent(in)::l,b
+  !      end Subroutine PrintMatrix
+  !   end interface
+
 contains
   !###############################
   !Methoden kalkulerer forsyvnigene til systemet
@@ -40,12 +54,18 @@ contains
        DisplacementVector(i)=0
        LoadVector(i)=1
     end do
-    call PrintMatrix(GlobalStiffnessMatrix, GSMLen, GSMLen)
     call GlobalStiffness(GlobalStiffnessMatrix,Elms,numberOfElm,Nodes,numberOfNodes,errorFlag)
-    print *, 'global etter genereinge'
-    call PrintMatrix(GlobalStiffnessMatrix, GSMLen, GSMLen)
-    call GaussSolver(GlobalStiffnessMatrix,DisplacementVector,LoadVector,GSMLen,Errorflag)
-
+    if (pr_switch>5)then
+       print * ,''
+       print *, '##### GlobalStivhetsmatrise: '
+       call PrintMatrix(GlobalStiffnessMatrix, GSMLen, GSMLen)
+    end if
+   call GaussSolver(GlobalStiffnessMatrix,DisplacementVector,LoadVector,GSMLen,Errorflag)
+    if (pr_switch>5)then 
+       print *,''
+       print *,'Displacemant:'
+       print *,DisplacementVector
+    end if
   end subroutine CalcDisplacement
 
   !###############################
@@ -114,16 +134,16 @@ contains
     real :: LocalStiffnessMatrix(6,6)
     type (element) :: elm
     integer :: GMC(6) , GTRGConverter(DOF*numberOfNodes)
-    character (Len=23) :: Tag = '##### GlobalStiffness: '
 
 
-
-    if (errorFlag .NE. 0)then
-       print *, 'Errorflag at begining of GlobalStiffness'
-       return
-    end if
     
-    call GlobalToRedusedGlobalStiffnessMatrixConverter(GTRGConverter, Nodes, numberOfNodes)
+    IF (Errorflag .LT. 0)THEN
+       PRINT *, 'ERRORFLAG AT BEGINING OF GLOBALSTIFFNESS'
+       RETURN
+    END IF
+    
+
+    CALL GlobalToRedusedGlobalStiffnessMatrixConverter(GTRGConverter, Nodes, numberOfNodes)
 
     do i = 1, numberOfElm, 1
        elm = Elms(i)
@@ -132,33 +152,48 @@ contains
 
        ! Hvis GobalMartixConverter (GCM) er null Betyr det at...
        ! verdien ikke skal være med videre pga. grensebetingerlser
+       ! TODO: her kan vi spare tid ved å lage GMc av mindre rank, slik at vi bare tar med de vardiene vi trenger. Da kan vi fjerne if checken i loop
        do j=1,DOF,1
           GMC(j)=GTRGConverter(((elm%node1-1)*DOF) +j)* Nodes(elm%node1)%GDOF(j)
           GMC(j+3)=GTRGConverter(((elm%node2-1)*DOF) +j) *  Nodes(elm%node2)%GDOF(j)
        end do
        if (pr_switch > 6)then
           print * ,''
-          print *, Tag
+          print *, '##### GlobalStiffness: '
           print *, 'Jobber på element ...: ', elm
           print *, 'GlobalMatrixConverter... : ' , GMC
        end if
-
-       do j=1,6,1
-          do k =1,6,1
-             if (GMC(k) == 0) cycle
+       !call PrintMatrix(LocalStiffnessMatrix,6,6)
+       do j=1,6
+          do k =1,6
+             if ((GMC(k) == 0) .OR. (GMC(j)==0))  cycle
              GlobalStiffnessMatrix(GMC(k),GMC(j))=GlobalStiffnessMatrix(GMC(k),GMC(j))+LocalStiffnessMatrix(k,j)
           end do
        end do
-       if(pr_switch >8)then
-          print *, ''
-          print *,'LocalStiffnessMatrix at element, ' ,i
-          call PrintMatrix(LocalStiffnessMatrix,6,6)
-          print *, 'GlobalStiffnessMatrix at element, ', i
-          call PrintMatrix(GlobalStiffnessMatrix,9,9)
-
-       end if
     end do
   end subroutine GlobalStiffness
+
+
+  !###############################
+  ! Prosedyren populerer Kraftvektoren (LoadVectors)
+  !###############################
+  subroutine PopulateLoads(LoadVector,Loads,Nodes, numberOfLoads, numberOfNodes,Errorflag)
+    integer, intent(in) :: numberOfLoads,Errorflag
+    type (load), intent(in) :: Loads(:)
+    
+    real , intetn(out):: LoadVector
+
+    integer :: i
+
+    do i=1,numberOfLoads
+       !TODO generte loads
+
+    end do
+  end subroutine PopulateLoads
+
+
+
+
 
   Subroutine GlobalToRedusedGlobalStiffnessMatrixConverter(GTRGConverter,Nodes, numberOfNodes)
     type (node), intent(in):: Nodes(:)

@@ -18,7 +18,8 @@
     end type node
      
     type :: load
-       !TODO: bestemme verdier.
+       integer :: nodeNr, rotation
+       real :: value
     end type load
 
   end module FEMTypes

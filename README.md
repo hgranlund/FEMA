@@ -17,5 +17,7 @@ Inputfilen skal inneholde all nødvendig data for å gjøre en FEA. Inputfilen e
 	E-modul*Areal, E-modul*I, Lengde, node1, node2
 	
 * Liste med krefter, med format:
-
+	
+	NodeNummer, Rotasjonen, i radianer, til vektoren (hvor nullpunktet er definert i positiv x-retning) ELLER en negativ verdi om det er moment, eks -1, verdien til kraften/momentet
+	
 	

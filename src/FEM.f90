@@ -1,31 +1,30 @@
 program FEM
   use FEMMethods
   implicit none
-  integer ::  errorFlag,numberOfNodes,numberOfElm,numberOfLoads,status,i
-  real , ALLOCATABLE :: Displacement(:)
+  integer ::  errorFlag,numberOfNodes,numberOfElm,numberOfLoads,numberOfTotalDegrees,status,i
+  real , ALLOCATABLE :: DisplacementVector(:)
   type (element),ALLOCATABLE :: Elms(:)
   type (node), ALLOCATABLE :: Nodes(:)
   type (load), ALLOCATABLE :: Loads(:)
 
   errorFlag=0
-  call ReadInput()
-  allocate (Displacement(DOF*numberOfNodes), stat=status)
-  IF (status /= 0)then
+  call ReadInput() 
+  allocate (DisplacementVector(totalDegrees(Nodes,numberOfNodes)), stat=status)
+  IF (status .NE. 0)then
      Errorflag =  status
      print *, "***Not Enough Memory*** when allocating Displacement "
      return
   end IF
-  call CalcDisplacement(Displacement,Elms,Nodes,Loads,numberOfElm,numberOfNodes,numberOfLoads, Errorflag)
-
   
+  call CalcDisplacement(DisplacementVector,Elms,Nodes,Loads,numberOfElm,numberOfNodes,numberOfLoads, Errorflag)
 
-  print *,Errorflag
   if (errorFlag .NE. 0 ) then 
      print *,'Noe gikk feil '
      print *,'Errorflag = ' ,Errorflag
      stop
   end if
-  print * , (Displacement(i), i=1,(DOF*numberOfNodes))
+  call WriteOutput
+!  print * ,Displacement
 
 contains
   Subroutine ReadInput()
@@ -50,7 +49,7 @@ contains
   Subroutine WriteOutput()
     integer ::file_out,n
     file_out=11
-    open(file_out,file="output.dat")
+  !  open(file_out,file="output.dat")
     !TODO: Skriv ut resultatene
   end Subroutine WriteOutput
 

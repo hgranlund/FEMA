@@ -2,7 +2,9 @@
 ! Gauss elimination with partial pivoting
 
 module Math
+ 
   implicit none
+
 
 
 contains
@@ -22,14 +24,13 @@ contains
     real, intent(inout)  :: A(len,len), B(len)
     REAL, intent(out) :: X(len)
 
-    integer i,j,k, pr_switch
-    REAL tmp, lower_sigular_value, temp
+    integer i,j,k
+    REAL tmp, lower_sigular_value, temp , pr_switch
     parameter (lower_sigular_value=1.0E-09)
-    pr_switch=0
    
-
+    pr_switch =5
     if (errorFlag < 0) return
-
+    
     do k=1, len-1 ! rad operasjoner, totalt len-1 operasjoner
 
        do i=k+1 ,len
@@ -94,20 +95,21 @@ contains
        print *, 'Matrisen etter gauss eliminisjon:'
        call PrintMatrix(A,len,len)
     end if
-    return
   end subroutine GaussSolver
 
 
 
    Subroutine PrintMatrix(A,l,b)
     real, intent(inout) :: A(:,:)
-    integer i,j,b,l
+    integer , intent(in)::l,b
+    integer i,j
 
-    print * , '#######################################'
+    print * , ' #######################################'
     do i=1,l
        print *,(A(i,j), j=1,b)
     end do
     print *, '####################################### '
+    print *,''
   end Subroutine PrintMatrix
 
 
