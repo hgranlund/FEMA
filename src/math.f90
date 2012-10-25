@@ -94,6 +94,7 @@ contains
     if (pr_switch >2)then
        print *, 'Matrisen etter gauss eliminisjon:'
        call PrintMatrix(A,len,len)
+       print *, 'b matrix: ', B
     end if
   end subroutine GaussSolver
 

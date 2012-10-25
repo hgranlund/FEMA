@@ -18,7 +18,7 @@
     end type node
      
     type :: load
-       integer :: nodeNr, rotation
+       integer :: nodeNr, DOF
        real :: value
     end type load
 

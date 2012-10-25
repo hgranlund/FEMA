@@ -1,4 +1,3 @@
-
 module FemMethods
   use FEMTypes
   use Math
@@ -32,14 +31,15 @@ contains
     type (load), intent(in) :: Loads(:)
     real , intent(out) :: DisplacementVector(:)
 
-    integer :: status, GSMLen,i,j
+
+    integer :: status, GSMLen,i,j, GTRGConverter(DOF*numberOfNodes)
     real , ALLOCATABLE :: GlobalStiffnessMatrix(:,:), LoadVector(:)
 
     if (errorFlag .NE. 0)then
        print *, 'Errorflag at begining of CalcDisplacement'
        return
     end if
-
+    CALL GlobalToRedusedGlobalStiffnessMatrixConverter(GTRGConverter, Nodes, numberOfNodes)
     GSMLen = totalDegrees(Nodes,numberOfNodes)
     allocate (GlobalStiffnessMatrix(GSMLen,GSMLen) , LoadVector(GSMLen), stat=status)
     if (status .NE. 0)then
@@ -47,20 +47,25 @@ contains
        print *, "***Not Enough Memory*** when allocating in CalcDisplacement "
        return
     end if
+
+!initilise
     do i=1,GSMLen
        do j=1,GSMLen
           GlobalStiffnessMatrix(i,j)=0
        end do
        DisplacementVector(i)=0
-       LoadVector(i)=1
+       LoadVector(i)=0
     end do
-    call GlobalStiffness(GlobalStiffnessMatrix,Elms,numberOfElm,Nodes,numberOfNodes,errorFlag)
+
+    call GlobalStiffness(GlobalStiffnessMatrix,Elms,numberOfElm,Nodes,GTRGConverter,errorFlag)
+    call PopulateLoads(LoadVector,Loads,GTRGConverter, numberOfLoads,errorflag)
     if (pr_switch>5)then
        print * ,''
        print *, '##### GlobalStivhetsmatrise: '
        call PrintMatrix(GlobalStiffnessMatrix, GSMLen, GSMLen)
     end if
-   call GaussSolver(GlobalStiffnessMatrix,DisplacementVector,LoadVector,GSMLen,Errorflag)
+
+    call GaussSolver(GlobalStiffnessMatrix,LoadVector,DisplacementVector,GSMLen,Errorflag)
     if (pr_switch>5)then 
        print *,''
        print *,'Displacemant:'
@@ -122,28 +127,29 @@ contains
   !###############################
   !En prosedyre som genererer  den globale stivhetsmatrisen
   !###############################
-  subroutine GlobalStiffness(GlobalStiffnessMatrix, Elms,numberOfElm,Nodes,numberOfNodes,errorFlag)
-    integer ,intent(in)::numberOfElm,numberOfNodes
-    integer ,intent(inout) :: errorFlag
-    real , intent(out) :: GlobalStiffnessMatrix(:,:)
+  subroutine GlobalStiffness(GlobalStiffnessMatrix, Elms,numberOfElm,Nodes,GTRGConverter,errorFlag)
+    integer ,intent(in)::numberOfElm, GTRGConverter(:)
     type (element), intent(in):: Elms(:)
     type (node), intent(in):: Nodes(:)
+    integer ,intent(inout) :: errorFlag
+    real ,intent(out) :: GlobalStiffnessMatrix(:,:)
+
 
 
     integer :: i ,j, k
     real :: LocalStiffnessMatrix(6,6)
     type (element) :: elm
-    integer :: GMC(6) , GTRGConverter(DOF*numberOfNodes)
+    integer :: GMC(6)  
 
 
-    
+
     IF (Errorflag .LT. 0)THEN
        PRINT *, 'ERRORFLAG AT BEGINING OF GLOBALSTIFFNESS'
        RETURN
     END IF
-    
 
-    CALL GlobalToRedusedGlobalStiffnessMatrixConverter(GTRGConverter, Nodes, numberOfNodes)
+
+
 
     do i = 1, numberOfElm, 1
        elm = Elms(i)
@@ -177,18 +183,28 @@ contains
   !###############################
   ! Prosedyren populerer Kraftvektoren (LoadVectors)
   !###############################
-  subroutine PopulateLoads(LoadVector,Loads,Nodes, numberOfLoads, numberOfNodes,Errorflag)
-    integer, intent(in) :: numberOfLoads,Errorflag
+  subroutine PopulateLoads(LoadVector,Loads,GTRGConverter, numberOfLoads,errorflag)
+    integer, intent(in) :: GTRGConverter(:),numberOfLoads,Errorflag
     type (load), intent(in) :: Loads(:)
-    
-    real , intetn(out):: LoadVector
+    real , intent(out):: LoadVector(:)
 
-    integer :: i
+    integer :: i, globalIndex
+    type (load):: tempLoad
+
+    if (Errorflag .LT. 0) return
 
     do i=1,numberOfLoads
-       !TODO generte loads
-
+       tempLoad= Loads(i)
+       globalIndex=(tempLoad%nodeNr-1)*3+tempLoad%DOF
+       LoadVector(GTRGConverter(globalIndex))=tempLoad%value
+      
     end do
+
+    if (pr_switch>5)then
+       print *, '##### PopulateLoads:'
+       print *, 'LoadVector', LoadVector
+    end if
+       
   end subroutine PopulateLoads
 
 

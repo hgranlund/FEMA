@@ -18,6 +18,6 @@ Inputfilen skal inneholde all nødvendig data for å gjøre en FEA. Inputfilen e
 	
 * Liste med krefter, med format:
 	
-	NodeNummer, Rotasjonen, i radianer, til vektoren (hvor nullpunktet er definert i positiv x-retning) ELLER en negativ verdi om det er moment, eks -1, verdien til kraften/momentet
+	NodeNummer, WhatDegreeOfFreedom (x=1,y=2,r=3), Value 
 	
 	
