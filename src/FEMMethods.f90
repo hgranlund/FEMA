@@ -82,7 +82,7 @@ contains
     type (element), intent(in):: Elm
 
     integer::i,j
-    real :: EI,EA,L,t1,t2,t3,t4
+    real :: ei,ea,l,t1,t2,t3,t4
     character (len=21) :: Tag = '##### LocalStiffness:'
 
     do i=1,6
@@ -90,12 +90,13 @@ contains
           LS(i,j)=0
        end do
     end do
-
-    L=Elm%L
-    t1 = Elm%EA /L
-    t2 = (12*Elm%EI)/L**3
-    t3 = (6*Elm%EI)/L**2
-    t4= (2*Elm%EI)/L
+    ea=elm%e*Elm%a
+    ei=elm%e*elm%i
+    l=elm%l
+    t1 = ea /l
+    t2 = (12*ei)/l**3
+    t3 = (6*ei)/l**2
+    t4= (2*ei)/l
     if (pr_switch > 7)then
        print *,''
        print * , Tag

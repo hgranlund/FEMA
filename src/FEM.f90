@@ -30,7 +30,7 @@ contains
   Subroutine ReadInput()
     integer ::file_in,n
     file_in=10
-    open(file_in, file="inputEasy.dat",status="old")
+    open(file_in, file="inputS219.dat",status="old")
     read(file_in,*) numberOfNodes, numberOfElm, numberOfLoads
     allocate (Nodes(numberOfNodes))
     allocate (Elms(numberOfElm))

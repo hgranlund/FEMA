@@ -8,17 +8,17 @@
     integer , parameter :: pr_switch=10, DOF=3
 
     type :: element
-       real :: EA,EI,L
+       real :: e,a,i,l
        integer :: node1, node2
     end type element
 
     type :: node 
-       real :: X,Y
+       real :: x,y
        integer :: GDOF(DOF)
     end type node
      
     type :: load
-       integer :: nodeNr, DOF
+       integer :: nodeNr, dof
        real :: value
     end type load
 
