@@ -48,7 +48,7 @@ contains
        return
     end if
 
-!initilise
+    !initilise
     do i=1,GSMLen
        do j=1,GSMLen
           GlobalStiffnessMatrix(i,j)=0
@@ -77,56 +77,87 @@ contains
   !LS LocalStiffnesMatrix er den genererte lokale stivhetsmatrisen
   !Elm er elementet i fokus
   !###############################
-  subroutine LocalStiffness(LS, Elm)
+  subroutine LocalStiffness(LS, Elm,Nodes)
     real , intent(out) :: LS(:,:)
-    type (element), intent(in):: Elm
+    type (element), intent(in):: elm
+    type (node), intent(in)::Nodes(:)
 
     integer::i,j
-    real :: ei,ea,l,t1,t2,t3,t4
+    real :: e,a,in,l,t1,t2,t3,c,s,angle
     character (len=21) :: Tag = '##### LocalStiffness:'
 
-    do i=1,6
-       do j=1,6
-          LS(i,j)=0
-       end do
-    end do
-    ea=elm%e*Elm%a
-    ei=elm%e*elm%i
+    ! do i=1,6
+    !    do j=1,6
+    !       LS(i,j)=0
+    !    end do
+    ! end do
+
+    angle=  AngelFromPoints(Nodes(elm%node1)%x,Nodes(elm%node1)%y,&
+         &Nodes(elm%node2)%x,Nodes(elm%node1)%y)
+    c=cos(angle)
+    s=sin(angle)
+    e=elm%e
+    a=elm%a
+    in=elm%i
     l=elm%l
-    t1 = ea /l
-    t2 = (12*ei)/l**3
-    t3 = (6*ei)/l**2
-    t4= (2*ei)/l
+    t1 = (12 *in) /l**2
+    t2 = (6*in)/l
+    t3 = e/l
     if (pr_switch > 7)then
        print *,''
        print * , Tag
-       print *, "t1:", t1, "t2:", t2, "t3:", t3, "t4:", t4
+       print *, " (12 *I) /L**2:", t1, "(6*I)/L:", t2, "E/L(6*EI)/L**2:", t3
     end if
-    LS(1,1)=t1
-    LS(2,2)=t2
-    LS(3,3)=2*t4
-    LS(4,4)=t1  
-    LS(5,5)=t2
-    LS(6,6)=2*t4
-    LS(4,1)=-t1
-    LS(1,4)=-t1
-    LS(2,5)=-t2
-    LS(5,2)=-t2
-    LS(5,3)=t3
-    Ls(3,5)=t3
-    LS(2,3)=-t3
-    LS(3,2)=-t3
-    LS(6,3)=2*t1
-    LS(3,6)=2*t1
-    LS(2,6)=-t3 
-    LS(6,2)=-t3
-    LS(5,6)=t3
-    LS(6,5)=t3
+
+    LS(1,1)=a*c**2+t1*s**2
+    LS(2,1)=(a-t1)*c*s
+    LS(3,1)=(-61*s)/l
+    LS(4,1)=-(a*c**2)+((12*i*s**2)/l**2)
+    LS(5,1)=(12/l**2-a)*c*s
+    LS(6,1)=-6*i*s/l
+
+    LS(1,2)=LS(2,1)
+    LS(2,2)=(a*s**2)+(12*i*c**2)/(l**2)
+    LS(3,2)=61*c/l
+    LS(4,2)=LS(5,1)
+    LS(5,2)=-(a*s**2)+((12*i*c**2)/(l**2))
+    LS(6,2)=LS(3,2)
+
+    LS(1,3)=LS(3,1)
+    LS(2,3)=LS(3,2)
+    LS(3,3)=4*l
+    LS(4,3)=-LS(3,1)
+    LS(5,3)=-LS(3,2)
+    LS(6,3)=2*i
+
+
+    LS(1,4)=LS(4,1)
+    LS(2,4)=LS(4,2)
+    LS(3,4)=LS(4,3)
+    LS(4,4)=(a*s**2)+((12*i*s**2)/l**2)
+    LS(5,4)=LS(2,1)
+    LS(6,4)=LS(6,1)
+
+    LS(1,5)=LS(5,1)
+    LS(2,5)=LS(5,2)
+    LS(3,5)=LS(5,3)
+    LS(4,5)=LS(5,4)
+    LS(5,5)=LS(2,2)
+    LS(6,5)=LS(5,3)
+
+    LS(1,6)=LS(6,1)
+    LS(2,6)=LS(6,2)
+    LS(3,6)=LS(6,3)
+    LS(4,6)=LS(6,4)
+    LS(5,6)=LS(6,5)
+    LS(6,6)=4*i
+
+
   end subroutine LocalStiffness
 
 
   !###############################
-  !En prosedyre som genererer  den globale stivhetsmatrisen
+  !En prosedyre som genererer  den reduserte globale stivhetsmatrisen direkte
   !###############################
   subroutine GlobalStiffness(GlobalStiffnessMatrix, Elms,numberOfElm,Nodes,GTRGConverter,errorFlag)
     integer ,intent(in)::numberOfElm, GTRGConverter(:)
@@ -155,7 +186,7 @@ contains
     do i = 1, numberOfElm, 1
        elm = Elms(i)
 
-       call LocalStiffness(LocalStiffnessMatrix,elm)
+       call LocalStiffness(LocalStiffnessMatrix,elm,Nodes)
 
        ! Hvis GobalMartixConverter (GCM) er null Betyr det at...
        ! verdien ikke skal være med videre pga. grensebetingerlser
@@ -170,7 +201,7 @@ contains
           print *, 'Jobber på element ...: ', elm
           print *, 'GlobalMatrixConverter... : ' , GMC
        end if
-       !call PrintMatrix(LocalStiffnessMatrix,6,6)
+
        do j=1,6
           do k =1,6
              if ((GMC(k) == 0) .OR. (GMC(j)==0))  cycle
@@ -198,14 +229,14 @@ contains
        tempLoad= Loads(i)
        globalIndex=(tempLoad%nodeNr-1)*3+tempLoad%DOF
        LoadVector(GTRGConverter(globalIndex))=tempLoad%value
-      
+
     end do
 
     if (pr_switch>5)then
        print *, '##### PopulateLoads:'
        print *, 'LoadVector', LoadVector
     end if
-       
+
   end subroutine PopulateLoads
 
 

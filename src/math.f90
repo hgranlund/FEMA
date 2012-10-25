@@ -98,8 +98,16 @@ contains
     end if
   end subroutine GaussSolver
 
+  real  function  AngelFromPoints(x1,y1,x2,y2)
+    real, intent(in)::x1,y1,x2,y2
 
+    real :: dx,dy
 
+    dx=x2-x1
+    dy=y2-y1
+    AngelFromPoints = atan(dy/dx)
+  end function AngelFromPoints
+    
    Subroutine PrintMatrix(A,l,b)
     real, intent(inout) :: A(:,:)
     integer , intent(in)::l,b
