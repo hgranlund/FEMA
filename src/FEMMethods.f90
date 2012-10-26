@@ -48,7 +48,6 @@ contains
        return
     end if
 
-    !initilise
     do i=1,GSMLen
        do j=1,GSMLen
           GlobalStiffnessMatrix(i,j)=0
@@ -83,7 +82,7 @@ contains
     type (node), intent(in)::Nodes(:)
 
     integer::i,j
-    real :: e,a,in,l,t1,t2,t3,c,s,angle
+    real :: e,a,inertia,l,t1,t2,t3,c,s,angle
     character (len=21) :: Tag = '##### LocalStiffness:'
 
     ! do i=1,6
@@ -93,48 +92,52 @@ contains
     ! end do
 
     angle=  AngelFromPoints(Nodes(elm%node1)%x,Nodes(elm%node1)%y,&
-         &Nodes(elm%node2)%x,Nodes(elm%node1)%y)
+         &Nodes(elm%node2)%x,Nodes(elm%node2)%y)
     c=cos(angle)
     s=sin(angle)
     e=elm%e
     a=elm%a
-    in=elm%i
+    inertia=elm%i
     l=elm%l
-    t1 = (12 *in) /l**2
-    t2 = (6*in)/l
+    t1 = (12 *inertia) /l**2
+    t2 = (6*inertia)/l
     t3 = e/l
+    !Fix av avrundinertiagsfeil i
+    if ( abs(c) .LE. 1E-5 ) c=0 
+    if ( abs(s) .LE. 1E-5 ) s=0
     if (pr_switch > 7)then
        print *,''
        print * , Tag
-       print *, " (12 *I) /L**2:", t1, "(6*I)/L:", t2, "E/L(6*EI)/L**2:", t3
+       print *,"Angle: ",angle, "C: ",c," S: ", s ," I: ",inertia, " L:",l,  &
+       &"(12 *I) /L**2:", t1, "(6*I)/L:", t2, "E/L:", t3
     end if
 
-    LS(1,1)=a*c**2+t1*s**2
-    LS(2,1)=(a-t1)*c*s
-    LS(3,1)=(-61*s)/l
-    LS(4,1)=-(a*c**2)+((12*i*s**2)/l**2)
-    LS(5,1)=(12/l**2-a)*c*s
-    LS(6,1)=-6*i*s/l
+    LS(1,1)=t3*((a*c**2)+(t1*s**2))
+    LS(2,1)=t3*(a-t1)*c*s
+    LS(3,1)=t3*(-(6*inertia*s)/l)
+    LS(4,1)=-LS(1,1)
+    LS(5,1)=t3*((12/l**2-a)*c*s)
+    LS(6,1)=LS(3,1)
 
     LS(1,2)=LS(2,1)
-    LS(2,2)=(a*s**2)+(12*i*c**2)/(l**2)
-    LS(3,2)=61*c/l
+    LS(2,2)=t3*((a*s**2)+(12*inertia*c**2)/(l**2))
+    LS(3,2)=t3* (6*inertia*c/l)
     LS(4,2)=LS(5,1)
-    LS(5,2)=-(a*s**2)+((12*i*c**2)/(l**2))
+    LS(5,2)=t3* (-(a*s**2)+((12*inertia*c**2)/(l**2)))
     LS(6,2)=LS(3,2)
 
     LS(1,3)=LS(3,1)
     LS(2,3)=LS(3,2)
-    LS(3,3)=4*l
+    LS(3,3)=t3*4*inertia
     LS(4,3)=-LS(3,1)
     LS(5,3)=-LS(3,2)
-    LS(6,3)=2*i
+    LS(6,3)=t3*2*inertia
 
 
     LS(1,4)=LS(4,1)
     LS(2,4)=LS(4,2)
     LS(3,4)=LS(4,3)
-    LS(4,4)=(a*s**2)+((12*i*s**2)/l**2)
+    LS(4,4)=t3*((a*s**2)+((12*inertia*s**2)/l**2))
     LS(5,4)=LS(2,1)
     LS(6,4)=LS(6,1)
 
@@ -150,8 +153,11 @@ contains
     LS(3,6)=LS(6,3)
     LS(4,6)=LS(6,4)
     LS(5,6)=LS(6,5)
-    LS(6,6)=4*i
 
+    if ( pr_switch >9 ) then
+      print *, '###### LocalStiffnessMatrix'
+      call PrintMatrix(LS,6,6)
+    end if
 
   end subroutine LocalStiffness
 
@@ -227,6 +233,7 @@ contains
 
     do i=1,numberOfLoads
        tempLoad= Loads(i)
+        print *,tempLoad
        globalIndex=(tempLoad%nodeNr-1)*3+tempLoad%DOF
        LoadVector(GTRGConverter(globalIndex))=tempLoad%value
 

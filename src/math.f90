@@ -102,7 +102,6 @@ contains
     real, intent(in)::x1,y1,x2,y2
 
     real :: dx,dy
-
     dx=x2-x1
     dy=y2-y1
     AngelFromPoints = atan(dy/dx)
@@ -115,7 +114,7 @@ contains
 
     print * , ' #######################################'
     do i=1,l
-       print *,(A(i,j), j=1,b)
+       print *,(A(i,j)/66670, j=1,b)
     end do
     print *, '####################################### '
     print *,''

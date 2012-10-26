@@ -15,6 +15,5 @@ test: ${OBJECTS}
 	$(FC) ${OBJECTS} -o FEM -lm
 
 clean:
-	rm FEM *.o *.mod *.Mod ${OBJECTS}
-
+	rm FEM *.o *.mod *.Mod 
 
