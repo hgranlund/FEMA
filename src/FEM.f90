@@ -1,27 +1,36 @@
 program FEM
   use FEMMethods
   implicit none
-  integer ::  errorFlag,numberOfNodes,numberOfElm,numberOfLoads
+  integer ::  errorFlag,numberOfNodes,numberOfElm,numberOfLoads,numberOfTotalDegrees,status,i
+  real , ALLOCATABLE :: DisplacementVector(:)
   type (element),ALLOCATABLE :: Elms(:)
   type (node), ALLOCATABLE :: Nodes(:)
   type (load), ALLOCATABLE :: Loads(:)
-  real , ALLOCATABLE :: GlobalStiffnessMatrix(:,:)
+
   errorFlag=0
-  call ReadInput()
-  allocate (GlobalStiffnessMatrix(DOF*numberOfNodes, DOF*numberOfNodes))
-  call GlobalStiffness(GlobalStiffnessMatrix,Elms,numberOfElm,errorFlag)
-  call PrintMatrix(GlobalStiffnessMatrix,DOF*numberOfNodes, DOF*numberOfNodes)
-  if (errorFlag > 0 ) then 
+  call ReadInput() 
+  allocate (DisplacementVector(totalDegrees(Nodes,numberOfNodes)), stat=status)
+  IF (status .NE. 0)then
+     Errorflag =  status
+     print *, "***Not Enough Memory*** when allocating Displacement "
+     return
+  end IF
+  
+  call CalcDisplacement(DisplacementVector,Elms,Nodes,Loads,numberOfElm,numberOfNodes,numberOfLoads, Errorflag)
+
+  if (errorFlag .NE. 0 ) then 
      print *,'Noe gikk feil '
+     print *,'Errorflag = ' ,Errorflag
+     stop
   end if
+  call WriteOutput
+!  print * ,Displacement
+
 contains
-
-
-
   Subroutine ReadInput()
     integer ::file_in,n
     file_in=10
-    open(file_in, file="inputEasy.dat",status="old")
+    open(file_in, file="inputS219.dat",status="old")
     read(file_in,*) numberOfNodes, numberOfElm, numberOfLoads
     allocate (Nodes(numberOfNodes))
     allocate (Elms(numberOfElm))
@@ -38,22 +47,10 @@ contains
   end Subroutine ReadInput
 
   Subroutine WriteOutput()
-    integer :: file_out
-    file_out = 11
-    open(file_out,file="output.dat")
+    integer ::file_out,n
+    file_out=11
+  !  open(file_out,file="output.dat")
     !TODO: Skriv ut resultatene
   end Subroutine WriteOutput
 
-
-  Subroutine PrintMatrix(A,l,b)
-    real, intent(inout) :: A(:,:)
-    integer i,j,b,l
-
-    print * , '#######################################'
-    do i=1,l
-       print *,(A(i,j), j=1,b)
-    end do
-    print *, '####################################### '
-  end Subroutine PrintMatrix
 end program FEM
-

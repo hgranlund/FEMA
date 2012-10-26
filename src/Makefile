@@ -1,4 +1,4 @@
-OBJECTS =  FEMTypes.o FEMMethods.o FEM.o 
+OBJECTS = math.o FEMTypes.o FEMMethods.o FEM.o 
 
 #FFLAGS = -g
 
@@ -16,4 +16,5 @@ test: ${OBJECTS}
 
 clean:
 	rm FEM *.o *.mod *.Mod ${OBJECTS}
+
 

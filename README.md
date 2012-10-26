@@ -17,5 +17,7 @@ Inputfilen skal inneholde all nødvendig data for å gjøre en FEA. Inputfilen e
 	E-modul*Areal, E-modul*I, Lengde, node1, node2
 	
 * Liste med krefter, med format:
-
+	
+	NodeNummer, WhatDegreeOfFreedom (x=1,y=2,r=3), Value 
+	
 	
