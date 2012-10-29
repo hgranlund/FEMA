@@ -1,11 +1,8 @@
 
   module FEMTypes
+  use FEMUtility
     implicit none
-    
-    ! pr_switch brukes til å bestemme hva som skal printes ut. 
-    ! DOF= Degrace of freedom/node
-
-    integer , parameter :: pr_switch=10, DOF=3
+    integer , parameter ::  DOF=3
 
     type :: element
        real :: e,a,i,l
@@ -14,6 +11,7 @@
 
     type :: node 
        real :: x,y
+       
        integer :: GDOF(DOF)
     end type node
      

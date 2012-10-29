@@ -58,23 +58,19 @@ contains
 
     call GlobalStiffness(GlobalStiffnessMatrix,Elms,numberOfElm,Nodes,GTRGConverter,errorFlag)
     call PopulateLoads(LoadVector,Loads,GTRGConverter, numberOfLoads,errorflag)
-    if (pr_switch>5)then
+    if (pr_switch>4)then
        print * ,''
        print *, '##### GlobalStivhetsmatrise: '
        call PrintMatrix(GlobalStiffnessMatrix, GSMLen, GSMLen)
+       print *, 'loadvector: ', LoadVector
     end if
 
     call GaussSolver(GlobalStiffnessMatrix,LoadVector,DisplacementVector,GSMLen,Errorflag)
-    if (pr_switch>5)then 
-       print *,''
-       print *,'Displacemant:'
-       print *,DisplacementVector
-    end if
+
   end subroutine CalcDisplacement
 
-  !###############################
-  !LS LocalStiffnesMatrix er den genererte lokale stivhetsmatrisen
-  !Elm er elementet i fokus
+  !##############################
+  !LS LocalStiffnesMatrix er den genererte lokale stivhetsmatrisen til element elm
   !###############################
   subroutine LocalStiffness(LS, Elm,Nodes)
     real , intent(out) :: LS(:,:)
@@ -83,16 +79,10 @@ contains
 
     integer::i,j
     real :: e,a,inertia,l,t1,t2,t3,c,s,angle
-    character (len=21) :: Tag = '##### LocalStiffness:'
-
-    ! do i=1,6
-    !    do j=1,6
-    !       LS(i,j)=0
-    !    end do
-    ! end do
 
     angle=  AngelFromPoints(Nodes(elm%node1)%x,Nodes(elm%node1)%y,&
          &Nodes(elm%node2)%x,Nodes(elm%node2)%y)
+
     c=cos(angle)
     s=sin(angle)
     e=elm%e
@@ -103,27 +93,27 @@ contains
     t2 = (6*inertia)/l
     t3 = e/l
     !Fix av avrundinertiagsfeil i
-    if ( abs(c) .LE. 1E-5 ) c=0 
-    if ( abs(s) .LE. 1E-5 ) s=0
+    if ( abs(c) .LE. epsilon(angle) ) c=0 
+    if ( abs(s) .LE. epsilon(angle) ) s=0
     if (pr_switch > 7)then
        print *,''
-       print * , Tag
+       print * , '##### LocalStiffness:'
        print *,"Angle: ",angle, "C: ",c," S: ", s ," I: ",inertia, " L:",l,  &
        &"(12 *I) /L**2:", t1, "(6*I)/L:", t2, "E/L:", t3
     end if
 
     LS(1,1)=t3*((a*c**2)+(t1*s**2))
     LS(2,1)=t3*(a-t1)*c*s
-    LS(3,1)=t3*(-(6*inertia*s)/l)
+    LS(3,1)=t3*(-t2*s)
     LS(4,1)=-LS(1,1)
     LS(5,1)=t3*((12/l**2-a)*c*s)
     LS(6,1)=LS(3,1)
 
     LS(1,2)=LS(2,1)
-    LS(2,2)=t3*((a*s**2)+(12*inertia*c**2)/(l**2))
+    LS(2,2)=t3*((a*s**2)+(t1*c**2))
     LS(3,2)=t3* (6*inertia*c/l)
     LS(4,2)=LS(5,1)
-    LS(5,2)=t3* (-(a*s**2)+((12*inertia*c**2)/(l**2)))
+    LS(5,2)=-LS(2,2)
     LS(6,2)=LS(3,2)
 
     LS(1,3)=LS(3,1)
@@ -137,7 +127,7 @@ contains
     LS(1,4)=LS(4,1)
     LS(2,4)=LS(4,2)
     LS(3,4)=LS(4,3)
-    LS(4,4)=t3*((a*s**2)+((12*inertia*s**2)/l**2))
+    LS(4,4)=LS(1,1)
     LS(5,4)=LS(2,1)
     LS(6,4)=LS(6,1)
 
@@ -153,6 +143,7 @@ contains
     LS(3,6)=LS(6,3)
     LS(4,6)=LS(6,4)
     LS(5,6)=LS(6,5)
+    LS(6,6)=LS(3,3)
 
     if ( pr_switch >9 ) then
       print *, '###### LocalStiffnessMatrix'
@@ -172,29 +163,20 @@ contains
     integer ,intent(inout) :: errorFlag
     real ,intent(out) :: GlobalStiffnessMatrix(:,:)
 
-
-
     integer :: i ,j, k
     real :: LocalStiffnessMatrix(6,6)
     type (element) :: elm
     integer :: GMC(6)  
 
-
-
-    IF (Errorflag .LT. 0)THEN
-       PRINT *, 'ERRORFLAG AT BEGINING OF GLOBALSTIFFNESS'
-       RETURN
-    END IF
-
-
-
+    if (Errorflag .LT. 0)then
+       print *, 'ERRORFLAG AT BEGINING OF GLOBALSTIFFNESS'
+       return
+    end if
 
     do i = 1, numberOfElm, 1
        elm = Elms(i)
-
        call LocalStiffness(LocalStiffnessMatrix,elm,Nodes)
-
-       ! Hvis GobalMartixConverter (GCM) er null Betyr det at...
+       ! Hvis GobalMartixConverter (GCM) er null Betyr det at
        ! verdien ikke skal være med videre pga. grensebetingerlser
        ! TODO: her kan vi spare tid ved å lage GMc av mindre rank, slik at vi bare tar med de vardiene vi trenger. Da kan vi fjerne if checken i loop
        do j=1,DOF,1
@@ -236,7 +218,6 @@ contains
         print *,tempLoad
        globalIndex=(tempLoad%nodeNr-1)*3+tempLoad%DOF
        LoadVector(GTRGConverter(globalIndex))=tempLoad%value
-
     end do
 
     if (pr_switch>5)then
@@ -245,10 +226,6 @@ contains
     end if
 
   end subroutine PopulateLoads
-
-
-
-
 
   Subroutine GlobalToRedusedGlobalStiffnessMatrixConverter(GTRGConverter,Nodes, numberOfNodes)
     type (node), intent(in):: Nodes(:)
@@ -283,6 +260,5 @@ contains
        end do
     end do
   end Function totalDegrees
-
 
 end module FemMethods

@@ -19,11 +19,10 @@ program FEM
   call CalcDisplacement(DisplacementVector,Elms,Nodes,Loads,numberOfElm,numberOfNodes,numberOfLoads, Errorflag)
 
   if (errorFlag .NE. 0 ) then 
-     print *,'Noe gikk feil '
      print *,'Errorflag = ' ,Errorflag
      stop
   end if
-  call WriteOutput
+  call WriteOutput()
 !  print * ,Displacement
 
 contains
@@ -49,6 +48,7 @@ contains
   Subroutine WriteOutput()
     integer ::file_out,n
     file_out=11
+    print *, 'Displacement:  ' , DisplacementVector
   !  open(file_out,file="output.dat")
     !TODO: Skriv ut resultatene
   end Subroutine WriteOutput
