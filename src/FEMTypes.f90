@@ -11,12 +11,11 @@
 
     type :: node 
        real :: x,y
-       
        integer :: GDOF(DOF)
     end type node
      
     type :: load
-       integer :: nodeNr, dof
+      integer :: nodeNr, DOF
        real :: value
     end type load
 

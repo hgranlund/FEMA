@@ -20,7 +20,6 @@ module FemMethods
 contains
   !###############################
   !Methoden kalkulerer forsyvnigene til systemet
-  !
   !###############################
   subroutine CalcDisplacement(DisplacementVector, Elms,Nodes,Loads,numberOfElm,numberOfNodes,numberOfLoads,errorFlag)
 
