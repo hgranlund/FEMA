@@ -6,9 +6,11 @@ module Math
 
 contains
 
+
   !###############################
   ! Gauss elimination with partial pivoting
   !###############################
+
   subroutine GaussSolver(A,B,X,len,errorFlag)
     integer, intent(in) :: len
     integer, intent(inout) :: errorFlag
@@ -19,7 +21,7 @@ contains
     REAL  temp , akk, pr_switch
 
 
-    pr_switch =10
+    pr_switch =0
     if (errorFlag < 0) return
 
     do k=1, len-1 ! rad operasjoner, totalt len-1 operasjoner
@@ -76,6 +78,7 @@ contains
   !###############################
   ! tilbake substitusjon
   !###############################
+
   subroutine BackwardSubstitution(A,B,X,len ,errorFlag)
     integer, intent(in) :: len
     integer, intent(inout) :: errorFlag
@@ -109,6 +112,7 @@ contains
   !###############################
   ! Funksjonen retunerer vinklen (rad) mellom x-aksen og linjen som er definert av punktene (x1,y1) og (x2,y2)
   !###############################
+  
   real  function  AngelFromPoints(x1,y1,x2,y2)
     real, intent(in)::x1,y1,x2,y2
 
@@ -122,5 +126,7 @@ contains
   !###############################
   ! Multipliserer matrise A med B
   !###############################
+  ! TODO: impl
+
 
 end module Math

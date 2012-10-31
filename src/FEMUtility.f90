@@ -1,8 +1,8 @@
 module FEMUtility
 
 	implicit none
-	    ! pr_switch brukes til å bestemme hva som skal printes ut. 
-    ! DOF= Degrace of freedom/node
+
+	   ! pr_switch brukes til å bestemme hva som skal printes ut. 
 
     integer , parameter :: pr_switch=5
 

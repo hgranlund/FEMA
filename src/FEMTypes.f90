@@ -2,11 +2,11 @@
   module FEMTypes
   use FEMUtility
     implicit none
-    integer , parameter ::  DOF=3
+    integer , parameter ::  DOF=3 !     ! DOF= Degrace of freedom. Maksimalt antall frihaetsgrader per node
 
     type :: element
-       real :: e,a,i,l
-       integer :: node1, node2
+       real :: e,a,i,l, cosT , sinT, ForceVector(DOF*2)
+       integer :: node1, node2 
     end type element
 
     type :: node 
