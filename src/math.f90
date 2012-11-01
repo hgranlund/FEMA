@@ -40,8 +40,9 @@ contains
        end do
 
        if (pr_switch>5) then
+          print * ,''
           print *, 'Matrisen etter swap, iterasjon...: ' , k 
-          call PrintMatrix(A,len,len)
+          call PrintMatrix(A)
           print *, B
 
        end if
@@ -64,8 +65,9 @@ contains
           A(i,k) =0 
        end do
        if (pr_switch>5)then 
+          print *, ''
           print *, 'readoberasjon nummber ......: ' , k
-          call PrintMatrix(A,len,len)
+          call PrintMatrix(A)
           print *, B
 
        end if
@@ -96,14 +98,16 @@ contains
        X(k)=(B(k)-tmp)/A(k,k)
 
        if (abs(A(k,k)) == 0) THEN
+          print *, ''
           print *, 'Matrisen har ikke en unik løsing'
           errorFlag = 5
           x(k)=1 !om det ikke finnes en unik løsning setter jeg x = 1
        end if
     end do
     if (pr_switch >2)then
+      print *, ''
        print *, 'Matrisen etter gauss eliminisjon:'
-       call PrintMatrix(A,len,len)
+       call PrintMatrix(A)
        print *, 'b matrix: ', B
     end if
   end subroutine BackwardSubstitution
@@ -122,11 +126,48 @@ contains
     dy=y2-y1
     AngelFromPoints = atan(dy/dx)
   end function AngelFromPoints
+  
+
+    !###############################
+  ! Funksjonen retunerer lengden til linjen som er definert av punktene (x1,y1) og (x2,y2)
+  !###############################
+  
+  real  function  LengthBetweenPoints(x1,y1,x2,y2)
+    real, intent(in)::x1,y1,x2,y2
+
+    real :: dx,dy
+
+    dx=x2-x1
+    dy=y2-y1
+    LengthBetweenPoints = sqrt(dx**2+dy**2)
+  end function LengthBetweenPoints
 
   !###############################
-  ! Multipliserer matrise A med B
+  ! Retunerer rotasjonsmatrisen med 6 frihetsgrader 
   !###############################
-  ! TODO: impl
+  
+  function RotationMatrix(cosT,sinT)
+    real, intent(in) :: cosT, sinT 
+
+    real :: RotationMatrix(6,6)
+
+    call NullifyRealMatrix(RotationMatrix)
+
+    RotationMatrix(3,3)=1
+    RotationMatrix(6,6)=1
+
+    RotationMatrix(1,1)=cosT
+    RotationMatrix(2,2)=cosT
+    RotationMatrix(4,4)=cosT
+    RotationMatrix(5,5)=cosT
+
+    RotationMatrix(1,2)=sinT
+    RotationMatrix(2,1)=-sinT
+    RotationMatrix(4,5)=sinT
+    RotationMatrix(5,4)=-sinT
+    
+  end function RotationMatrix
+
 
 
 end module Math

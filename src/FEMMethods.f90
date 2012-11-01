@@ -11,7 +11,7 @@ module FemMethods
   !        REAL, intent(out) :: X(len)
   !      end Subroutine GaussSolver
 
-  !      Subroutine PrintMatrix(A,l,b)
+  !      Subroutine PrintMatrix(A)
   !        real, intent(inout) :: A(:,:)
   !        integer , intent(in)::l,b
   !      end Subroutine PrintMatrix
@@ -23,9 +23,7 @@ contains
   !Methoden kalkulerer forsyvnigene til systemet
   !###############################
 
-  subroutine CalcDisplacement(DisplacementVector, Elms,Nodes,Loads,numberOfElm,numberOfNodes,numberOfLoads,errorFlag)
-
-    integer, intent(in) ::  numberOfNodes,numberOfElm,numberOfLoads
+  subroutine DoFEA(DisplacementVector, Elms,Nodes,Loads,errorFlag)
     integer, intent(inout) :: errorFlag
     type (element), intent(inout) :: Elms(:)
     type (node), intent(in):: Nodes(:)
@@ -33,7 +31,7 @@ contains
     real , intent(out) :: DisplacementVector(:)
 
 
-    integer :: status, RGSMLen,i,j, GTRGConverter(DOF*numberOfNodes)
+    integer :: status, RGSMLen,i,j, GTRGConverter(DOF*size(Nodes))
     real , ALLOCATABLE :: GlobalStiffnessMatrix(:,:), LoadVector(:)
 
     if (errorFlag .NE. 0)then
@@ -41,35 +39,38 @@ contains
        return
     end if
 
-    CALL GlobalToRedusedGlobalStiffnessMatrixConverter(GTRGConverter, Nodes, numberOfNodes)
-    RGSMLen = totalDegrees(Nodes,numberOfNodes)
-    allocate (GlobalStiffnessMatrix(RGSMLen,RGSMLen) , LoadVector(RGSMLen), stat=status)
-    if (status .NE. 0)then
-       Errorflag =  status
+    call SetElementProperties(Elms, Nodes)  
+    CALL GlobalToRedusedGlobalStiffnessMatrixConverter(GTRGConverter, Nodes)
+    RGSMLen = TotalDegrees(Nodes)
+    allocate (GlobalStiffnessMatrix(RGSMLen,RGSMLen) , LoadVector(RGSMLen), stat=errorFlag)
+    if (errorFlag .NE. 0)then
        print *, "***Not Enough Memory*** when allocating in CalcDisplacement "
        return
     end if
 
-    do i=1,RGSMLEN
-       do j=1,RGSMLEN
-          GlobalStiffnessMatrix(i,j)=0
-       end do
-       DisplacementVector(i)=0
-       LoadVector(i)=0
-    end do
+    call NullifyRealMatrix(GlobalStiffnessMatrix)
+    call NullifyRealVector(DisplacementVector)
+    call NullifyRealVector(LoadVector)
 
-    call GlobalStiffness(GlobalStiffnessMatrix,Elms,numberOfElm,Nodes,GTRGConverter,errorFlag)
-    call PopulateLoads(LoadVector,Loads,GTRGConverter, numberOfLoads,errorflag)
+    call GlobalStiffness(GlobalStiffnessMatrix,Elms,Nodes,GTRGConverter,errorFlag)
+    call PopulateLoads(LoadVector,Loads,GTRGConverter, errorflag)
     if (pr_switch>4)then
        print * ,''
        print *, '##### GlobalStivhetsmatrise: '
-       call PrintMatrix(GlobalStiffnessMatrix, RGSMLen, RGSMLen)
+       call PrintMatrix(GlobalStiffnessMatrix)
        print *, 'loadvector: ', LoadVector
     end if
 
     call GaussSolver(GlobalStiffnessMatrix,LoadVector,DisplacementVector,RGSMLen,Errorflag)
-    call SetElementForces(Elms, DisplacementVector, GTRGConverter,numberOfElm)
-  end subroutine CalcDisplacement
+
+    if (pr_switch>2)then
+       print * ,''
+       print *, '##### Forskyvninger: '
+       print *,  DisplacementVector
+     end if
+
+    call SetElementForces(Elms, DisplacementVector, GTRGConverter)
+  end subroutine DoFEA
 
 
  !###############################
@@ -84,7 +85,7 @@ contains
     integer::i,j
     real :: ei,ea,l,t1,t2,t3,t4
 
-    forall (i=1:6, j=1:6) LS(i,j)=0
+    call NullifyRealMatrix(LS)
 
     ea=elm%e*Elm%a
     ei=elm%e*elm%i
@@ -124,7 +125,7 @@ contains
 
   !##############################
   !LS LocalStiffnesMatrix er den genererte lokale stivhetsmatrisen
-  !,til element elm, multiplisert med Elementets rotasjonsmatrise
+  !,til element elm, multiplisert med Elementets rotasjonsmatriser CkC^t
   !###############################
 
   subroutine LocalStiffnessWithRotation(LS, elm)
@@ -172,7 +173,10 @@ contains
     LS(1,3)=LS(3,1)
     LS(2,3)=LS(3,2)
     LS(3,3)=t3*4*inertia
-    LS(4,3)=-LS(3,1)
+
+!     LS(4,3)=-LS(3,1)
+    LS(4,3)=t3*((a*s**2)+(t1*s**2))
+
     LS(5,3)=-LS(3,2)
     LS(6,3)=t3*2*inertia
 
@@ -182,7 +186,7 @@ contains
     LS(3,4)=LS(4,3)
     LS(4,4)=LS(1,1)
     LS(5,4)=LS(2,1)
-    LS(6,4)=LS(6,1)
+    LS(6,4)=-LS(6,1)
 
     LS(1,5)=LS(5,1)
     LS(2,5)=LS(5,2)
@@ -199,19 +203,21 @@ contains
     LS(6,6)=LS(3,3)
 
     if ( pr_switch >9 ) then
+      print *, ''
       print *, '###### LocalStiffnessMatrix'
-      call PrintMatrix(LS,6,6)
+      call PrintMatrix(LS)
     end if
 
   end subroutine LocalStiffnessWithRotation
+
 
 
   !###############################
   !En prosedyre som genererer  den reduserte globale stivhetsmatrisen direkte
   !###############################
 
-  subroutine GlobalStiffness(GlobalStiffnessMatrix, Elms,numberOfElm,Nodes,GTRGConverter,errorFlag)
-    integer ,intent(in)::numberOfElm, GTRGConverter(:)
+  subroutine GlobalStiffness(GlobalStiffnessMatrix, Elms,Nodes,GTRGConverter,errorFlag)
+    integer ,intent(in)::GTRGConverter(:)
     type (element), intent(in):: Elms(:)
     type (node), intent(in):: Nodes(:)
     integer ,intent(inout) :: errorFlag
@@ -228,7 +234,7 @@ contains
        return
     end if
 
-    do i = 1, numberOfElm
+    do i = 1, ubound(Elms,1)
        elm = Elms(i)
        call LocalStiffnessWithRotation(LocalStiffnessMatrix,elm)
        ! Hvis GobalMartixConverter (GCM) er null Betyr det at
@@ -248,7 +254,7 @@ contains
        do j=1,6
           do k =1,6
              if ((GMC(k) == 0) .OR. (GMC(j)==0))  cycle
-             GlobalStiffnessMatrix(GMC(k),GMC(j))=GlobalStiffnessMatrix(GMC(k),GMC(j))+LocalStiffnessMatrix(k,j)
+              GlobalStiffnessMatrix(GMC(k),GMC(j))=GlobalStiffnessMatrix(GMC(k),GMC(j))+LocalStiffnessMatrix(k,j)
           end do
        end do
     end do
@@ -260,21 +266,20 @@ contains
   ! Prosedyren populerer Kraftvektoren (LoadVectors)
   !###############################
 
-  subroutine PopulateLoads(LoadVector,Loads,GTRGConverter, numberOfLoads,errorflag)
-    integer, intent(in) :: GTRGConverter(:),numberOfLoads,Errorflag
+  subroutine PopulateLoads(LoadVector,Loads,GTRGConverter,errorflag)
+    integer, intent(in) :: GTRGConverter(:),Errorflag
     type (load), intent(in) :: Loads(:)
     real , intent(out):: LoadVector(:)
 
     integer :: i, globalIndex
-    type (load):: tempLoad
 
     if (Errorflag .LT. 0) return
 
-    do i=1,numberOfLoads
-       tempLoad= Loads(i)
-        print *,tempLoad
-       globalIndex=(tempLoad%nodeNr-1)*3+tempLoad%DOF
-       LoadVector(GTRGConverter(globalIndex))=tempLoad%value
+    do i=1,ubound(Loads, 1)
+       globalIndex=(Loads(i)%nodeNr-1)*3+Loads(i)%DOF
+       globalIndex= GTRGConverter(globalIndex)
+       if (globalIndex==0) cycle
+       LoadVector(globalIndex)=Loads(i)%value
     end do
 
     if (pr_switch>5)then
@@ -286,30 +291,40 @@ contains
 
 
 
+
   !###############################
   ! Genererer en konverteringsmatrise som konverterer fra den globalestivhetsmatrisen til den reduserte globalestivhetsmatrisen.
   ! Den reduserte globlaestivhetsmatrisen er alle grensebetingelser tatt i be
   !###############################
 
-  Subroutine GlobalToRedusedGlobalStiffnessMatrixConverter(GTRGConverter,Nodes, numberOfNodes)
+  Subroutine GlobalToRedusedGlobalStiffnessMatrixConverter(GTRGConverter,Nodes)
     type (node), intent(in):: Nodes(:)
-    integer ,intent(in)::numberOfNodes
-    integer ,intent(out) :: GTRGConverter(numberOfNodes*3)
+
+    integer ,intent(out) :: GTRGConverter(size(Nodes)*3)
 
     integer ::i,j,globalIndex,redusedIndex
 
     globalIndex=1
     redusedIndex=1
-    do i=1,numberOfNodes
+    do i=1,ubound(Nodes, dim=1)
        do j=1,3
           if (Nodes(i)%GDOF(j) .NE. 0)then
              GTRGConverter(globalIndex)=redusedIndex
              redusedIndex=redusedIndex+1
+          else
+             GTRGConverter(globalIndex)=0
           end if
           globalIndex=globalIndex+1
        end do
     end do
+
+    if(pr_switch>7)then
+      print *,''
+      print *, 'Global til redusert globalestivhetsmatrise konvertor:'
+      print *, GTRGConverter
+    end if 
   end Subroutine GlobalToRedusedGlobalStiffnessMatrixConverter
+
 
 
 
@@ -317,19 +332,20 @@ contains
     ! Kalkulerer hvor mange grader av frihet alle nodene har tilsammen
     !###############################
 
-  integer Function totalDegrees(Nodes, numberOfNodes)
+  integer Function totalDegrees(Nodes)
     type (node), intent(in):: Nodes(:)
-    integer ,intent(in)::numberOfNodes
 
     integer ::i,j
 
     totalDegrees=0
-    do i=1,numberOfNodes
+    do i=1,ubound(Nodes,1)
        do j=1,3
           totalDegrees = totalDegrees+Nodes(i)%GDOF(j)
        end do
     end do
   end Function totalDegrees
+
+
 
 
   !###############################
@@ -338,38 +354,47 @@ contains
 
   Subroutine LoadsOnElement(ElementLoadVector,elm, ElementDisplacementVector)
     real, intent(in) :: ElementDisplacementVector(:) 
-    type (element), intent(in) :: elm
+    type (element), intent(inout) :: elm
     real, intent(out):: ElementLoadVector(:) 
     
-    real :: LocalStiffness (DOF*2,DOF*2)
+    real :: LocalStiffnessMatrix(DOF*2,DOF*2), ElmsRotationMatrix(6,6)
 
-    call LocalStiffnessWithRotation(LocalStiffness, elm)
-    ElementLoadVector = matmul(LocalStiffness, ElementDisplacementVector)
+    ElmsRotationMatrix=RotationMatrix(elm%cosT,elm%sinT)
+
+    call LocalStiffness(LocalStiffnessMatrix, elm)
+    ElementLoadVector = matmul(ElmsRotationMatrix, ElementDisplacementVector)
+    ElementLoadVector = matmul(LocalStiffnessMatrix, ElementLoadVector)
+
+
   end Subroutine LoadsOnElement
 
 
+
+
   !###############################
-  ! Prosedyren kalkulerer kreftene til alle elementet ut i fra forskyvningene
+  ! Prosedyren kalkulerer kreftene på alle elementet ut i fra forskyvningene
   !###############################
 
-  Subroutine SetElementForces(Elms, DisplacementVector, GTRGConverter,numberOfElm)
+  Subroutine SetElementForces(Elms, DisplacementVector, GTRGConverter)
     type (element), intent(inout) :: Elms(:)
     real, intent(in) ::  DisplacementVector(:)
-    integer , intent(in) :: GTRGConverter(:), numberOfElm
+    integer , intent(in) :: GTRGConverter(:)
 
     integer :: i,j
     real ::  ElementDisplacementVector(DOF*2)
 
-    type (element) :: elm
 
-    do i =1,numberOfElm
-      elm = Elms(i)
+    do i =1,size(Elms)
        do j=1,DOF
-          ElementDisplacementVector(j)=DisplacementVector(GTRGConverter(((elm%node1-1)*DOF) +j))
-          ElementDisplacementVector(j+3)=DisplacementVector(GTRGConverter(((elm%node2-1)*DOF) +j) )
+          ElementDisplacementVector(j)=DisplacementVector(GTRGConverter(((Elms(i)%node1-1)*DOF) +j))
+          ElementDisplacementVector(j+3)=DisplacementVector(GTRGConverter(((Elms(i)%node2-1)*DOF) +j) )
        end do
-      call LoadsOnElement(elm%ForceVector, elm, ElementDisplacementVector )
-      print *, (elm%ForceVector(j), j=1,6)
+      call LoadsOnElement(Elms(i)%ForceVector, Elms(i), ElementDisplacementVector )
+      if(pr_switch>5)then
+        print * ,''
+        print *,'Krefter på element nr : ', i
+        print *, Elms(i)%ForceVector
+      end if
     end do
     
   end Subroutine SetElementForces
@@ -381,22 +406,22 @@ contains
   ! Prosedyren populerer verdiene til elementene
   !###############################
 
-  subroutine SetElementProperties(Elms, Nodes, numberOfElm)
+  subroutine SetElementProperties(Elms, Nodes)
   
     type (element), intent(inout) :: Elms(:)
     type (node) , intent(in) :: Nodes(:)
-    integer, intent(in)  :: numberOfElm
 
     integer :: n
-    real :: length, dx,dy
+    real :: x1,x2,y1,y2
 
-    do n=1,numberOfElm
-      dx = Nodes(Elms(n)%node2)%x-Nodes(Elms(n)%node1)%x
-      dy = Nodes(Elms(n)%node2)%y-Nodes(Elms(n)%node1)%y
-      length=sqrt(dx**2+dy**2)
-      Elms(n)%cosT=(dx)/length
-      Elms(n)%sinT=(dy)/length
-      print *, Elms(n)%cosT,  Elms(n)%sinT
+    do n=1,ubound(Elms,1)
+      x2 = Nodes(Elms(n)%node2)%x
+      x1=Nodes(Elms(n)%node1)%x
+      y2 = Nodes(Elms(n)%node2)%y
+      y1= Nodes(Elms(n)%node1)%y
+      Elms(n)%l=LengthBetweenPoints(x1,y1,x2,y2)
+      Elms(n)%cosT=(x2-x1)/Elms(n)%l
+      Elms(n)%sinT=(y2-y1)/Elms(n)%l
     end do
   end subroutine SetElementProperties
 
