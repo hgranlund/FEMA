@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"sw",
+				"swapAB"
+			],
+			[
+				"swap",
+				"swapRow"
+			],
+			[
+				"su",
+				"subroutine"
+			],
+			[
 				"gl",
 				"globalIndex"
 			],
@@ -160,10 +172,6 @@
 				"sinT"
 			],
 			[
-				"su",
-				"sub	subroutine"
-			],
-			[
 				"Lo",
 				"LoadsOnNodes"
 			],
@@ -263,7 +271,7 @@
 			"file": "FEMMethods.f90",
 			"settings":
 			{
-				"buffer_size": 11816,
+				"buffer_size": 14553,
 				"line_ending": "Unix"
 			}
 		},
@@ -271,7 +279,7 @@
 			"file": "FEMUtility.f90",
 			"settings":
 			{
-				"buffer_size": 1303,
+				"buffer_size": 1951,
 				"line_ending": "Unix"
 			}
 		},
@@ -279,7 +287,7 @@
 			"file": "FEM.f90",
 			"settings":
 			{
-				"buffer_size": 2487,
+				"buffer_size": 2920,
 				"line_ending": "Unix"
 			}
 		},
@@ -287,7 +295,7 @@
 			"file": "/home/simenhg/workspace/FEMA/README.md",
 			"settings":
 			{
-				"buffer_size": 524,
+				"buffer_size": 0,
 				"line_ending": "Unix"
 			}
 		},
@@ -295,7 +303,7 @@
 			"file": "/home/simenhg/workspace/FEMA/todo.md",
 			"settings":
 			{
-				"buffer_size": 445,
+				"buffer_size": 0,
 				"line_ending": "Unix"
 			}
 		},
@@ -320,7 +328,7 @@
 			"file": "FEMTypes.f90",
 			"settings":
 			{
-				"buffer_size": 490,
+				"buffer_size": 674,
 				"line_ending": "Unix"
 			}
 		},
@@ -336,7 +344,7 @@
 			"file": "math.f90",
 			"settings":
 			{
-				"buffer_size": 4257,
+				"buffer_size": 5368,
 				"line_ending": "Unix"
 			}
 		},
@@ -344,7 +352,7 @@
 			"file": "/home/simenhg/workspace/FEMA/axbsolver.py",
 			"settings":
 			{
-				"buffer_size": 3863,
+				"buffer_size": 0,
 				"line_ending": "Unix"
 			}
 		}
@@ -507,7 +515,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 93.0,
+		"height": 0.0,
 		"where_history":
 		[
 			""
@@ -518,6 +526,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"#",
+			"int",
+			"len",
+			"temp",
 			")\n",
 			"globalIndex",
 			"GTRGConverter",
@@ -614,24 +626,15 @@
 					"file": "FEMMethods.f90",
 					"settings":
 					{
-						"buffer_size": 11816,
+						"buffer_size": 14553,
 						"regions":
 						{
-							"bookmarks":
-							{
-								"flags": 144,
-								"icon": "bookmark",
-								"regions":
-								[
-								],
-								"scope": "bookmarks"
-							}
 						},
 						"selection":
 						[
 							[
-								10162,
-								10162
+								42,
+								42
 							]
 						],
 						"settings":
@@ -641,7 +644,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 5038.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -651,15 +654,15 @@
 					"file": "FEMUtility.f90",
 					"settings":
 					{
-						"buffer_size": 1303,
+						"buffer_size": 1951,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1239,
-								1239
+								1462,
+								1462
 							]
 						],
 						"settings":
@@ -669,7 +672,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 45.0,
+						"translation.y": 1224.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -679,15 +682,15 @@
 					"file": "FEM.f90",
 					"settings":
 					{
-						"buffer_size": 2487,
+						"buffer_size": 2920,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1033,
-								1033
+								2245,
+								2245
 							]
 						],
 						"settings":
@@ -697,7 +700,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 90.0,
+						"translation.y": 221.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -707,15 +710,15 @@
 					"file": "/home/simenhg/workspace/FEMA/README.md",
 					"settings":
 					{
-						"buffer_size": 524,
+						"buffer_size": 0,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								414,
-								414
+								0,
+								0
 							]
 						],
 						"settings":
@@ -739,15 +742,15 @@
 					"file": "/home/simenhg/workspace/FEMA/todo.md",
 					"settings":
 					{
-						"buffer_size": 445,
+						"buffer_size": 0,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								443,
-								443
+								0,
+								0
 							]
 						],
 						"settings":
@@ -798,8 +801,8 @@
 						"selection":
 						[
 							[
-								115,
-								115
+								62,
+								62
 							]
 						],
 						"settings":
@@ -818,15 +821,15 @@
 					"file": "FEMTypes.f90",
 					"settings":
 					{
-						"buffer_size": 490,
+						"buffer_size": 674,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								427,
-								427
+								674,
+								674
 							]
 						],
 						"settings":
@@ -874,15 +877,15 @@
 					"file": "math.f90",
 					"settings":
 					{
-						"buffer_size": 4257,
+						"buffer_size": 5368,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3544,
-								3544
+								5363,
+								5363
 							]
 						],
 						"settings":
@@ -892,7 +895,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1710.0,
+						"translation.y": 3621.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -902,15 +905,15 @@
 					"file": "/home/simenhg/workspace/FEMA/axbsolver.py",
 					"settings":
 					{
-						"buffer_size": 3863,
+						"buffer_size": 0,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1441,
-								1441
+								0,
+								0
 							]
 						],
 						"settings":
@@ -920,7 +923,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 630.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -956,7 +959,7 @@
 		"cols":
 		[
 			0.0,
-			0.5,
+			0.521875,
 			1.0
 		],
 		"rows":
@@ -986,7 +989,11 @@
 		[
 			[
 				"",
-				"/home/simenhg/workspace/FEMA/src/FEMMethods.f90"
+				"/home/simenhg/github/FEMA/src/FEMUtility.f90"
+			],
+			[
+				"frm",
+				"/home/simenhg/github/FEMA/src/FEMTypes.f90"
 			]
 		],
 		"width": 0.0

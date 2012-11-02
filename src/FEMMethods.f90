@@ -1,6 +1,6 @@
 module FemMethods
   use FEMTypes
-  use Math
+  use FEMMath
   implicit none
 
 !   interface 
@@ -69,6 +69,9 @@ contains
 
   !###############################
   !Methoden kalkulerer forsyvnigene til systemet
+  !
+  ! Author: Simen Haugerud Granlund
+  ! Date/version: 02-11-12/ 1.0
   !###############################
 
   subroutine DoFEA(DisplacementVector, Elms,Nodes,Loads,errorFlag)
@@ -124,6 +127,9 @@ contains
   !###############################
   !LS LocalStiffnesMatrix er den genererte lokale stivhetsmatrisen
   !Elm er elementet i fokus
+  !
+  ! Author: Simen Haugerud Granlund
+  ! Date/version: 02-11-12/ 1.0
   !###############################
 
   subroutine LocalStiffness(LS, Elm)
@@ -176,6 +182,9 @@ contains
   !##############################
   !LS LocalStiffnesMatrix er den genererte lokale stivhetsmatrisen
   !,til element elm, multiplisert med Elementets rotasjonsmatriser CkC^t
+  !
+  ! Author: Simen Haugerud Granlund
+  ! Date/version: 02-11-12/ 1.0
   !###############################
 
   subroutine LocalStiffnessWithRotation(LS, elm)
@@ -264,6 +273,9 @@ contains
 
   !###############################
   !En prosedyre som genererer  den reduserte globale stivhetsmatrisen direkte
+  !
+  ! Author: Simen Haugerud Granlund
+  ! Date/version: 02-11-12/ 1.0
   !###############################
 
   subroutine GlobalStiffness(GlobalStiffnessMatrix, Elms,Nodes,GTRGConverter,errorFlag)
@@ -314,6 +326,9 @@ contains
 
   !###############################
   ! Prosedyren populerer Kraftvektoren (LoadVectors)
+  !
+  ! Author: Simen Haugerud Granlund
+  ! Date/version: 02-11-12/ 1.0
   !###############################
 
   subroutine PopulateLoads(LoadVector,Loads,GTRGConverter,errorflag)
@@ -345,6 +360,9 @@ contains
   !###############################
   ! Genererer en konverteringsmatrise som konverterer fra den globalestivhetsmatrisen til den reduserte globalestivhetsmatrisen.
   ! Den reduserte globlaestivhetsmatrisen er alle grensebetingelser tatt i be
+  !
+  ! Author: Simen Haugerud Granlund
+  ! Date/version: 02-11-12/ 1.0
   !###############################
 
   Subroutine GlobalToRedusedGlobalStiffnessMatrixConverter(GTRGConverter,Nodes)
@@ -380,6 +398,9 @@ contains
 
   !###############################
   ! Kalkulerer hvor mange grader av frihet alle nodene har tilsammen
+  !
+  ! Author: Simen Haugerud Granlund
+  ! Date/version: 02-11-12/ 1.0
   !###############################
 
   integer Function totalDegrees(Nodes)
@@ -400,6 +421,9 @@ contains
 
   !###############################
   ! Prosedyren kalkulerer kreftene til elementet ut i fra forskyvningene
+  !
+  ! Author: Simen Haugerud Granlund
+  ! Date/version: 02-11-12/ 1.0
   !###############################
 
   Subroutine LoadsOnElement(ElementLoadVector,elm, ElementDisplacementVector)
@@ -421,6 +445,9 @@ contains
 
   !###############################
   ! Prosedyren kalkulerer kreftene på alle elementet ut i fra forskyvningene
+  !
+  ! Author: Simen Haugerud Granlund
+  ! Date/version: 02-11-12/ 1.0
   !###############################
 
   Subroutine SetElementForces(Elms, DisplacementVector, GTRGConverter)
@@ -452,6 +479,9 @@ contains
 
   !###############################
   ! Prosedyren populerer verdiene til elementene
+  !
+  ! Author: Simen Haugerud Granlund
+  ! Date/version: 02-11-12/ 1.0
   !###############################
 
   subroutine SetElementProperties(Elms, Nodes)

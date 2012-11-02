@@ -1,6 +1,6 @@
 
 
-module Math
+module FEMMath
   use FEMUtility
   implicit none
 !   interface 
@@ -39,7 +39,7 @@ contains
   ! Gauss elimination with partial pivoting
   !
   ! Author: Simen Haugerud Granlund
-  ! Date/version: 2/
+  ! Date/version: 02-11-12/ 1.0
   !###############################
 
   subroutine GaussSolver(A,B,X,len,errorFlag)
@@ -97,7 +97,10 @@ contains
 
 
   !###############################
-  ! tilbake substitusjon
+  ! Tilbake substitusjon
+  !
+  ! Author: Simen Haugerud Granlund
+  ! Date/version: 02-11-12/ 1.0
   !###############################
 
   subroutine BackwardSubstitution(A,B,X,len ,errorFlag)
@@ -127,6 +130,9 @@ contains
 
   !###############################
   ! Funksjonen retunerer vinklen (rad) mellom x-aksen og linjen som er definert av punktene (x1,y1) og (x2,y2)
+  !
+  ! Author: Simen Haugerud Granlund
+  ! Date/version: 02-11-12/ 1.0
   !###############################
 
   real  function  AngelFromPoints(x1,y1,x2,y2)
@@ -142,6 +148,9 @@ contains
 
   !###############################
   ! Funksjonen retunerer lengden til linjen som er definert av punktene (x1,y1) og (x2,y2)
+  !
+  ! Author: Simen Haugerud Granlund
+  ! Date/version: 02-11-12/ 1.0
   !###############################
 
   real  function  LengthBetweenPoints(x1,y1,x2,y2)
@@ -156,6 +165,9 @@ contains
 
   !###############################
   ! Retunerer rotasjonsmatrisen med 6 frihetsgrader 
+  !
+  ! Author: Simen Haugerud Granlund
+  ! Date/version: 02-11-12/ 1.0
   !###############################
 
   function RotationMatrix(cosT,sinT)
@@ -184,6 +196,9 @@ contains
 
   !###############################
   ! swapRow bytter rad r1 med r2 i matrisen A og vector B
+  !
+  ! Author: Simen Haugerud Granlund
+  ! Date/version: 02-11-12/ 1.0
   !###############################
 
   subroutine swapAB(A,B,r1,r2)
@@ -198,4 +213,4 @@ contains
     B(r1)=swapB
   end subroutine swapAB
 
-end module Math
+end module FEMMath
