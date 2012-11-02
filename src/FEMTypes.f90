@@ -1,24 +1,21 @@
 
   module FEMTypes
+  use FEMUtility
     implicit none
-    
-    ! pr_switch brukes til å bestemme hva som skal printes ut. 
-    ! DOF= Degrace of freedom/node
+    integer , parameter ::  DOF=3 !     ! DOF= Degrace of freedom. Maksimalt antall frihaetsgrader per node
 
-    integer , parameter :: pr_switch=10, DOF=3
-
-    type :: element
-       real :: e,a,i,l
-       integer :: node1, node2
+    type  element
+       real :: e,a,i,l, cosT , sinT, ForceVector(DOF*2)
+       integer :: node1, node2 
     end type element
 
-    type :: node 
+    type  node 
        real :: x,y
        integer :: GDOF(DOF)
     end type node
      
-    type :: load
-       integer :: nodeNr, dof
+    type  load
+      integer :: nodeNr, DOF
        real :: value
     end type load
 

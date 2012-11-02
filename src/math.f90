@@ -1,44 +1,67 @@
 
-! Gauss elimination with partial pivoting
 
 module Math
- 
+  use FEMUtility
   implicit none
+!   interface 
+!      subroutine GaussSolver(A,B,X,len, errorFlag) 
+!        integer, intent(in) :: len
+!        integer, intent(inout) :: errorFlag
+!        real, intent(inout)  :: A(len,len), B(len)
+!        REAL, intent(out) :: X(len)
+!      end Subroutine GaussSolver
+
+!      subroutine BackwardSubstitution(A,B,X,len ,errorFlag)
+!        integer, intent(in) :: len
+!        integer, intent(inout) :: errorFlag
+!        real, intent(inout)  :: A(len,len), B(len)
+!        REAL, intent(out) :: X(len)
+!      end Subroutine BackwardSubstitution
+
+!      real  function  AngelFromPoints(x1,y1,x2,y2)
+!        real, intent(in)::x1,y1,x2,y2
+!      end function AngelFromPoints
+
+!      real  function  LengthBetweenPoints(x1,y1,x2,y2)
+!        real, intent(in)::x1,y1,x2,y2
+!      end function LengthBetweenPoints
+
+!      function RotationMatrix(cosT,sinT)
+!        real, intent(in) :: cosT, sinT 
+!      end function RotationMatrix
 
 
+
+!   end interface
 
 contains
 
-  subroutine GaussSolver(A,B,X,len, errorFlag) 
-!=====================================================================================
-    ! Task: Denne kjører en direkte gauss eliminasjon på matrisen A
-    ! - input:
-    ! - Ax=B
-    ! output: 
-    ! - A er den reduserte matrisen
-    ! - X er løsningen
-!===================================================================================
 
+  !###############################
+  ! Gauss elimination with partial pivoting
+  !###############################
+
+  subroutine GaussSolver(A,B,X,len,errorFlag)
     integer, intent(in) :: len
     integer, intent(inout) :: errorFlag
     real, intent(inout)  :: A(len,len), B(len)
     REAL, intent(out) :: X(len)
-
     integer i,j,k
-    REAL tmp, lower_sigular_value, temp , pr_switch
-    parameter (lower_sigular_value=1.0E-09)
-   
-    pr_switch =5
+    integer,parameter :: dp = selected_real_kind(15, 307)
+    REAL  temp , akk, pr_switch
+
+
+    pr_switch =0
     if (errorFlag < 0) return
-    
+
     do k=1, len-1 ! rad operasjoner, totalt len-1 operasjoner
 
        do i=k+1 ,len
           IF ( (ABS(A(I,k))-abs(A(k,k))).gt. 0) then   ! swapper rader slik at jeg får størst ...
              do j=k, len                               ! mulig pivot -- da slipper vi divisjon...
-                 temp=A(k,j)                       ! med unødvendig små tall
+                temp=A(k,j)                       ! med unødvendig små tall
                 A(k,j)=A(i,j)
-               A(i,j)=temp
+                A(i,j)=temp
              end do
              temp=B(k)
              B(k)=B(i)
@@ -47,78 +70,134 @@ contains
        end do
 
        if (pr_switch>5) then
+          print * ,''
           print *, 'Matrisen etter swap, iterasjon...: ' , k 
-          call PrintMatrix(A,len,len)
+          call PrintMatrix(A)
+          print *, B
+
        end if
 
        ! Tester om matrisen er singulær
-       if (abs(A(k,k))< lower_sigular_value) THEN
+       if (abs(A(k,k))< epsilon(A(k,k))) THEN
           print *, 'Matrisen er singulær'
           errorFlag = -5
           return
        end if
        ! utfører radoperasjoner
        do  i= k+1, len
-          if (a(i,i) .NE. 0) then
-             do j= len, k, -1                     
-                !             a(i,j) = a(i,j)* a(k,k) / a(i,k) - a(k,j)
-                A(i,j) =  A(i,j)- A(i,k)/A(k,k)*A(k,j)
-             end do
-             B(i)=B(i)- A(i,k)/A(k,k)*B(k)
-          else
-             print *,' Det finnes ingen unik løsning '
-             errorFlag=5
-          end if
+          akk=A(k,k)
+
+          do j= k+1, len, 1                     
+
+             A(i,j) =  A(i,j)- A(k,j)*(A(i,k)/akk)
+          end do
+          B(i)=B(i)- A(i,k)*B(k)/A(k,k)
+          A(i,k) =0 
        end do
        if (pr_switch>5)then 
+          print *, ''
           print *, 'readoberasjon nummber ......: ' , k
-          call PrintMatrix(A,len,len)
+          call PrintMatrix(A)
+          print *, B
+
        end if
     end do
 
+    call BackwardSubstitution(A,B,X,len,errorFlag)
+  end subroutine GaussSolver
 
-    ! tilbake substitusjon
-    X(len)=A(len,len+1)/A(len,len)
-    if (abs(A(k,k)) == 0) THEN
-       print *, 'Matrisen har ikke en unik løsing'
-       errorFlag = 5
-    end if
 
-    do k =len-1 , 1, -1
+  !###############################
+  ! tilbake substitusjon
+  !###############################
+
+  subroutine BackwardSubstitution(A,B,X,len ,errorFlag)
+    integer, intent(in) :: len
+    integer, intent(inout) :: errorFlag
+    real, intent(inout)  :: A(len,len), B(len)
+    REAL, intent(out) :: X(len)
+
+    integer :: j,k
+    real :: tmp
+
+    do k =len , 1, -1
        tmp = 0.0d0
        do j = k+1, len
           tmp = tmp + A(k,j)*X(j)
        end do
        X(k)=(B(k)-tmp)/A(k,k)
+
+       if (abs(A(k,k)) == 0) THEN
+          print *, ''
+          print *, 'Matrisen har ikke en unik løsing'
+          errorFlag = 5
+          x(k)=1 !om det ikke finnes en unik løsning setter jeg x = 1
+       end if
     end do
     if (pr_switch >2)then
+       print *, ''
        print *, 'Matrisen etter gauss eliminisjon:'
-       call PrintMatrix(A,len,len)
+       call PrintMatrix(A)
        print *, 'b matrix: ', B
     end if
-  end subroutine GaussSolver
+  end subroutine BackwardSubstitution
+
+
+  !###############################
+  ! Funksjonen retunerer vinklen (rad) mellom x-aksen og linjen som er definert av punktene (x1,y1) og (x2,y2)
+  !###############################
 
   real  function  AngelFromPoints(x1,y1,x2,y2)
     real, intent(in)::x1,y1,x2,y2
 
     real :: dx,dy
+
     dx=x2-x1
     dy=y2-y1
     AngelFromPoints = atan(dy/dx)
   end function AngelFromPoints
-    
-   Subroutine PrintMatrix(A,l,b)
-    real, intent(inout) :: A(:,:)
-    integer , intent(in)::l,b
-    integer i,j
 
-    print * , ' #######################################'
-    do i=1,l
-       print *,(A(i,j)/66670, j=1,b)
-    end do
-    print *, '####################################### '
-    print *,''
-  end Subroutine PrintMatrix
+
+  !###############################
+  ! Funksjonen retunerer lengden til linjen som er definert av punktene (x1,y1) og (x2,y2)
+  !###############################
+
+  real  function  LengthBetweenPoints(x1,y1,x2,y2)
+    real, intent(in)::x1,y1,x2,y2
+
+    real :: dx,dy
+
+    dx=x2-x1
+    dy=y2-y1
+    LengthBetweenPoints = sqrt(dx**2+dy**2)
+  end function LengthBetweenPoints
+
+  !###############################
+  ! Retunerer rotasjonsmatrisen med 6 frihetsgrader 
+  !###############################
+
+  function RotationMatrix(cosT,sinT)
+    real, intent(in) :: cosT, sinT 
+
+    real :: RotationMatrix(6,6)
+
+    call NullifyRealMatrix(RotationMatrix)
+
+    RotationMatrix(3,3)=1
+    RotationMatrix(6,6)=1
+
+    RotationMatrix(1,1)=cosT
+    RotationMatrix(2,2)=cosT
+    RotationMatrix(4,4)=cosT
+    RotationMatrix(5,5)=cosT
+
+    RotationMatrix(1,2)=sinT
+    RotationMatrix(2,1)=-sinT
+    RotationMatrix(4,5)=sinT
+    RotationMatrix(5,4)=-sinT
+
+  end function RotationMatrix
+
 
 
 end module Math
