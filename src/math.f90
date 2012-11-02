@@ -29,16 +29,17 @@ module Math
 !      function RotationMatrix(cosT,sinT)
 !        real, intent(in) :: cosT, sinT 
 !      end function RotationMatrix
-
-
-
 !   end interface
+
 
 contains
 
 
   !###############################
   ! Gauss elimination with partial pivoting
+  !
+  ! Author: Simen Haugerud Granlund
+  ! Date/version: 2/
   !###############################
 
   subroutine GaussSolver(A,B,X,len,errorFlag)
@@ -47,25 +48,15 @@ contains
     real, intent(inout)  :: A(len,len), B(len)
     REAL, intent(out) :: X(len)
     integer i,j,k
-    integer,parameter :: dp = selected_real_kind(15, 307)
-    REAL  temp , akk, pr_switch
+    REAL  :: akk
 
 
-    pr_switch =0
     if (errorFlag < 0) return
 
-    do k=1, len-1 ! rad operasjoner, totalt len-1 operasjoner
-
+    do k=1, len-1
        do i=k+1 ,len
-          IF ( (ABS(A(I,k))-abs(A(k,k))).gt. 0) then   ! swapper rader slik at jeg får størst ...
-             do j=k, len                               ! mulig pivot -- da slipper vi divisjon...
-                temp=A(k,j)                       ! med unødvendig små tall
-                A(k,j)=A(i,j)
-                A(i,j)=temp
-             end do
-             temp=B(k)
-             B(k)=B(i)
-             B(i)=temp
+          IF ( (ABS(A(I,k))-abs(A(k,k))).gt. 0) then   
+                call swapAB(A,B,k,i)
           end if
        end do
 
@@ -83,27 +74,25 @@ contains
           errorFlag = -5
           return
        end if
+
        ! utfører radoperasjoner
        do  i= k+1, len
           akk=A(k,k)
-
           do j= k+1, len, 1                     
-
              A(i,j) =  A(i,j)- A(k,j)*(A(i,k)/akk)
           end do
           B(i)=B(i)- A(i,k)*B(k)/A(k,k)
           A(i,k) =0 
        end do
-       if (pr_switch>5)then 
-          print *, ''
-          print *, 'readoberasjon nummber ......: ' , k
-          call PrintMatrix(A)
-          print *, B
-
-       end if
     end do
 
     call BackwardSubstitution(A,B,X,len,errorFlag)
+    if (pr_switch >2)then
+       print *, ''
+       print *, 'Matrisen A etter gauss eliminisjon:'
+       call PrintMatrix(A)
+       print *, 'B matrix: ', B
+    end if
   end subroutine GaussSolver
 
 
@@ -126,7 +115,6 @@ contains
           tmp = tmp + A(k,j)*X(j)
        end do
        X(k)=(B(k)-tmp)/A(k,k)
-
        if (abs(A(k,k)) == 0) THEN
           print *, ''
           print *, 'Matrisen har ikke en unik løsing'
@@ -134,12 +122,6 @@ contains
           x(k)=1 !om det ikke finnes en unik løsning setter jeg x = 1
        end if
     end do
-    if (pr_switch >2)then
-       print *, ''
-       print *, 'Matrisen etter gauss eliminisjon:'
-       call PrintMatrix(A)
-       print *, 'b matrix: ', B
-    end if
   end subroutine BackwardSubstitution
 
 
@@ -199,5 +181,21 @@ contains
   end function RotationMatrix
 
 
+
+  !###############################
+  ! swapRow bytter rad r1 med r2 i matrisen A og vector B
+  !###############################
+
+  subroutine swapAB(A,B,r1,r2)
+    real, intent(inout) :: A(:,:), B(:)
+    integer, intent(in) :: r1,r2
+
+    real :: swapA(size(A, 1)), swapB
+
+    call swapRow(A,r1,r2)
+    swapB=B(r1)
+    B(r1)=B(r2)
+    B(r1)=swapB
+  end subroutine swapAB
 
 end module Math

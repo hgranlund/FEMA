@@ -3,78 +3,23 @@
 	{
 		"selected_items":
 		[
-			[
-				"B",
-				"BackwardSubstitution"
-			],
-			[
-				"sub",
-				"sub	subroutine"
-			],
-			[
-				"su",
-				"Subroutine"
-			],
-			[
-				"b",
-				"backwardSubstitution"
-			],
-			[
-				"eps",
-				"epsilon"
-			],
-			[
-				"then",
-				"then"
-			],
-			[
-				"cl",
-				"closeToZeroBug"
-			],
-			[
-				"num",
-				"number"
-			],
-			[
-				"f",
-				"fun	function"
-			],
-			[
-				"Loa",
-				"LoadVector"
-			],
-			[
-				"if",
-				"if	if (single line)"
-			],
-			[
-				"prin",
-				"PrintMatrix"
-			],
-			[
-				"Loc",
-				"LocalStiffnessMatrix"
-			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "src/FEMMethods.f90",
+			"file": "src/FEMTypes.f90",
 			"settings":
 			{
-				"buffer_size": 8162,
+				"buffer_size": 484,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "\n  module FEMTypes\n    implicit none\n    \n    ! pr_switch brukes til å bestemme hva som skal printes ut. \n    ! DOF= Degrace of freedom/node\n\n    integer , parameter :: pr_switch=5, DOF=3\n\n    type :: element\n       real :: e,a,i,l\n       integer :: node1, node2\n    end type element\n\n    type :: node \n       real :: x,y\n       \n       integer :: GDOF(DOF)\n    end type node\n     \n    type :: load\n       integer :: nodeNr, dof\n       real :: value\n    end type load\n\n  end module FEMTypes\n",
-			"file": "src/FEMTypes.f90",
-			"file_size": 484,
-			"file_write_time": 1351469783000000,
+			"file": "src/inputEasy.dat",
 			"settings":
 			{
-				"buffer_size": 491,
+				"buffer_size": 116,
 				"line_ending": "Unix"
 			}
 		},
@@ -82,26 +27,23 @@
 			"file": "src/FEM.f90",
 			"settings":
 			{
-				"buffer_size": 1700,
+				"buffer_size": 1730,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "\n! Gauss elimination with partial pivoting\n\nmodule Math\n \n  implicit none\n  real :: epsilon   \n  parameter (epsilon=1.0E-07)\n\n\ncontains\n\n  subroutine GaussSolver(A,B,X,len, errorFlag) \n!=====================================================================================\n    ! Task: Denne kjører en direkte gauss løser på matrisen A\n    ! - input:\n    ! - Ax=B\n    ! output: \n    ! - A er den reduserte matrisen\n    ! - X er løsningen\n!===================================================================================\n\n    integer, intent(in) :: len\n    integer, intent(inout) :: errorFlag\n    real, intent(inout)  :: A(len,len), B(len)\n    REAL, intent(out) :: X(len)\n\n    integer i,j,k\n    REAL tmp, temp , pr_switch\n\n   \n    pr_switch =10\n    if (errorFlag < 0) return\n    \n    do k=1, len-1 ! rad operasjoner, totalt len-1 operasjoner\n\n       do i=k+1 ,len\n          IF ( (ABS(A(I,k))-abs(A(k,k))).gt. 0) then   ! swapper rader slik at jeg får størst ...\n             do j=k, len                               ! mulig pivot -- da slipper vi divisjon...\n                 temp=A(k,j)                       ! med unødvendig små tall\n                A(k,j)=A(i,j)\n               A(i,j)=temp\n             end do\n             temp=B(k)\n             B(k)=B(i)\n             B(i)=temp\n          end if\n       end do\n\n       if (pr_switch>5) then\n          print *, 'Matrisen etter swap, iterasjon...: ' , k \n          call PrintMatrix(A,len,len)\n          print *, B\n\n       end if\n\n       ! Tester om matrisen er singulær\n       if (abs(A(k,k))< epsilon) THEN\n          print *, 'Matrisen er singulær'\n          errorFlag = -5\n          return\n       end if\n       ! utfører radoperasjoner\n       do  i= k+1, len\n          if (a(k,k) .NE. 0) then\n             do j= len, k, -1                     \n                !             a(i,j) = a(i,j)* a(k,k) / a(i,k) - a(k,j)\n                if (k == 4) then \n                  print *, 'her' ,i,j , A(i,j), A(i,k),A(k,j),A(k,k)\n                end if\n                A(i,j) =  A(i,j)- A(i,k)*A(k,j)/A(k,k)\n                if ( closeToZeroBug(A(i,j)) ) then\n                  if (A(i,j) .ne. 0)then\n                    print *, 'aaaaaaaa a',A(i,j)\n                  end if\n                  A(i,j) =0 \n                end if\n             end do\n             B(i)=B(i)- A(i,k)*B(k)/A(k,k)\n             if ( closeToZeroBug(B(i)) ) B(i) =0 \n          end if\n       end do\n       if (pr_switch>5)then \n          print *, 'readoberasjon nummber ......: ' , k\n          call PrintMatrix(A,len,len)\n          print *, B\n\n       end if\n    end do\n    call BackwardSubstitution(A,B,X,len,errorFlag)\n  end subroutine GaussSolver\n\n\n    ! tilbake substitusjon\n  subroutine BackwardSubstitution(A,B,X,len ,errorFlag)\n    integer, intent(in) :: len\n    integer, intent(inout) :: errorFlag\n    real, intent(inout)  :: A(len,len), B(len)\n    REAL, intent(out) :: X(len)\n\n\n    X(len)=B(len)/A(len,len)\n\n    do k =len-1 , 1, -1\n      if (abs(A(k,k)) == 0) THEN\n         print *, 'Matrisen har ikke en unik løsing'\n         errorFlag = 5\n      end if\n      tmp = 0.0d0\n      do j = k+1, len\n          tmp = tmp + A(k,j)*X(j)\n       end do\n       X(k)=(B(k)-tmp)/A(k,k)\n    end do\n    if (pr_switch >2)then\n       print *, 'Matrisen etter gauss eliminisjon:'\n       call PrintMatrix(A,len,len)\n       print *, 'b matrix: ', B\n    end if\n  end subroutine BackwardSubstitution\n\n  real  function  AngelFromPoints(x1,y1,x2,y2)\n    real, intent(in)::x1,y1,x2,y2\n\n    real :: dx,dy\n    dx=x2-x1\n    dy=y2-y1\n    AngelFromPoints = atan(dy/dx)\n  end function AngelFromPoints\n    \n   Subroutine PrintMatrix(A,l,b)\n    real, intent(inout) :: A(:,:)\n    integer , intent(in)::l,b\n    integer i,j\n\n    print * , ' #######################################'\n    do i=1,l\n       print *,(A(i,j), j=1,b)\n    end do\n    print *, '####################################### '\n    print *,''\n  end Subroutine PrintMatrix\n\nLogical function closeToZeroBug(number)\n  real, intent(in) :: number\n\n  if ( abs(number) < epsilon) then\n    closeToZeroBug = .True.\n  else \n    closeToZeroBug = .False.\n  end if  \n    \nend function closeToZeroBug\n\n\nend module Math\n",
+			"file": "src/FEMMethods.f90",
+			"settings":
+			{
+				"buffer_size": 8136,
+				"line_ending": "Unix"
+			}
+		},
+		{
 			"file": "src/math.f90",
-			"file_size": 4161,
-			"file_write_time": 1351507894000000,
 			"settings":
 			{
-				"buffer_size": 4154,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/inputS219.dat",
-			"settings":
-			{
-				"buffer_size": 139,
+				"buffer_size": 5195,
 				"line_ending": "Unix"
 			}
 		}
@@ -113,35 +55,15 @@
 		"selected_items":
 		[
 			[
-				"fort",
-				"Set Syntax: Fortran - Punchcard"
-			],
-			[
-				"for",
-				"Set Syntax: Fortran - Modern"
-			],
-			[
-				"",
-				"Preferences: Key Bindings - User"
-			],
-			[
-				"key",
-				"Preferences: Key Bindings - User"
-			],
-			[
-				"make",
-				"Set Syntax: Makefile"
-			],
-			[
-				"bul",
-				"Build: Build"
+				"rever",
+				"File: Revert"
 			]
 		],
 		"width": 392.0
 	},
 	"console":
 	{
-		"height": 139.0
+		"height": 0.0
 	},
 	"distraction_free":
 	{
@@ -154,13 +76,8 @@
 	},
 	"file_history":
 	[
-		"/home/simenhg/.config/sublime-text-2/Packages/Default/Default (Linux).sublime-keymap",
-		"/home/simenhg/.config/sublime-text-2/Packages/User/Default (Linux).sublime-keymap",
-		"/home/simenhg/workspace/FEMA/src/Makefile",
-		"/home/simenhg/.config/sublime-text-2/Packages/User/FEMA.sublime-build",
-		"/home/simenhg/.config/sublime-text-2/Packages/User/McMake.sublime-build",
-		"/home/simenhg/workspace/FEMA/FEMA.sublime-project",
-		"/home/simenhg/Documents/skole/prosedyreorientert/math/gauss.f90"
+		"/home/simenhg/github/FEMA/src/math.f90",
+		"/home/simenhg/github/FEMA/src/Makefile"
 	],
 	"find":
 	{
@@ -168,7 +85,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 93.0,
+		"height": 0.0,
 		"where_history":
 		[
 		]
@@ -178,14 +95,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"lower_sigular_value",
-			")\n",
-			"),",
-			"in",
-			"print *, x1,x2,y1,y2,dy,dx, atan(dy/dx)",
-			"make",
-			"test",
-			"\n     "
+			"\n    ",
+			"sum"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -193,8 +104,6 @@
 		"regex": false,
 		"replace_history":
 		[
-			"inertia",
-			"angle"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -210,46 +119,18 @@
 			[
 				{
 					"buffer": 0,
-					"file": "src/FEMMethods.f90",
-					"settings":
-					{
-						"buffer_size": 8162,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2043,
-								2043
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Fortran/Fortran - Punchcard.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 510.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
 					"file": "src/FEMTypes.f90",
 					"settings":
 					{
-						"buffer_size": 491,
+						"buffer_size": 484,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								329,
-								329
+								484,
+								484
 							]
 						],
 						"settings":
@@ -265,19 +146,73 @@
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "src/FEM.f90",
+					"buffer": 1,
+					"file": "src/inputEasy.dat",
 					"settings":
 					{
-						"buffer_size": 1700,
+						"buffer_size": 116,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								577,
-								577
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/FEM.f90",
+					"settings":
+					{
+						"buffer_size": 1730,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Fortran/Syntaxes/Fortran - Modern.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/FEMMethods.f90",
+					"settings":
+					{
+						"buffer_size": 8136,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
 							]
 						],
 						"settings":
@@ -299,55 +234,29 @@
 			"sheets":
 			[
 				{
-					"buffer": 3,
+					"buffer": 4,
 					"file": "src/math.f90",
 					"settings":
 					{
-						"buffer_size": 4154,
+						"buffer_size": 5195,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2691,
-								2691
+								1339,
+								1397
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/textmate-fortran.tmbundle-f46fd74/Syntaxes/Fortran - Punchcard.tmLanguage",
+							"syntax": "Packages/Fortran/Syntaxes/Fortran - Modern.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1595.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "src/inputS219.dat",
-					"settings":
-					{
-						"buffer_size": 139,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								139,
-								139
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 612.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -383,7 +292,7 @@
 		"cols":
 		[
 			0.0,
-			0.569270833333,
+			0.5,
 			1.0
 		],
 		"rows":
@@ -399,7 +308,7 @@
 	},
 	"replace":
 	{
-		"height": 64.0
+		"height": 0.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -409,7 +318,15 @@
 		[
 			[
 				"",
-				"/home/simenhg/workspace/FEMA/src/FEMMethods.f90"
+				"/home/simenhg/github/FEMA/src/math.f90"
+			],
+			[
+				"mak",
+				"/home/simenhg/github/FEMA/src/Makefile"
+			],
+			[
+				"fem",
+				"/home/simenhg/github/FEMA/src/FEMTypes.f90"
 			]
 		],
 		"width": 0.0
@@ -419,6 +336,10 @@
 		"height": 500.0,
 		"selected_items":
 		[
+			[
+				"",
+				"/home/simenhg/github/FEMA/FEMA.sublime-project"
+			]
 		],
 		"width": 380.0
 	},

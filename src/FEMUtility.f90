@@ -55,4 +55,22 @@ module FEMUtility
     
   end subroutine NullifyRealVector
 
+
+    !###############################
+  ! swapRow bytter rad r1 med r2 i matrisen A
+  !###############################
+
+  subroutine swapRow(A,r1,r2)
+    real, intent(inout) :: A(:,:)
+    integer, intent(in) :: r1,r2
+
+!     integer:: n = size(A, 1)
+    real :: swap(size(A, 1))
+
+    swap=A(r1,:)
+    A(r1,:)=A(r2,:)
+    A(r1,:)=swap
+
+  end subroutine swapRow
+
 end module FEMUtility
