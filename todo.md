@@ -2,7 +2,7 @@
 
 ### kode
 
-* forminske global ved å ikke ta md faste friheter, info i elm
+* Ta med element krefter. se side 183
 
 
 ### Besvarelse

@@ -14,10 +14,10 @@ program FEM
 
 !   file_in=10
 !   file_out=11
-!   open(unit=file_in, file='input.dat', iostat=errorFlag, status="old", action="read")
-!   if ( ios /= 0 ) stop "Error opening file_in"
-!   open(unit=file_out, file='output.dat', iostat=errorFlag, status="new", action="write")
-!   if ( ios /= 0 ) stop "Error opening file_out"
+!   open(unit=file_in, file='inputE52S224.dat', iostat=errorFlag, status="old", action="read")
+!   if ( errorFlag /= 0 ) stop "Error opening file_in"
+!   open(unit=file_out, file='output.dat', iostat=errorFlag, status="unknown", action="write")
+!   if ( errorFlag /= 0 ) stop "Error opening file_out"
   
 
 
@@ -47,6 +47,7 @@ contains
     read (file_in,*,iostat=errorFlag) (Nodes(n), n=1,numberOfNodes)
     read (file_in,*, iostat=errorFlag) (Elms(n)%e,Elms(n)%a,Elms(n)%i,Elms(n)%node1,Elms(n)%node2,n=1,numberOfElm)
     read (file_in,*, iostat=errorFlag) (Loads(n),n=1,numberOfLoads)
+        print *, errorFlag
     if ( errorFlag /= 0 ) stop "Read error in file file_in"
 
     if (pr_switch >= 5 ) then 

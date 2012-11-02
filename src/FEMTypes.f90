@@ -4,17 +4,17 @@
     implicit none
     integer , parameter ::  DOF=3 !     ! DOF= Degrace of freedom. Maksimalt antall frihaetsgrader per node
 
-    type :: element
+    type  element
        real :: e,a,i,l, cosT , sinT, ForceVector(DOF*2)
        integer :: node1, node2 
     end type element
 
-    type :: node 
+    type  node 
        real :: x,y
        integer :: GDOF(DOF)
     end type node
      
-    type :: load
+    type  load
       integer :: nodeNr, DOF
        real :: value
     end type load

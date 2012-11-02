@@ -3,6 +3,36 @@
 module Math
   use FEMUtility
   implicit none
+!   interface 
+!      subroutine GaussSolver(A,B,X,len, errorFlag) 
+!        integer, intent(in) :: len
+!        integer, intent(inout) :: errorFlag
+!        real, intent(inout)  :: A(len,len), B(len)
+!        REAL, intent(out) :: X(len)
+!      end Subroutine GaussSolver
+
+!      subroutine BackwardSubstitution(A,B,X,len ,errorFlag)
+!        integer, intent(in) :: len
+!        integer, intent(inout) :: errorFlag
+!        real, intent(inout)  :: A(len,len), B(len)
+!        REAL, intent(out) :: X(len)
+!      end Subroutine BackwardSubstitution
+
+!      real  function  AngelFromPoints(x1,y1,x2,y2)
+!        real, intent(in)::x1,y1,x2,y2
+!      end function AngelFromPoints
+
+!      real  function  LengthBetweenPoints(x1,y1,x2,y2)
+!        real, intent(in)::x1,y1,x2,y2
+!      end function LengthBetweenPoints
+
+!      function RotationMatrix(cosT,sinT)
+!        real, intent(in) :: cosT, sinT 
+!      end function RotationMatrix
+
+
+
+!   end interface
 
 contains
 
@@ -105,7 +135,7 @@ contains
        end if
     end do
     if (pr_switch >2)then
-      print *, ''
+       print *, ''
        print *, 'Matrisen etter gauss eliminisjon:'
        call PrintMatrix(A)
        print *, 'b matrix: ', B
@@ -116,7 +146,7 @@ contains
   !###############################
   ! Funksjonen retunerer vinklen (rad) mellom x-aksen og linjen som er definert av punktene (x1,y1) og (x2,y2)
   !###############################
-  
+
   real  function  AngelFromPoints(x1,y1,x2,y2)
     real, intent(in)::x1,y1,x2,y2
 
@@ -126,12 +156,12 @@ contains
     dy=y2-y1
     AngelFromPoints = atan(dy/dx)
   end function AngelFromPoints
-  
 
-    !###############################
+
+  !###############################
   ! Funksjonen retunerer lengden til linjen som er definert av punktene (x1,y1) og (x2,y2)
   !###############################
-  
+
   real  function  LengthBetweenPoints(x1,y1,x2,y2)
     real, intent(in)::x1,y1,x2,y2
 
@@ -145,7 +175,7 @@ contains
   !###############################
   ! Retunerer rotasjonsmatrisen med 6 frihetsgrader 
   !###############################
-  
+
   function RotationMatrix(cosT,sinT)
     real, intent(in) :: cosT, sinT 
 
@@ -165,7 +195,7 @@ contains
     RotationMatrix(2,1)=-sinT
     RotationMatrix(4,5)=sinT
     RotationMatrix(5,4)=-sinT
-    
+
   end function RotationMatrix
 
 
