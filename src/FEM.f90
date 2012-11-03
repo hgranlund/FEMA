@@ -33,16 +33,9 @@ program FEM
      print *,'Errorflag = ' ,Errorflag
      stop
   end if
-  call WriteOutput()
+   call WriteOutput()
 
 contains
-  !###############################
-  ! ReadInput leser inputfilen og pupulerer variable
-  !
-  ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.0
-  !###############################
-
   Subroutine ReadInput()
     integer ::n, numberOfNodes, numberOfElm,numberOfLoads
     type (element) :: elm
@@ -66,25 +59,25 @@ contains
 
   end Subroutine ReadInput
 
-
-   !###############################
-  ! WriteOutput skriver data til file_out
-  !
-  ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.0
-  !###############################
-
   Subroutine WriteOutput()
     integer ::n
-
-    write(file_out, *, iostat=errorFlag) DisplacementVector
     write (file_out,*,iostat=errorFlag), '==============================================================='
-    write(file_out,*, iostat=errorFlag) 'Elementer: [Areal ,Lengde, Cos(theta), &
-    & KraftVektor (x1,y1,r1;x2,y2, r2), Node1, Node2'
+    write(file_out,*, iostat=errorFlag) 'Forskyvningsvector'
+    write(file_out, *, iostat=errorFlag) DisplacementVector
+    write (file_out,*,iostat=errorFlag), ''
+    write (file_out,*,iostat=errorFlag), '==============================================================='
+    write(file_out,*, iostat=errorFlag) 'ElementNr:' 
+    write(file_out,*, iostat=errorFlag) '  Areal,          Lengde,         Cos(theta),       Node1,        Node2'
+    write(file_out,*, iostat=errorFlag) '  Fx1,            Fy1,            Mr1;               Fx2,          Fy2,           Mr2 '
+    write(file_out,*, iostat=errorFlag) ''
     
+
     do n=1, ubound(Elms,1)
-      write(file_out,'(3F10.3)', iostat=errorFlag) Elms(n)%a,Elms(n)%l,Elms(n)%cosT,Elms(n)%ForceVector,Elms(n)%node1,Elms(n)%node2
+      write(file_out,*, iostat=errorFlag) 'ElementNr:', n
+      write(file_out,*, iostat=errorFlag) Elms(n)%a,Elms(n)%l,Elms(n)%cosT,Elms(n)%node1,Elms(n)%node2
+      write(file_out,*, iostat=errorFlag) Elms(n)%ForceVector
       write(file_out,*, iostat=errorFlag) ''
+
     end do
        if ( errorFlag /= 0 ) stop "Write error in file file_out"
 
