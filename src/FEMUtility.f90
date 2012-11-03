@@ -10,7 +10,10 @@ module FEMUtility
 
 
   !###############################
-  !Rutinen printer Matrisen A
+  !PrintMatrix printer Matrisen A
+  !
+  ! Author: Simen Haugerud Granlund
+  ! Date/version: 02-11-12/ 1.0
   !###############################
 
    Subroutine PrintMatrix(A)
@@ -30,6 +33,9 @@ module FEMUtility
 
   !###############################
   !Prosedyren Setter alle elementene i Matrix til null
+  !
+  ! Author: Simen Haugerud Granlund
+  ! Date/version: 02-11-12/ 1.0
   !###############################
 
   subroutine NullifyRealMatrix(Matrix)
@@ -42,8 +48,11 @@ module FEMUtility
   end subroutine NullifyRealMatrix
 
 
-    !###############################
+  !###############################
   !Prosedyren Setter alle elementene i vector til null
+  !
+  ! Author: Simen Haugerud Granlund
+  ! Date/version: 02-11-12/ 1.0
   !###############################
 
   subroutine NullifyRealVector(Vector)
@@ -54,5 +63,26 @@ module FEMUtility
     forall (i=lbound(Vector,1):ubound(Vector,1)) Vector(i)=0
     
   end subroutine NullifyRealVector
+
+
+  !###############################
+  ! swapRow bytter rad r1 med r2 i matrisen A
+  !
+  ! Author: Simen Haugerud Granlund
+  ! Date/version: 02-11-12/ 1.0
+  !###############################
+
+  subroutine swapRow(A,r1,r2)
+    real, intent(inout) :: A(:,:)
+    integer, intent(in) :: r1,r2
+
+!     integer:: n = size(A, 1)
+    real :: swap(size(A, 1))
+
+    swap=A(r1,:)
+    A(r1,:)=A(r2,:)
+    A(r1,:)=swap
+
+  end subroutine swapRow
 
 end module FEMUtility

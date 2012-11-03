@@ -36,6 +36,13 @@ program FEM
   call WriteOutput()
 
 contains
+  !###############################
+  ! ReadInput leser inputfilen og pupulerer variable
+  !
+  ! Author: Simen Haugerud Granlund
+  ! Date/version: 02-11-12/ 1.0
+  !###############################
+
   Subroutine ReadInput()
     integer ::n, numberOfNodes, numberOfElm,numberOfLoads
     type (element) :: elm
@@ -58,6 +65,14 @@ contains
     end if
 
   end Subroutine ReadInput
+
+
+   !###############################
+  ! WriteOutput skriver data til file_out
+  !
+  ! Author: Simen Haugerud Granlund
+  ! Date/version: 02-11-12/ 1.0
+  !###############################
 
   Subroutine WriteOutput()
     integer ::n

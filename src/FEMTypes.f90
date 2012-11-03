@@ -1,5 +1,12 @@
 
   module FEMTypes
+  !###############################
+  ! FEMTypes inneholder data typer brukt i FEM
+  !
+  ! Author: Simen Haugerud Granlund
+  ! Date/version: 02-11-12/ 1.0
+  !###############################
+
   use FEMUtility
     implicit none
     integer , parameter ::  DOF=3 !     ! DOF= Degrace of freedom. Maksimalt antall frihaetsgrader per node
