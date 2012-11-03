@@ -4,7 +4,7 @@ module FEMUtility
 
 	   ! pr_switch brukes til å bestemme hva som skal printes ut. 
 
-    integer , parameter :: pr_switch=10
+    integer , parameter :: pr_switch=0
 
 	contains 
 

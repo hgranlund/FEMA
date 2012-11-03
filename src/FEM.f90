@@ -33,7 +33,7 @@ program FEM
      print *,'Errorflag = ' ,Errorflag
      stop
   end if
-!   call WriteOutput()
+  call WriteOutput()
 
 contains
   Subroutine ReadInput()
@@ -64,11 +64,11 @@ contains
 
     write(file_out, *, iostat=errorFlag) DisplacementVector
     write (file_out,*,iostat=errorFlag), '==============================================================='
-    write(file_out,*, iostat=errorFlag) 'Elementer: [E-modul, Areal, Inertia, Lengde, Cos(theta), &
-    &Sin(Theta), KraftVektor, Node1, Node2'
+    write(file_out,*, iostat=errorFlag) 'Elementer: [Areal ,Lengde, Cos(theta), &
+    & KraftVektor (x1,y1,r1;x2,y2, r2), Node1, Node2'
     
     do n=1, ubound(Elms,1)
-      write(file_out,*, iostat=errorFlag) Elms(n)
+      write(file_out,'(3F10.3)', iostat=errorFlag) Elms(n)%a,Elms(n)%l,Elms(n)%cosT,Elms(n)%ForceVector,Elms(n)%node1,Elms(n)%node2
       write(file_out,*, iostat=errorFlag) ''
     end do
        if ( errorFlag /= 0 ) stop "Write error in file file_out"
