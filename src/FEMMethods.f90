@@ -100,8 +100,8 @@ contains
     Ls(3,5)=t3
     LS(2,3)=-t3
     LS(3,2)=-t3
-    LS(6,3)=2*t1
-    LS(3,6)=2*t1
+    LS(6,3)=t4
+    LS(3,6)=t4
     LS(2,6)=-t3 
     LS(6,2)=-t3
     LS(5,6)=t3
@@ -149,7 +149,7 @@ contains
     if (pr_switch > 7)then
        print *,''
        print * , '##### LocalStiffness:'
-       print *,"C: ",c," S: ", s ," I: ",inertia, " L:",l, 'A:',a, &
+       print *,"C: ",c," S: ", s ," I: ",inertia, " L:",l,  &
             &"(12 *I) /L**2:", t1, "(6*I)/L:", t2, "E/L:", t3
     end if
 
@@ -163,17 +163,14 @@ contains
     LS(1,2)=LS(2,1)
     LS(2,2)=t3*((a*s**2)+(t1*c**2))
     LS(3,2)=t3* (6*inertia*c/l)
-!     LS(4,2)=LS(5,1)
-    LS(4,2)=-LS(2,1)
+    LS(4,2)=LS(5,1)
     LS(5,2)=-LS(2,2)
     LS(6,2)=LS(3,2)
 
     LS(1,3)=LS(3,1)
     LS(2,3)=LS(3,2)
     LS(3,3)=t3*4*inertia
-
     LS(4,3)=-LS(3,1)
-
     LS(5,3)=-LS(3,2)
     LS(6,3)=t3*2*inertia
 
@@ -181,7 +178,6 @@ contains
     LS(1,4)=LS(4,1)
     LS(2,4)=LS(4,2)
     LS(3,4)=LS(4,3)
-    LS(4,4)=t3*((a*s**2)+(t1*s**2))
     LS(4,4)=LS(1,1)
     LS(5,4)=LS(2,1)
     LS(6,4)=-LS(6,1)
@@ -237,10 +233,23 @@ contains
 
     do i = 1, ubound(Elms,1)
        elm = Elms(i)
-        call LocalStiffnessWithRotation(LocalStiffnessMatrix,elm)
-!           call LocalStiffness(LocalStiffnessMatrix,elm)
-!           LocalStiffnessMatrix= matmul(RotationMatrix(elm%cosT,elm%sinT),LocalStiffnessMatrix)
-!           LocalStiffnessMatrix= matmul(LocalStiffnessMatrix, transpose(RotationMatrix(elm%cosT,elm%sinT)))
+!        call LocalStiffnessWithRotation(LocalStiffnessMatrix,elm)
+       call LocalStiffness(LocalStiffnessMatrix,elm)
+
+       LocalStiffnessMatrix = matmul(RotationMatrix(elm%cosT,elm%sinT),LocalStiffnessMatrix)
+       LocalStiffnessMatrix = matmul(LocalStiffnessMatrix,Transpose(RotationMatrix(elm%cosT,elm%sinT)))
+       if (pr_switch > 7)then
+          print *,''
+          print * , '##### LocalStiffnesstimesRotation:'
+          call PrintMatrix(LocalStiffnessMatrix)
+       endif
+
+       call LocalStiffnessWithRotation(LocalStiffnessMatrix,elm)
+              if (pr_switch > 7)then
+          print *,''
+          print * , '##### LocalStiffnessWithRotation:'
+          call PrintMatrix(LocalStiffnessMatrix)
+       endif
        ! Hvis GobalMartixConverter (GCM) er null Betyr det at
        ! verdien ikke skal være med videre pga. grensebetingerlser
        ! TODO: her kan vi spare tid ved å lage GMc av mindre rank, slik at vi bare tar med de vardiene vi trenger. Da kan vi fjerne if checken i loop
