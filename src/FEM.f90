@@ -60,7 +60,7 @@ contains
 
   Subroutine WriteOutput()
     integer ::n
-
+    write (file_out,*,iostat=errorFlag), '==============================================================='
     write (file_out,*,iostat=errorFlag), '==============================================================='
     write(file_out,*, iostat=errorFlag) 'Forskyvningsvector'
     write(file_out, *, iostat=errorFlag) DisplacementVector
