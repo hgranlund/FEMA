@@ -3,68 +3,6 @@ module FemMethods
   use FEMMath
   implicit none
 
-!   interface 
-
-
-!      subroutine DoFEA(DisplacementVector, Elms,Nodes,Loads,errorFlag)
-!        integer, intent(inout) :: errorFlag
-!        type (element), intent(inout) :: Elms(:)
-!        type (node), intent(in):: Nodes(:)
-!        type (load), intent(in) :: Loads(:)
-!        real , intent(out) :: DisplacementVector(:)
-!      end subroutine DoFEA
-
-!      subroutine LocalStiffness(LS, Elm)
-!        real , intent(out) :: LS(:,:)
-!        type (element), intent(in):: Elm
-!      end subroutine LocalStiffness
-
-!      subroutine LocalStiffnessWithRotation(LS, elm)
-!        real , intent(out) :: LS(:,:)
-!        type (element), intent(in):: elm
-!      end subroutine LocalStiffnessWithRotation
-
-!      subroutine GlobalStiffness(GlobalStiffnessMatrix, Elms,Nodes,GTRGConverter,errorFlag)
-!        integer ,intent(in)::GTRGConverter(:)
-!        type (element), intent(in):: Elms(:)
-!        type (node), intent(in):: Nodes(:)
-!        integer ,intent(inout) :: errorFlag
-!        real ,intent(out) :: GlobalStiffnessMatrix(:,:)
-!      end subroutine GlobalStiffness
-
-!      subroutine PopulateLoads(LoadVector,Loads,GTRGConverter,errorflag)
-!        integer, intent(in) :: GTRGConverter(:),Errorflag
-!        type (load), intent(in) :: Loads(:)
-!        real , intent(out):: LoadVector(:)
-!      end subroutine PopulateLoads
-
-!      Subroutine GlobalToRedusedGlobalStiffnessMatrixConverter(GTRGConverter,Nodes)
-!        type (node), intent(in):: Nodes(:)
-!        integer ,intent(out) :: GTRGConverter(size(Nodes)*3)
-!      end Subroutine GlobalToRedusedGlobalStiffnessMatrixConverter
-
-!      integer Function totalDegrees(Nodes)
-!        type (node), intent(in):: Nodes(:)
-!      end Function totalDegrees
-
-!      Subroutine LoadsOnElement(ElementLoadVector,elm, ElementDisplacementVector)
-!        real, intent(in) :: ElementDisplacementVector(:) 
-!        type (element), intent(inout) :: elm
-!        real, intent(out):: ElementLoadVector(:) 
-!      end Subroutine LoadsOnElement
-
-!      Subroutine SetElementForces(Elms, DisplacementVector, GTRGConverter)
-!        type (element), intent(inout) :: Elms(:)
-!        real, intent(in) ::  DisplacementVector(:)
-!        integer , intent(in) :: GTRGConverter(:)
-!      end Subroutine SetElementForces
-
-!      subroutine SetElementProperties(Elms, Nodes)
-!        type (element), intent(inout) :: Elms(:)
-!        type (node) , intent(in) :: Nodes(:)
-!      end subroutine SetElementProperties
-!   end interface
-
 contains
 
   !###############################
@@ -211,7 +149,7 @@ contains
     if (pr_switch > 7)then
        print *,''
        print * , '##### LocalStiffness:'
-       print *,"C: ",c," S: ", s ," I: ",inertia, " L:",l,  &
+       print *,"C: ",c," S: ", s ," I: ",inertia, " L:",l, 'A:',a, &
             &"(12 *I) /L**2:", t1, "(6*I)/L:", t2, "E/L:", t3
     end if
 
@@ -219,13 +157,14 @@ contains
     LS(2,1)=t3*(a-t1)*c*s
     LS(3,1)=t3*(-t2*s)
     LS(4,1)=-LS(1,1)
-    LS(5,1)=t3*((12/l**2-a)*c*s)
+    LS(5,1)=t3*(((12/l**2)-a)*c*s)
     LS(6,1)=LS(3,1)
 
     LS(1,2)=LS(2,1)
     LS(2,2)=t3*((a*s**2)+(t1*c**2))
     LS(3,2)=t3* (6*inertia*c/l)
-    LS(4,2)=LS(5,1)
+!     LS(4,2)=LS(5,1)
+    LS(4,2)=-LS(2,1)
     LS(5,2)=-LS(2,2)
     LS(6,2)=LS(3,2)
 
@@ -233,8 +172,7 @@ contains
     LS(2,3)=LS(3,2)
     LS(3,3)=t3*4*inertia
 
-    !     LS(4,3)=-LS(3,1)
-    LS(4,3)=t3*((a*s**2)+(t1*s**2))
+    LS(4,3)=-LS(3,1)
 
     LS(5,3)=-LS(3,2)
     LS(6,3)=t3*2*inertia
@@ -243,6 +181,7 @@ contains
     LS(1,4)=LS(4,1)
     LS(2,4)=LS(4,2)
     LS(3,4)=LS(4,3)
+    LS(4,4)=t3*((a*s**2)+(t1*s**2))
     LS(4,4)=LS(1,1)
     LS(5,4)=LS(2,1)
     LS(6,4)=-LS(6,1)
@@ -298,7 +237,10 @@ contains
 
     do i = 1, ubound(Elms,1)
        elm = Elms(i)
-       call LocalStiffnessWithRotation(LocalStiffnessMatrix,elm)
+        call LocalStiffnessWithRotation(LocalStiffnessMatrix,elm)
+!           call LocalStiffness(LocalStiffnessMatrix,elm)
+!           LocalStiffnessMatrix= matmul(RotationMatrix(elm%cosT,elm%sinT),LocalStiffnessMatrix)
+!           LocalStiffnessMatrix= matmul(LocalStiffnessMatrix, transpose(RotationMatrix(elm%cosT,elm%sinT)))
        ! Hvis GobalMartixConverter (GCM) er null Betyr det at
        ! verdien ikke skal være med videre pga. grensebetingerlser
        ! TODO: her kan vi spare tid ved å lage GMc av mindre rank, slik at vi bare tar med de vardiene vi trenger. Da kan vi fjerne if checken i loop

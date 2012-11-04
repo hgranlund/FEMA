@@ -3,7 +3,6 @@
 ### kode
 
 * Ta med element krefter. se side 183
-* sette matrisen initalverdi lik null
 * Kan lage flere likningsløsere, bestemme meg for en som programmet skal bruke
 
 
