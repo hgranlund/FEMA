@@ -60,7 +60,7 @@ contains
           end if
        end do
 
-       if (pr_switch>5) then
+       if (pr_switch>9) then
           print * ,''
           print *, 'Matrisen etter swap, iterasjon...: ' , k 
           call PrintMatrix(A)
@@ -87,7 +87,8 @@ contains
     end do
 
     call BackwardSubstitution(A,B,X,len,errorFlag)
-    if (pr_switch >2)then
+
+    if (pr_switch >5)then
        print *, ''
        print *, 'Matrisen A etter gauss eliminisjon:'
        call PrintMatrix(A)

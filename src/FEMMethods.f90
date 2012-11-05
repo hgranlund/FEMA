@@ -118,8 +118,7 @@ contains
 
 
   !##############################
-  !LS LocalStiffnesMatrix er den genererte lokale stivhetsmatrisen
-  !,til element elm, multiplisert med Elementets rotasjonsmatriser CkC^t
+  !LocalStiffnessWithRotation genererer den globale stivhetsmatrisen til elmentet (elm) direkte
   !
   ! Author: Simen Haugerud Granlund
   ! Date/version: 02-11-12/ 1.0
@@ -142,10 +141,6 @@ contains
     t2 = (6*inertia)/l
     t3 = e/l
 
-    !     !Fix av avrundinertiagsfeil i real verdier
-    !     if ( abs(c) .LE. epsilon(c) ) c=0 
-    !     if ( abs(s) .LE. epsilon(s) ) s=0
-
     if (pr_switch > 7)then
        print *,''
        print * , '##### LocalStiffness:'
@@ -155,7 +150,9 @@ contains
 
     LS(1,1)=t3*((a*c**2)+(t1*s**2))
     LS(2,1)=t3*(a-t1)*c*s
-    LS(3,1)=t3*(-t2*s)
+!     LS(3,1)=t3*(-t2*s)
+    LS(3,1)=t3*(t2*s)
+
     LS(4,1)=-LS(1,1)
     LS(5,1)=t3*(((12/l**2)-a)*c*s)
     LS(6,1)=LS(3,1)
@@ -233,26 +230,8 @@ contains
 
     do i = 1, ubound(Elms,1)
        elm = Elms(i)
-!        call LocalStiffnessWithRotation(LocalStiffnessMatrix,elm)
-       call LocalStiffness(LocalStiffnessMatrix,elm)
+       call LocalStiffnessWithRotation(LocalStiffnessMatrix,elm)
 
-       LocalStiffnessMatrix = matmul(RotationMatrix(elm%cosT,elm%sinT),LocalStiffnessMatrix)
-       LocalStiffnessMatrix = matmul(LocalStiffnessMatrix,Transpose(RotationMatrix(elm%cosT,elm%sinT)))
-       if (pr_switch > 7)then
-          print *,''
-          print * , '##### LocalStiffnesstimesRotation:'
-          call PrintMatrix(LocalStiffnessMatrix)
-       endif
-
-!        call LocalStiffnessWithRotation(LocalStiffnessMatrix,elm)
-!               if (pr_switch > 7)then
-!           print *,''
-!           print * , '##### LocalStiffnessWithRotation:'
-!           call PrintMatrix(LocalStiffnessMatrix)
-!        endif
-       ! Hvis GobalMartixConverter (GCM) er null Betyr det at
-       ! verdien ikke skal være med videre pga. grensebetingerlser
-       ! TODO: her kan vi spare tid ved å lage GMc av mindre rank, slik at vi bare tar med de vardiene vi trenger. Da kan vi fjerne if checken i loop
        do j=1,DOF
           GMC(j)=GTRGConverter(((elm%node1-1)*DOF) +j)* Nodes(elm%node1)%GDOF(j)
           GMC(j+3)=GTRGConverter(((elm%node2-1)*DOF) +j) *  Nodes(elm%node2)%GDOF(j)

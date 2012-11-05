@@ -2,9 +2,9 @@ module FEMUtility
 
 	implicit none
 
-	   ! pr_switch brukes til å bestemme hva som skal printes ut. 
+	   ! pr_switch brukes til å bestemme hva som skal printes ut.  0= ingen ting, 10 = alt 
 
-    integer , parameter :: pr_switch=10
+    integer , parameter :: pr_switch=0
 
 	contains 
 

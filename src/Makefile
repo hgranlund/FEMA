@@ -17,3 +17,5 @@ test: ${OBJECTS}
 clean:
 	rm FEM *.o *.mod *.Mod 
 
+veryclean: 
+	rm FEM *.o *.mod *.Mod *~ *.orig
