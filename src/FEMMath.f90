@@ -185,10 +185,10 @@ contains
     RotationMatrix(4,4)=cosT
     RotationMatrix(5,5)=cosT
 
-    RotationMatrix(1,2)=sinT
-    RotationMatrix(2,1)=-sinT
-    RotationMatrix(4,5)=sinT
-    RotationMatrix(5,4)=-sinT
+    RotationMatrix(1,2)=-sinT
+    RotationMatrix(2,1)=sinT
+    RotationMatrix(4,5)=-sinT
+    RotationMatrix(5,4)=sinT
 
   end function RotationMatrix
 

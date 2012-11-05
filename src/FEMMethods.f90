@@ -162,7 +162,7 @@ contains
 
     LS(1,2)=LS(2,1)
     LS(2,2)=t3*((a*s**2)+(t1*c**2))
-    LS(3,2)=t3* (6*inertia*c/l)
+    LS(3,2)=-t3* (6*inertia*c/l)
     LS(4,2)=LS(5,1)
     LS(5,2)=-LS(2,2)
     LS(6,2)=LS(3,2)
@@ -244,12 +244,12 @@ contains
           call PrintMatrix(LocalStiffnessMatrix)
        endif
 
-       call LocalStiffnessWithRotation(LocalStiffnessMatrix,elm)
-              if (pr_switch > 7)then
-          print *,''
-          print * , '##### LocalStiffnessWithRotation:'
-          call PrintMatrix(LocalStiffnessMatrix)
-       endif
+!        call LocalStiffnessWithRotation(LocalStiffnessMatrix,elm)
+!               if (pr_switch > 7)then
+!           print *,''
+!           print * , '##### LocalStiffnessWithRotation:'
+!           call PrintMatrix(LocalStiffnessMatrix)
+!        endif
        ! Hvis GobalMartixConverter (GCM) er null Betyr det at
        ! verdien ikke skal være med videre pga. grensebetingerlser
        ! TODO: her kan vi spare tid ved å lage GMc av mindre rank, slik at vi bare tar med de vardiene vi trenger. Da kan vi fjerne if checken i loop
@@ -384,7 +384,7 @@ contains
 
     real :: LocalStiffnessMatrix(DOF*2,DOF*2), ElmsRotationMatrix(6,6)
 
-    ElmsRotationMatrix=RotationMatrix(elm%cosT,elm%sinT)
+    ElmsRotationMatrix=Transpose(RotationMatrix(elm%cosT,elm%sinT))
 
     call LocalStiffness(LocalStiffnessMatrix, elm)
     ElementLoadVector = matmul(ElmsRotationMatrix, ElementDisplacementVector)

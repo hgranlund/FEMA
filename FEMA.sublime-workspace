@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"print",
+				"printmatrix"
+			],
+			[
+				"GlobalS",
+				"GlobalStiffnessMatrix"
+			],
+			[
+				"glo",
+				"GlobalStivhetsmatrise"
+			],
+			[
 				"Element",
 				"ElementNr"
 			],
@@ -268,13 +280,21 @@
 	"buffers":
 	[
 		{
-			"contents": "module FemMethods\n  use FEMTypes\n  use FEMMath\n  implicit none\n\ncontains\n\n  !###############################\n  !Methoden kalkulerer forsyvnigene til systemet\n  !\n  ! Author: Simen Haugerud Granlund\n  ! Date/version: 02-11-12/ 1.0\n  !###############################\n\n  subroutine DoFEA(DisplacementVector, Elms,Nodes,Loads,errorFlag)\n    integer, intent(inout) :: errorFlag\n    type (element), intent(inout) :: Elms(:)\n    type (node), intent(in):: Nodes(:)\n    type (load), intent(in) :: Loads(:)\n    real , intent(out) :: DisplacementVector(:)\n\n\n    integer :: status, RGSMLen,i,j, GTRGConverter(DOF*size(Nodes))\n    real , ALLOCATABLE :: GlobalStiffnessMatrix(:,:), LoadVector(:)\n\n    if (errorFlag .NE. 0)then\n       print *, 'Errorflag at begining of CalcDisplacement'\n       return\n    end if\n\n    call SetElementProperties(Elms, Nodes)  \n    CALL GlobalToRedusedGlobalStiffnessMatrixConverter(GTRGConverter, Nodes)\n    RGSMLen = TotalDegrees(Nodes)\n    allocate (GlobalStiffnessMatrix(RGSMLen,RGSMLen) , LoadVector(RGSMLen), stat=errorFlag)\n    if (errorFlag .NE. 0)then\n       print *, \"***Not Enough Memory*** when allocating in CalcDisplacement \"\n       return\n    end if\n\n    call NullifyRealMatrix(GlobalStiffnessMatrix)\n    call NullifyRealVector(DisplacementVector)\n    call NullifyRealVector(LoadVector)\n\n    call GlobalStiffness(GlobalStiffnessMatrix,Elms,Nodes,GTRGConverter,errorFlag)\n    call PopulateLoads(LoadVector,Loads,GTRGConverter, errorflag)\n    if (pr_switch>4)then\n       print * ,''\n       print *, '##### GlobalStivhetsmatrise: '\n       call PrintMatrix(GlobalStiffnessMatrix)\n       print *, 'loadvector: ', LoadVector\n    end if\n\n    call GaussSolver(GlobalStiffnessMatrix,LoadVector,DisplacementVector,RGSMLen,Errorflag)\n\n    if (pr_switch>2)then\n       print * ,''\n       print *, '##### Forskyvninger: '\n       print *,  DisplacementVector\n    end if\n\n    call SetElementForces(Elms, DisplacementVector, GTRGConverter)\n  end subroutine DoFEA\n\n\n  !###############################\n  !LS LocalStiffnesMatrix er den genererte lokale stivhetsmatrisen\n  !Elm er elementet i fokus\n  !\n  ! Author: Simen Haugerud Granlund\n  ! Date/version: 02-11-12/ 1.0\n  !###############################\n\n  subroutine LocalStiffness(LS, Elm)\n    real , intent(out) :: LS(:,:)\n    type (element), intent(in):: Elm\n\n    integer::i,j\n    real :: ei,ea,l,t1,t2,t3,t4\n\n    call NullifyRealMatrix(LS)\n\n    ea=elm%e*Elm%a\n    ei=elm%e*elm%i\n    l=elm%l\n    t1 = ea /l\n    t2 = (12*ei)/l**3\n    t3 = (6*ei)/l**2\n    t4= (2*ei)/l\n    LS(1,1)=t1\n    LS(2,2)=t2\n    LS(3,3)=2*t4\n    LS(4,4)=t1  \n    LS(5,5)=t2\n    LS(6,6)=2*t4\n    LS(4,1)=-t1\n    LS(1,4)=-t1\n    LS(2,5)=-t2\n    LS(5,2)=-t2\n    LS(5,3)=t3\n    Ls(3,5)=t3\n    LS(2,3)=-t3\n    LS(3,2)=-t3\n    LS(6,3)=2*t1\n    LS(3,6)=2*t1\n    LS(2,6)=-t3 \n    LS(6,2)=-t3\n    LS(5,6)=t3\n    LS(6,5)=t3\n\n    if (pr_switch > 7)then\n       print *,''\n       print * , '##### LocalStiffness:'\n       print *, \"t1:\", t1, \"t2:\", t2, \"t3:\", t3, \"t4:\", t4\n       call PrintMatrix(LS)\n    end if\n  end subroutine LocalStiffness\n\n\n\n  !##############################\n  !LS LocalStiffnesMatrix er den genererte lokale stivhetsmatrisen\n  !,til element elm, multiplisert med Elementets rotasjonsmatriser CkC^t\n  !\n  ! Author: Simen Haugerud Granlund\n  ! Date/version: 02-11-12/ 1.0\n  !###############################\n\n  subroutine LocalStiffnessWithRotation(LS, elm)\n    real , intent(out) :: LS(:,:)\n    type (element), intent(in):: elm\n\n    integer::i,j\n    real :: e,a,inertia,l,t1,t2,t3,c,s\n\n    s=elm%sinT\n    c=elm%cosT\n    e=elm%e\n    a=elm%a\n    inertia=elm%i\n    l=elm%l\n    t1 = (12 *inertia) /l**2\n    t2 = (6*inertia)/l\n    t3 = e/l\n\n    !     !Fix av avrundinertiagsfeil i real verdier\n    !     if ( abs(c) .LE. epsilon(c) ) c=0 \n    !     if ( abs(s) .LE. epsilon(s) ) s=0\n\n    if (pr_switch > 7)then\n       print *,''\n       print * , '##### LocalStiffness:'\n       print *,\"C: \",c,\" S: \", s ,\" I: \",inertia, \" L:\",l,  &\n            &\"(12 *I) /L**2:\", t1, \"(6*I)/L:\", t2, \"E/L:\", t3\n    end if\n\n    LS(1,1)=t3*((a*c**2)+(t1*s**2))\n    LS(2,1)=t3*(a-t1)*c*s\n    LS(3,1)=t3*(-t2*s)\n    LS(4,1)=-LS(1,1)\n    LS(5,1)=t3*((12/l**2-a)*c*s)\n    LS(6,1)=LS(3,1)\n\n    LS(1,2)=LS(2,1)\n    LS(2,2)=t3*((a*s**2)+(t1*c**2))\n    LS(3,2)=t3* (6*inertia*c/l)\n    LS(4,2)=LS(5,1)\n    LS(5,2)=-LS(2,2)\n    LS(6,2)=LS(3,2)\n\n    LS(1,3)=LS(3,1)\n    LS(2,3)=LS(3,2)\n    LS(3,3)=t3*4*inertia\n\n    !     LS(4,3)=-LS(3,1)\n    LS(4,3)=t3*((a*s**2)+(t1*s**2))\n\n    LS(5,3)=-LS(3,2)\n    LS(6,3)=t3*2*inertia\n\n\n    LS(1,4)=LS(4,1)\n    LS(2,4)=LS(4,2)\n    LS(3,4)=LS(4,3)\n    LS(4,4)=LS(1,1)\n    LS(5,4)=LS(2,1)\n    LS(6,4)=-LS(6,1)\n\n    LS(1,5)=LS(5,1)\n    LS(2,5)=LS(5,2)\n    LS(3,5)=LS(5,3)\n    LS(4,5)=LS(5,4)\n    LS(5,5)=LS(2,2)\n    LS(6,5)=LS(5,3)\n\n    LS(1,6)=LS(6,1)\n    LS(2,6)=LS(6,2)\n    LS(3,6)=LS(6,3)\n    LS(4,6)=LS(6,4)\n    LS(5,6)=LS(6,5)\n    LS(6,6)=LS(3,3)\n\n    if ( pr_switch >9 ) then\n       print *, ''\n       print *, '###### LocalStiffnessMatrix'\n       call PrintMatrix(LS)\n    end if\n\n  end subroutine LocalStiffnessWithRotation\n\n\n\n  !###############################\n  !En prosedyre som genererer  den reduserte globale stivhetsmatrisen direkte\n  !\n  ! Author: Simen Haugerud Granlund\n  ! Date/version: 02-11-12/ 1.0\n  !###############################\n\n  subroutine GlobalStiffness(GlobalStiffnessMatrix, Elms,Nodes,GTRGConverter,errorFlag)\n    integer ,intent(in)::GTRGConverter(:)\n    type (element), intent(in):: Elms(:)\n    type (node), intent(in):: Nodes(:)\n    integer ,intent(inout) :: errorFlag\n    real ,intent(out) :: GlobalStiffnessMatrix(:,:)\n\n    integer :: i ,j, k\n    real :: LocalStiffnessMatrix(6,6)\n    type (element) :: elm\n    integer :: GMC(6)   ! GCM er en konverteringsmatrise som konverterer\n    ! den locale stivhetsmatrisen til den globale stivhetsmatrisen\n\n    if (Errorflag .LT. 0)then\n       print *, 'ERRORFLAG AT BEGINING OF GLOBALSTIFFNESS'\n       return\n    end if\n\n    do i = 1, ubound(Elms,1)\n       elm = Elms(i)\n       call LocalStiffnessWithRotation(LocalStiffnessMatrix,elm)\n       ! Hvis GobalMartixConverter (GCM) er null Betyr det at\n       ! verdien ikke skal være med videre pga. grensebetingerlser\n       ! TODO: her kan vi spare tid ved å lage GMc av mindre rank, slik at vi bare tar med de vardiene vi trenger. Da kan vi fjerne if checken i loop\n       do j=1,DOF\n          GMC(j)=GTRGConverter(((elm%node1-1)*DOF) +j)* Nodes(elm%node1)%GDOF(j)\n          GMC(j+3)=GTRGConverter(((elm%node2-1)*DOF) +j) *  Nodes(elm%node2)%GDOF(j)\n       end do\n       if (pr_switch > 6)then\n          print * ,''\n          print *, '##### GlobalStiffness: '\n          print *, 'Jobber på element ...: ', elm\n          print *, 'GlobalMatrixConverter... : ' , GMC\n       end if\n\n       do j=1,6\n          do k =1,6\n             if ((GMC(k) == 0) .OR. (GMC(j)==0))  cycle\n             GlobalStiffnessMatrix(GMC(k),GMC(j))=GlobalStiffnessMatrix(GMC(k),GMC(j))+LocalStiffnessMatrix(k,j)\n          end do\n       end do\n    end do\n  end subroutine GlobalStiffness\n\n\n\n  !###############################\n  ! Prosedyren populerer Kraftvektoren (LoadVectors)\n  !\n  ! Author: Simen Haugerud Granlund\n  ! Date/version: 02-11-12/ 1.0\n  !###############################\n\n  subroutine PopulateLoads(LoadVector,Loads,GTRGConverter,errorflag)\n    integer, intent(in) :: GTRGConverter(:),Errorflag\n    type (load), intent(in) :: Loads(:)\n    real , intent(out):: LoadVector(:)\n\n    integer :: i, globalIndex\n\n    if (Errorflag .LT. 0) return\n\n    do i=1,ubound(Loads, 1)\n       globalIndex=(Loads(i)%nodeNr-1)*3+Loads(i)%DOF\n       globalIndex= GTRGConverter(globalIndex)\n       if (globalIndex==0) cycle\n       LoadVector(globalIndex)=Loads(i)%value\n    end do\n\n    if (pr_switch>5)then\n       print *, '##### PopulateLoads:'\n       print *, 'LoadVector', LoadVector\n    end if\n\n  end subroutine PopulateLoads\n\n\n\n\n  !###############################\n  ! Genererer en konverteringsmatrise som konverterer fra den globalestivhetsmatrisen til den reduserte globalestivhetsmatrisen.\n  ! Den reduserte globlaestivhetsmatrisen er alle grensebetingelser tatt i be\n  !\n  ! Author: Simen Haugerud Granlund\n  ! Date/version: 02-11-12/ 1.0\n  !###############################\n\n  Subroutine GlobalToRedusedGlobalStiffnessMatrixConverter(GTRGConverter,Nodes)\n    type (node), intent(in):: Nodes(:)\n\n    integer ,intent(out) :: GTRGConverter(size(Nodes)*3)\n\n    integer ::i,j,globalIndex,redusedIndex\n\n    globalIndex=1\n    redusedIndex=1\n    do i=1,ubound(Nodes, dim=1)\n       do j=1,3\n          if (Nodes(i)%GDOF(j) .NE. 0)then\n             GTRGConverter(globalIndex)=redusedIndex\n             redusedIndex=redusedIndex+1\n          else\n             GTRGConverter(globalIndex)=0\n          end if\n          globalIndex=globalIndex+1\n       end do\n    end do\n\n    if(pr_switch>7)then\n       print *,''\n       print *, 'Global til redusert globalestivhetsmatrise konvertor:'\n       print *, GTRGConverter\n    end if\n  end Subroutine GlobalToRedusedGlobalStiffnessMatrixConverter\n\n\n\n\n  !###############################\n  ! Kalkulerer hvor mange grader av frihet alle nodene har tilsammen\n  !\n  ! Author: Simen Haugerud Granlund\n  ! Date/version: 02-11-12/ 1.0\n  !###############################\n\n  integer Function totalDegrees(Nodes)\n    type (node), intent(in):: Nodes(:)\n\n    integer ::i,j\n\n    totalDegrees=0\n    do i=1,ubound(Nodes,1)\n       do j=1,3\n          totalDegrees = totalDegrees+Nodes(i)%GDOF(j)\n       end do\n    end do\n  end Function totalDegrees\n\n\n\n\n  !###############################\n  ! Prosedyren kalkulerer kreftene til elementet ut i fra forskyvningene\n  !\n  ! Author: Simen Haugerud Granlund\n  ! Date/version: 02-11-12/ 1.0\n  !###############################\n\n  Subroutine LoadsOnElement(ElementLoadVector,elm, ElementDisplacementVector)\n    real, intent(in) :: ElementDisplacementVector(:) \n    type (element), intent(inout) :: elm\n    real, intent(out):: ElementLoadVector(:) \n\n    real :: LocalStiffnessMatrix(DOF*2,DOF*2), ElmsRotationMatrix(6,6)\n\n    ElmsRotationMatrix=RotationMatrix(elm%cosT,elm%sinT)\n\n    call LocalStiffness(LocalStiffnessMatrix, elm)\n    ElementLoadVector = matmul(ElmsRotationMatrix, ElementDisplacementVector)\n    ElementLoadVector = matmul(LocalStiffnessMatrix, ElementLoadVector)\n  end Subroutine LoadsOnElement\n\n\n\n\n  !###############################\n  ! Prosedyren kalkulerer kreftene på alle elementet ut i fra forskyvningene\n  !\n  ! Author: Simen Haugerud Granlund\n  ! Date/version: 02-11-12/ 1.0\n  !###############################\n\n  Subroutine SetElementForces(Elms, DisplacementVector, GTRGConverter)\n    type (element), intent(inout) :: Elms(:)\n    real, intent(in) ::  DisplacementVector(:)\n    integer , intent(in) :: GTRGConverter(:)\n\n    integer :: i,j\n    real ::  ElementDisplacementVector(DOF*2)\n\n\n    do i =1,size(Elms)\n       do j=1,DOF\n          ElementDisplacementVector(j)=DisplacementVector(GTRGConverter(((Elms(i)%node1-1)*DOF) +j))\n          ElementDisplacementVector(j+3)=DisplacementVector(GTRGConverter(((Elms(i)%node2-1)*DOF) +j) )\n       end do\n       call LoadsOnElement(Elms(i)%ForceVector, Elms(i), ElementDisplacementVector )\n       if(pr_switch>5)then\n          print * ,''\n          print *,'Krefter på element nr : ', i\n          print *, Elms(i)%ForceVector\n       end if\n    end do\n\n  end Subroutine SetElementForces\n\n\n\n\n  !###############################\n  ! Prosedyren populerer verdiene til elementene\n  !\n  ! Author: Simen Haugerud Granlund\n  ! Date/version: 02-11-12/ 1.0\n  !###############################\n\n  subroutine SetElementProperties(Elms, Nodes)\n\n    type (element), intent(inout) :: Elms(:)\n    type (node) , intent(in) :: Nodes(:)\n\n    integer :: n\n    real :: x1,x2,y1,y2\n\n    do n=1,ubound(Elms,1)\n       x2 = Nodes(Elms(n)%node2)%x\n       x1=Nodes(Elms(n)%node1)%x\n       y2 = Nodes(Elms(n)%node2)%y\n       y1= Nodes(Elms(n)%node1)%y\n       Elms(n)%l=LengthBetweenPoints(x1,y1,x2,y2)\n       Elms(n)%cosT=(x2-x1)/Elms(n)%l\n       Elms(n)%sinT=(y2-y1)/Elms(n)%l\n    end do\n  end subroutine SetElementProperties\n\nend module FemMethods\n",
-			"file": "src/FEMMethods.f90",
-			"file_size": 14558,
-			"file_write_time": 1351942008000000,
+			"contents": "def idMatx(size):\n  id = []\n  for i in range(size):\n    id.append([0]*size)\n  for i in range(size):\n    id[i][i] = 1\n  return(id)\n \ndef tranMtx(inMtx):\n  tMtx = []\n  for row in range(0, len(inMtx[0])):\n    tRow = []\n    for col in range(0, len(inMtx)):\n      ele = inMtx[col][row]\n      tRow.append(ele)\n    tMtx.append(tRow)\n  return(tMtx)\n \ndef matxRound(matx, decPts=4):\n  for col in range(len(matx)):\n    for row in range(len(matx[0])):\n      matx[col][row] = round(matx[col][row], decPts)\n\ndef printmatrix(mat):\n  for row in mat:\n    print row\n \n# the solver ...\n \ndef gj_Solve(A, b=False, decPts=4):\n  \"\"\" A gauss-jordan method to solve an augmented matrix for\n030\n      the unknown variables, x, in Ax = b.\n031\n      The degree of rounding is 'tuned' by altering decPts = 4.\n032\n      In the case where b is not supplied, b = ID matrix, and therefore\n033\n      the output is the inverse of the A matrix.\n034\n  \"\"\"\n \n  if not b == False:\n    # first, a test to make sure that A and b are conformable\n    if (len(A) != len(b)):\n      print 'A and b are not conformable'\n      return\n    Ab = A[:]\n    Ab.append(b)\n    m = tranMtx(Ab)\n  else:\n    ii = idMatx(len(A))\n    Aa = A[:]\n    for col in range(len(ii)):\n      Aa.append(ii[col])\n    tAa = tranMtx(Aa)\n    m = tAa[:]\n \n  (eqns, colrange, augCol) = (len(A), len(A), len(m[0]))\n \n  # permute the matrix -- get the largest leaders onto the diagonals\n  # take the first row, assume that x[1,1] is largest, and swap if that's not true\n  for col in range(0, colrange):\n    bigrow = col\n    for row in range(col+1, colrange):\n      if abs(m[row][col]) > abs(m[bigrow][col]):\n        bigrow = row\n        (m[col], m[bigrow]) = (m[bigrow], m[col])\n  print 'm is ' \n  printmatrix(m)\n \n\n  # reduce, such that the last row is has at most one unknown\n\n  for rrcol in range(0, colrange):\n\n    for rr in range(rrcol+1, eqns):\n      cc = -(float(m[rr][rrcol])/float(m[rrcol][rrcol]))\n\n      for j in range(augCol):\n        m[rr][j] = m[rr][j] + cc*m[rrcol][j]\n \n  # final reduction -- the first test catches under-determined systems\n  # these are characterised by some equations being all zero\n  for rb in reversed(range(eqns)):\n    if ( m[rb][rb] == 0):\n      if m[rb][augCol-1] == 0:\n        continue\n      else:\n        print 'system is inconsistent'\n        return\n    else:\n      # you must loop back across to catch under-determined systems\n      for backCol in reversed(range(rb, augCol)):\n        m[rb][backCol] = float(m[rb][backCol]) / float(m[rb][rb])\n      # knock-up (cancel the above to eliminate the knowns)\n      # again, we must loop to catch under-determined systems\n      if not (rb == 0):\n        for kup in reversed(range(rb)):\n          for kleft in reversed(range(rb, augCol)):\n            kk = -float(m[kup][rb]) / float(m[rb][rb])\n            m[kup][kleft] += kk*float(m[rb][kleft])\n \n  matxRound(m, decPts)\n \n  if not b == False:\n    return m\n  else:\n    mOut = []\n    for row in range(len(m)):\n      rOut = []\n      for col in range(augCol/2, augCol):\n        rOut.append(m[row][col])\n      mOut.append(rOut)\n    return mOut\n \n# test it!\nA=   [[6.6063361,       0.0000000,       159.99199,      -6.4996748,       0.0000000       0.0000000],    [0.0000000   ,    6.5530057   ,   -79.995995  ,     0.0000000 ,    -5.33306636E-02  ,-79.995995    ],    [159.99199   ,   -79.995995   ,    479975.97  ,     0.0000000  ,     79.995995      , 79995.992    ],  [-6.4996748   ,    0.0000000   ,    0.0000000  ,     6.6063361   ,    0.0000000      , 159.99199    ],  [ 0.0000000   ,  -5.33306636E-02,   79.995995  ,     0.0000000   ,    6.5530057      , 79.995995    ],  [ 0.0000000   ,   -79.995995    ,   79995.992  ,     159.99199   ,    79.995995      , 479975.97   ]]\n# A =  [  [440444.44  ,     0.0000000 ,     -10666666 ,     -433333.31  ,     0.0000000   ,    0.0000000  ],[ 0.0000000  ,     436888.88  ,     5333333.0   ,    0.0000000    ,   4444.4443  ,     5333333.0   ],[-10666666.    ,   5333333.0   ,   3.19999980E+10 ,  0.0000000     , -5333333.0   ,   5.33333299E+09],[-433333.31    ,   0.0000000   ,    0.0000000     ,  440444.44     ,  0.0000000    ,   10666666.    ],[0.0000000     ,  4444.4443   ,   -5333333.0     ,  0.0000000    ,   436888.88     , -5333333.0    ],[0.0000000     ,  5333333.0   ,   5.33333299E+09 ,  10666666.    ,  -5333333.0    ,  3.19999980E+10]]\nprint 'A'\nprintmatrix(A)\n\nb = [40000.000  ,     0.0000000    ,   0.0000000     ,  0.0000000     ,  0.0000000     ,  500000   ]\n \nsol = gj_Solve(A, b)\nprint '\\n\\n\\n\\n'\nprint 'sol is ',\nfor row in  sol:\n  print row\n \ninv = gj_Solve(A)\nprint 'inv is '\nprintmatrix(inv)\n\n",
+			"file": "Test/axbsolver.py",
+			"file_size": 4618,
+			"file_write_time": 1352117041000000,
 			"settings":
 			{
-				"buffer_size": 12085,
+				"buffer_size": 4617,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/FEMMethods.f90",
+			"settings":
+			{
+				"buffer_size": 12704,
 				"line_ending": "Unix"
 			}
 		},
@@ -303,10 +323,7 @@
 			}
 		},
 		{
-			"contents": "# TODO\n\n### kode\n\n* Ta med element krefter. se side 183\n* Kan lage flere likningsløsere, bestemme meg for en som programmet skal bruke\n\n\n### Besvarelse\n\n* Undersøke tidsforbruk av likningsløsere\n	* **Multigrid:** løse med forksjellige mesh, er det veldig lite kan det være lurt å bruke en dirkete løser.\n\n\n### Spørsmål\n\n* Skal jeg sende med lenden av en array som parameter eller skal jeg bruke SIZE(ARRAY, dim)\n* Skal jeg gjøre antal noder per element til en variabel eller skal jeg gange med '2'\n\n",
 			"file": "todo.md",
-			"file_size": 547,
-			"file_write_time": 1351942008000000,
 			"settings":
 			{
 				"buffer_size": 499,
@@ -322,6 +339,14 @@
 			}
 		},
 		{
+			"file": "src/inputE53.dat",
+			"settings":
+			{
+				"buffer_size": 361,
+				"line_ending": "Unix"
+			}
+		},
+		{
 			"file": "src/FEMTypes.f90",
 			"settings":
 			{
@@ -330,18 +355,26 @@
 			}
 		},
 		{
-			"file": "src/output.dat",
+			"file": "src/inputS219.dat",
 			"settings":
 			{
-				"buffer_size": 781,
+				"buffer_size": 142,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "src/math.f90",
+			"contents": "   [6.6063361       0.0000000       159.99199      -6.4996748       0.0000000       0.0000000;0.0000000       6.5530057      -79.995995       0.0000000     -5.33306636E-02  -79.995995   ;159.99199      -79.995995      479975.97      0.0000000      79.995995      79995.992   ;-6.4996748       0.0000000       0.0000000       6.6063361       0.0000000       159.99199    ; 0.0000000     -5.33306636E-02   79.995995       0.0000000       6.5530057       79.995995    ; 0.0000000      -79.995995       79995.992       159.99199       79.995995       479975.97   ]",
 			"settings":
 			{
-				"buffer_size": 4071,
+				"buffer_size": 560,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/FEMMath.f90",
+			"settings":
+			{
+				"buffer_size": 5368,
 				"line_ending": "Unix"
 			}
 		}
@@ -482,18 +515,19 @@
 	},
 	"file_history":
 	[
+		"/home/simenhg/workspace/FEMA/src/output.dat",
+		"/home/simenhg/workspace/FEMA/src/math.f90",
+		"/home/simenhg/workspace/FEMA/FEMA.sublime-project",
 		"/home/simenhg/workspace/FEMA/FEMA.sublime-workspace",
 		"/home/simenhg/workspace/FEMA/axbsolver.py",
 		"/home/simenhg/workspace/FEMA/src/inputS219.dat",
 		"/home/simenhg/workspace/FEMA/src/inputEasy.dat",
 		"/home/simenhg/workspace/FEMA/src/inputE52S224.dat",
-		"/home/simenhg/workspace/FEMA/src/math.f90",
 		"/home/simenhg/Downloads/lapacks.f90",
 		"/home/simenhg/.config/sublime-text-2/Packages/SublimeCodeIntel/Base File.sublime-settings",
 		"/home/simenhg/.config/sublime-text-2/Packages/User/Default (Linux).sublime-keymap",
 		"/home/simenhg/.config/sublime-text-2/Packages/Default/Default (Linux).sublime-keymap",
 		"/home/simenhg/Documents/skole/prosedyreorientert/math/gauss.f90",
-		"/home/simenhg/workspace/FEMA/src/output.dat",
 		"/home/simenhg/glibal.txt",
 		"/home/simenhg/.config/sublime-text-2/Packages/SublimeCodeIntel/Default (Linux).sublime-mousemap",
 		"/home/simenhg/.config/sublime-text-2/Packages/Terminal/Default (Linux).sublime-keymap",
@@ -501,8 +535,7 @@
 		"/home/simenhg/workspace/FEMA/src/Makefile",
 		"/home/simenhg/.config/sublime-text-2/Packages/User/Fortran - Modern.sublime-settings",
 		"/home/simenhg/.config/sublime-text-2/Packages/User/FEMA.sublime-build",
-		"/home/simenhg/.config/sublime-text-2/Packages/User/McMake.sublime-build",
-		"/home/simenhg/workspace/FEMA/FEMA.sublime-project"
+		"/home/simenhg/.config/sublime-text-2/Packages/User/McMake.sublime-build"
 	],
 	"find":
 	{
@@ -510,7 +543,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 0.0,
+		"height": 93.0,
 		"where_history":
 		[
 			""
@@ -521,6 +554,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"]]",
+			",",
+			"]]",
+			" 479975.97   ]]",
 			"print",
 			"TODO",
 			"''\n",
@@ -600,28 +637,57 @@
 		"regex": false,
 		"replace_history":
 		[
+			"]]",
 			"RGSMLEN",
 			"inertia",
 			"angle"
 		],
 		"reverse": false,
-		"show_context": true,
-		"use_buffer2": true,
+		"show_context": false,
+		"use_buffer2": false,
 		"whole_word": false,
 		"wrap": true
 	},
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
+					"file": "Test/axbsolver.py",
+					"settings":
+					{
+						"buffer_size": 4617,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3178,
+								3178
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1170.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
 					"file": "src/FEMMethods.f90",
 					"settings":
 					{
-						"buffer_size": 12085,
+						"buffer_size": 12704,
 						"regions":
 						{
 							"bookmarks":
@@ -637,8 +703,8 @@
 						"selection":
 						[
 							[
-								4940,
-								4940
+								10932,
+								10932
 							]
 						],
 						"settings":
@@ -648,13 +714,13 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2564.0,
+						"translation.y": 5352.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 1,
+					"buffer": 2,
 					"file": "src/FEMUtility.f90",
 					"settings":
 					{
@@ -682,7 +748,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 2,
+					"buffer": 3,
 					"file": "src/FEM.f90",
 					"settings":
 					{
@@ -693,8 +759,8 @@
 						"selection":
 						[
 							[
-								0,
-								0
+								1140,
+								1140
 							]
 						],
 						"settings":
@@ -704,13 +770,13 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 135.0,
+						"translation.y": 450.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 4,
 					"file": "README.md",
 					"settings":
 					{
@@ -738,10 +804,11 @@
 			]
 		},
 		{
+			"selected": 6,
 			"sheets":
 			[
 				{
-					"buffer": 4,
+					"buffer": 5,
 					"file": "todo.md",
 					"settings":
 					{
@@ -767,7 +834,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 6,
 					"file": "src/input.dat",
 					"settings":
 					{
@@ -778,8 +845,8 @@
 						"selection":
 						[
 							[
-								135,
-								135
+								123,
+								123
 							]
 						],
 						"settings":
@@ -793,7 +860,33 @@
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 7,
+					"file": "src/inputE53.dat",
+					"settings":
+					{
+						"buffer_size": 361,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								144,
+								144
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
 					"file": "src/FEMTypes.f90",
 					"settings":
 					{
@@ -821,26 +914,24 @@
 					"type": "text"
 				},
 				{
-					"buffer": 7,
-					"file": "src/output.dat",
+					"buffer": 9,
+					"file": "src/inputS219.dat",
 					"settings":
 					{
-						"buffer_size": 781,
+						"buffer_size": 142,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								781,
-								781
+								117,
+								117
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -849,19 +940,44 @@
 					"type": "text"
 				},
 				{
-					"buffer": 8,
-					"file": "src/math.f90",
+					"buffer": 10,
 					"settings":
 					{
-						"buffer_size": 4071,
+						"buffer_size": 560,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								560,
+								560
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Fortran/Syntaxes/Fortran - Modern.tmLanguage"
+						},
+						"translation.x": 2663.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "src/FEMMath.f90",
+					"settings":
+					{
+						"buffer_size": 5368,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4838,
+								4838
 							]
 						],
 						"settings":
@@ -871,7 +987,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 156.0,
+						"translation.y": 2430.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -907,7 +1023,7 @@
 		"cols":
 		[
 			0.0,
-			0.459895833333,
+			0.565545550847,
 			1.0
 		],
 		"rows":
@@ -935,6 +1051,18 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"py",
+				"Test/axbsolver.py"
+			],
+			[
+				"femm",
+				"src/FEMMath.f90"
+			],
+			[
+				"in",
+				"src/inputS219.dat"
+			],
 			[
 				"",
 				"/home/simenhg/workspace/FEMA/src/FEMMethods.f90"
