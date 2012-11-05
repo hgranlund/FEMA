@@ -4,6 +4,10 @@
 Simple Finite  Analysis for calculating loads in frame structures.
 
 
+## Beskrivelse
+Programmer kalkulerer krefter og forskyvninger på en bjelke kontruksjon. Hver bjelke har 6 grader av frihet. 
+
+
 ## input.dat
 Inputfilen skal inneholde all nødvendig data for å gjøre en FEA. Inputfilen er bygget opp på denne måten:
 
@@ -14,7 +18,7 @@ Inputfilen skal inneholde all nødvendig data for å gjøre en FEA. Inputfilen e
 	
 * Liste med Elementer med format:
 
-	E-modul,Areal, E-modul*I, node1, node2
+	E-modul,Areal, I, node1, node2
 	
 * Liste med krefter, med format:
 	

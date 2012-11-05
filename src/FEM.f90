@@ -33,16 +33,9 @@ program FEM
      print *,'Errorflag = ' ,Errorflag
      stop
   end if
-!   call WriteOutput()
+   call WriteOutput()
 
 contains
-  !###############################
-  ! ReadInput leser inputfilen og pupulerer variable
-  !
-  ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.0
-  !###############################
-
   Subroutine ReadInput()
     integer ::n, numberOfNodes, numberOfElm,numberOfLoads
     type (element) :: elm
@@ -54,7 +47,6 @@ contains
     read (file_in,*,iostat=errorFlag) (Nodes(n), n=1,numberOfNodes)
     read (file_in,*, iostat=errorFlag) (Elms(n)%e,Elms(n)%a,Elms(n)%i,Elms(n)%node1,Elms(n)%node2,n=1,numberOfElm)
     read (file_in,*, iostat=errorFlag) (Loads(n),n=1,numberOfLoads)
-        print *, errorFlag
     if ( errorFlag /= 0 ) stop "Read error in file file_in"
 
     if (pr_switch >= 5 ) then 
@@ -66,25 +58,26 @@ contains
 
   end Subroutine ReadInput
 
-
-   !###############################
-  ! WriteOutput skriver data til file_out
-  !
-  ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.0
-  !###############################
-
   Subroutine WriteOutput()
     integer ::n
-
-    write(file_out, *, iostat=errorFlag) DisplacementVector
     write (file_out,*,iostat=errorFlag), '==============================================================='
-    write(file_out,*, iostat=errorFlag) 'Elementer: [E-modul, Areal, Inertia, Lengde, Cos(theta), &
-    &Sin(Theta), KraftVektor, Node1, Node2'
+    write (file_out,*,iostat=errorFlag), '==============================================================='
+    write(file_out,*, iostat=errorFlag) 'Forskyvningsvector'
+    write(file_out, *, iostat=errorFlag) DisplacementVector
+    write (file_out,*,iostat=errorFlag), ''
+    write (file_out,*,iostat=errorFlag), '==============================================================='
+    write(file_out,*, iostat=errorFlag) 'ElementNr:' 
+    write(file_out,*, iostat=errorFlag) '  Areal,          Lengde,         Cos(theta),       Node1,        Node2'
+    write(file_out,*, iostat=errorFlag) '  Fx1,            Fy1,            Mr1;               Fx2,          Fy2,           Mr2 '
+    write(file_out,*, iostat=errorFlag) ''
     
+
     do n=1, ubound(Elms,1)
-      write(file_out,*, iostat=errorFlag) Elms(n)
+      write(file_out,*, iostat=errorFlag) 'ElementNr:', n
+      write(file_out,*, iostat=errorFlag) Elms(n)%a,Elms(n)%l,Elms(n)%cosT,Elms(n)%node1,Elms(n)%node2
+      write(file_out,*, iostat=errorFlag) Elms(n)%ForceVector
       write(file_out,*, iostat=errorFlag) ''
+
     end do
        if ( errorFlag /= 0 ) stop "Write error in file file_out"
 

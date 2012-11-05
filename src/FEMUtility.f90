@@ -2,9 +2,9 @@ module FEMUtility
 
 	implicit none
 
-	   ! pr_switch brukes til å bestemme hva som skal printes ut. 
+	   ! pr_switch brukes til å bestemme hva som skal printes ut.  0= ingen ting, 10 = alt 
 
-    integer , parameter :: pr_switch=10
+    integer , parameter :: pr_switch=0
 
 	contains 
 
@@ -23,7 +23,7 @@ module FEMUtility
 
     print * , ' #######################################'
     do i=lbound(A,1), ubound(A,1)
-       print *,(A(i,j), j=lbound(A,2), ubound(A,2))
+       print *,(A(i,j)/66670, j=lbound(A,2), ubound(A,2))
     end do
     print *, '####################################### '
     print *,''
@@ -32,7 +32,7 @@ module FEMUtility
 
 
   !###############################
-  !Prosedyren Setter alle elementene i Matrix til null
+  !NullifyRealMatrix Setter alle elementene i Matrix til null
   !
   ! Author: Simen Haugerud Granlund
   ! Date/version: 02-11-12/ 1.0
@@ -49,7 +49,7 @@ module FEMUtility
 
 
   !###############################
-  !Prosedyren Setter alle elementene i vector til null
+  !NullifyRealVector Setter alle elementene i vector til null
   !
   ! Author: Simen Haugerud Granlund
   ! Date/version: 02-11-12/ 1.0
@@ -66,13 +66,13 @@ module FEMUtility
 
 
   !###############################
-  ! swapRow bytter rad r1 med r2 i matrisen A
+  ! SwapRow bytter rad r1 med r2 i matrisen A
   !
   ! Author: Simen Haugerud Granlund
   ! Date/version: 02-11-12/ 1.0
   !###############################
 
-  subroutine swapRow(A,r1,r2)
+  subroutine SwapRow(A,r1,r2)
     real, intent(inout) :: A(:,:)
     integer, intent(in) :: r1,r2
 
