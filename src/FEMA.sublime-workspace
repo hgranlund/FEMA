@@ -3,356 +3,15 @@
 	{
 		"selected_items":
 		[
-			[
-				"sw",
-				"swapAB"
-			],
-			[
-				"swap",
-				"swapRow"
-			],
-			[
-				"su",
-				"subroutine"
-			],
-			[
-				"gl",
-				"globalIndex"
-			],
-			[
-				"null",
-				"NullifyRealVector"
-			],
-			[
-				"global",
-				"globalestivhetsmatrisen"
-			],
-			[
-				"cy",
-				"cycle"
-			],
-			[
-				"L",
-				"LoadVector"
-			],
-			[
-				"Gl",
-				"GlobalStiffnessMatrix"
-			],
-			[
-				"file",
-				"file_in"
-			],
-			[
-				"re",
-				"read	Read"
-			],
-			[
-				"file_",
-				"file_out"
-			],
-			[
-				"op",
-				"open	Output File"
-			],
-			[
-				"err",
-				"errorFlag"
-			],
-			[
-				"for",
-				"ForceVector"
-			],
-			[
-				"em",
-				"elm"
-			],
-			[
-				"io",
-				"iostat"
-			],
-			[
-				"wr",
-				"write	Write"
-			],
-			[
-				"fil",
-				"file_out"
-			],
-			[
-				"El",
-				"ElementLoadVector"
-			],
-			[
-				"Ele",
-				"ElementLoadVector"
-			],
-			[
-				"R",
-				"ElmsRotationMatrix"
-			],
-			[
-				"num",
-				"numberOfLoads"
-			],
-			[
-				"nu",
-				"numberOfNodes"
-			],
-			[
-				"mat",
-				"Matrix"
-			],
-			[
-				"M",
-				"Matrix"
-			],
-			[
-				"h",
-				"heigth"
-			],
-			[
-				"int",
-				"integer"
-			],
-			[
-				"fun",
-				"fun	function"
-			],
-			[
-				"elm",
-				"Elms"
-			],
-			[
-				"F",
-				"ForceVector"
-			],
-			[
-				"D",
-				"DisplacementVector"
-			],
-			[
-				"Di",
-				"DisplacementVectorWithZero"
-			],
-			[
-				"no",
-				"node1"
-			],
-			[
-				"P",
-				"PrintMatrix"
-			],
-			[
-				"Load",
-				"LoadsOnElement"
-			],
-			[
-				"sub",
-				"subroutine"
-			],
-			[
-				"LS",
-				"LocalStiffness"
-			],
-			[
-				"node",
-				"node2"
-			],
-			[
-				"s",
-				"s"
-			],
-			[
-				"len",
-				"length"
-			],
-			[
-				"sin",
-				"sinT"
-			],
-			[
-				"Lo",
-				"LoadsOnNodes"
-			],
-			[
-				"S",
-				"Subroutine"
-			],
-			[
-				"Elm",
-				"Elms"
-			],
-			[
-				"el",
-				"element"
-			],
-			[
-				"inte",
-				"integer"
-			],
-			[
-				"G",
-				"GSMlen"
-			],
-			[
-				"Element",
-				"ElementDisplacementVector"
-			],
-			[
-				"di",
-				"DisplacementVector"
-			],
-			[
-				"GTR",
-				"GTRGConverter"
-			],
-			[
-				"dis",
-				"DisplacementVector"
-			],
-			[
-				"t",
-				"t	Quick Custom Type"
-			],
-			[
-				"pr",
-				"pr_switch"
-			],
-			[
-				"in",
-				"int	Integer"
-			],
-			[
-				"B",
-				"BackwardSubstitution"
-			],
-			[
-				"b",
-				"backwardSubstitution"
-			],
-			[
-				"eps",
-				"epsilon"
-			],
-			[
-				"then",
-				"then"
-			],
-			[
-				"cl",
-				"closeToZeroBug"
-			],
-			[
-				"f",
-				"fun	function"
-			],
-			[
-				"Loa",
-				"LoadVector"
-			],
-			[
-				"if",
-				"if	if (single line)"
-			],
-			[
-				"prin",
-				"PrintMatrix"
-			],
-			[
-				"Loc",
-				"LocalStiffnessMatrix"
-			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "FEMMethods.f90",
-			"settings":
-			{
-				"buffer_size": 14553,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "FEMUtility.f90",
-			"settings":
-			{
-				"buffer_size": 1951,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "FEM.f90",
-			"settings":
-			{
-				"buffer_size": 2920,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/home/simenhg/workspace/FEMA/README.md",
-			"settings":
-			{
-				"buffer_size": 0,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/home/simenhg/workspace/FEMA/todo.md",
-			"settings":
-			{
-				"buffer_size": 0,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "inputS219.dat",
-			"settings":
-			{
-				"buffer_size": 139,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "inputE52S224.dat",
-			"settings":
-			{
-				"buffer_size": 136,
-				"line_ending": "Unix",
-				"name": "3,2,4"
-			}
-		},
-		{
-			"file": "FEMTypes.f90",
-			"settings":
-			{
-				"buffer_size": 674,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "output.dat",
-			"settings":
-			{
-				"buffer_size": 2499,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "math.f90",
+			"file": "FEMMath.f90",
 			"settings":
 			{
 				"buffer_size": 5368,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/home/simenhg/workspace/FEMA/axbsolver.py",
-			"settings":
-			{
-				"buffer_size": 0,
 				"line_ending": "Unix"
 			}
 		}
@@ -364,123 +23,15 @@
 		"selected_items":
 		[
 			[
-				"mark",
-				"Set Syntax: Markdown"
-			],
-			[
-				"install",
-				"Package Control: Install Package"
-			],
-			[
-				"markd",
-				"Pandoc: Render Markdown DocX"
-			],
-			[
-				"markdown",
-				"Set Syntax: MultiMarkdown"
-			],
-			[
-				"markdoen",
-				"Markdown Preview: preview in Sublime Text"
-			],
-			[
-				"MODER",
-				"Set Syntax: Fortran - Modern"
-			],
-			[
-				"mo",
-				"Set Syntax: Fortran - Modern"
-			],
-			[
-				"for",
-				"Set Syntax: Fortran - Modern"
-			],
-			[
-				"shell",
-				"Set Syntax: Shell Script (Bash)"
-			],
-			[
-				"git",
-				"Git: Diff Tool Current File"
-			],
-			[
-				"Package Control: ",
-				"Package Control: Disable Package"
-			],
-			[
-				"enable",
-				"Package Control: Disable Package"
-			],
-			[
-				"pack",
-				"Package Control: Enable Package"
-			],
-			[
-				"add",
-				"Package Control: Add Repository"
-			],
-			[
-				"mode",
-				"Set Syntax: Fortran - Modern"
-			],
-			[
-				"remove",
-				"Package Control: Remove Package"
-			],
-			[
-				"inst",
-				"Package Control: Install Package"
-			],
-			[
-				"fo",
-				"Set Syntax: Fortran - Punchcard"
-			],
-			[
-				"comm",
-				"Toggle Block Comment"
-			],
-			[
-				"insta",
-				"Package Control: Install Package"
-			],
-			[
-				"ins",
-				"Package Control: Install Package"
-			],
-			[
-				"pa",
-				"Package Control: Install Package"
-			],
-			[
-				"pag",
-				"Package Control: Install Package"
-			],
-			[
-				"fort",
-				"Set Syntax: Fortran - Punchcard"
-			],
-			[
-				"",
-				"Preferences: Key Bindings - User"
-			],
-			[
-				"key",
-				"Preferences: Key Bindings - User"
-			],
-			[
-				"make",
-				"Set Syntax: Makefile"
-			],
-			[
-				"bul",
-				"Build: Build"
+				"rever",
+				"File: Revert"
 			]
 		],
-		"width": 593.0
+		"width": 392.0
 	},
 	"console":
 	{
-		"height": 139.0
+		"height": 0.0
 	},
 	"distraction_free":
 	{
@@ -493,32 +44,19 @@
 	},
 	"file_history":
 	[
-		"/home/simenhg/.config/sublime-text-2/Packages/SublimeCodeIntel/Base File.sublime-settings",
-		"/home/simenhg/.config/sublime-text-2/Packages/User/Default (Linux).sublime-keymap",
-		"/home/simenhg/.config/sublime-text-2/Packages/Default/Default (Linux).sublime-keymap",
-		"/home/simenhg/Documents/skole/prosedyreorientert/math/gauss.f90",
-		"/home/simenhg/workspace/FEMA/src/output.dat",
-		"/home/simenhg/glibal.txt",
-		"/home/simenhg/.config/sublime-text-2/Packages/SublimeCodeIntel/Default (Linux).sublime-mousemap",
-		"/home/simenhg/.config/sublime-text-2/Packages/Terminal/Default (Linux).sublime-keymap",
-		"/home/simenhg/.config/sublime-text-2/Packages/Terminal/Terminal.sublime-settings",
-		"/home/simenhg/workspace/FEMA/src/Makefile",
-		"/home/simenhg/workspace/FEMA/axbsolver.py",
-		"/home/simenhg/.config/sublime-text-2/Packages/User/Fortran - Modern.sublime-settings",
-		"/home/simenhg/.config/sublime-text-2/Packages/User/FEMA.sublime-build",
-		"/home/simenhg/.config/sublime-text-2/Packages/User/McMake.sublime-build",
-		"/home/simenhg/workspace/FEMA/FEMA.sublime-project"
+		"/home/simenhg/github/FEMA/src/math/math.f90",
+		"/home/simenhg/github/FEMA/src/math.f90",
+		"/home/simenhg/github/FEMA/src/Makefile"
 	],
 	"find":
 	{
-		"height": 37.0
+		"height": 35.0
 	},
 	"find_in_files":
 	{
 		"height": 0.0,
 		"where_history":
 		[
-			""
 		]
 	},
 	"find_state":
@@ -526,78 +64,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"#",
-			"int",
-			"len",
-			"temp",
-			")\n",
-			"globalIndex",
-			"GTRGConverter",
-			"tempLoad",
-			"pop",
-			"Matrix",
-			"LoadVector",
-			"Loads",
-			"popula",
-			"globalmater",
-			"ios",
-			"t3",
-			"\n  ",
-			"do",
-			"ctrl+shift+d",
-			"1",
-			"elm",
-			"Elms",
-			"file_out",
-			"write",
-			"nulli",
-			"numberof",
-			"elm",
-			"inertia",
-			"i",
-			"null",
-			"Null",
-			"number",
-			"number\n",
-			"number",
-			"TotalDegrees",
-			"printM",
-			"print",
-			"printm",
-			"1",
-			"sinT",
-			"cosT",
-			"print",
-			"load",
-			"\n     ",
-			"hide",
-			"show",
-			"hide",
-			"RGSMLen",
-			"    \n",
-			"type",
-			"typ",
-			"type",
-			"GSMLen",
-			"GlobalToRedusedGlobalStiffnessMatrixConverter",
-			"]]\n",
-			"070",
-			"069",
-			"    ]",
-			"\n[",
-			"READ",
-			"        ",
-			"epsil",
-			"READ",
-			"A",
-			"lower_sigular_value",
-			")\n",
-			"),",
-			"in",
-			"print *, x1,x2,y1,y2,dy,dx, atan(dy/dx)",
-			"make",
-			"test",
-			"\n     "
+			"\n    ",
+			"sum"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -605,9 +73,6 @@
 		"regex": false,
 		"replace_history":
 		[
-			"RGSMLEN",
-			"inertia",
-			"angle"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -623,94 +88,10 @@
 			[
 				{
 					"buffer": 0,
-					"file": "FEMMethods.f90",
+					"file": "FEMMath.f90",
 					"settings":
 					{
-						"buffer_size": 14553,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								42,
-								42
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Fortran/Syntaxes/Fortran - Modern.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "FEMUtility.f90",
-					"settings":
-					{
-						"buffer_size": 1951,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1462,
-								1462
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Fortran/Syntaxes/Fortran - Modern.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1224.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "FEM.f90",
-					"settings":
-					{
-						"buffer_size": 2920,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2245,
-								2245
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Fortran/Syntaxes/Fortran - Modern.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 221.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "/home/simenhg/workspace/FEMA/README.md",
-					"settings":
-					{
-						"buffer_size": 0,
+						"buffer_size": 5368,
 						"regions":
 						{
 						},
@@ -723,7 +104,9 @@
 						],
 						"settings":
 						{
-							"syntax": "Packages/Markdown/Markdown.tmLanguage"
+							"syntax": "Packages/Fortran/Syntaxes/Fortran - Modern.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -734,200 +117,8 @@
 			]
 		},
 		{
-			"selected": 2,
 			"sheets":
 			[
-				{
-					"buffer": 4,
-					"file": "/home/simenhg/workspace/FEMA/todo.md",
-					"settings":
-					{
-						"buffer_size": 0,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Markdown/MultiMarkdown.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "inputS219.dat",
-					"settings":
-					{
-						"buffer_size": 139,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								114,
-								114
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "inputE52S224.dat",
-					"settings":
-					{
-						"buffer_size": 136,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								62,
-								62
-							]
-						],
-						"settings":
-						{
-							"auto_name": "3,2,4",
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "FEMTypes.f90",
-					"settings":
-					{
-						"buffer_size": 674,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								674,
-								674
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Fortran/Syntaxes/Fortran - Modern.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "output.dat",
-					"settings":
-					{
-						"buffer_size": 2499,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "math.f90",
-					"settings":
-					{
-						"buffer_size": 5368,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								5363,
-								5363
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Fortran/Syntaxes/Fortran - Modern.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 3621.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 10,
-					"file": "/home/simenhg/workspace/FEMA/axbsolver.py",
-					"settings":
-					{
-						"buffer_size": 0,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
 			]
 		}
 	],
@@ -937,7 +128,7 @@
 	},
 	"input":
 	{
-		"height": 33.0
+		"height": 0.0
 	},
 	"layout":
 	{
@@ -959,7 +150,7 @@
 		"cols":
 		[
 			0.0,
-			0.521875,
+			0.5,
 			1.0
 		],
 		"rows":
@@ -971,15 +162,11 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 182.0
-	},
-	"output.git":
-	{
-		"height": 118.0
+		"height": 112.0
 	},
 	"replace":
 	{
-		"height": 64.0
+		"height": 0.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -988,11 +175,23 @@
 		"selected_items":
 		[
 			[
-				"",
-				"/home/simenhg/github/FEMA/src/FEMUtility.f90"
+				"math",
+				"src/FEMMath.f90"
 			],
 			[
-				"frm",
+				"mat",
+				"src/math/math.f90"
+			],
+			[
+				"",
+				"/home/simenhg/github/FEMA/src/math.f90"
+			],
+			[
+				"mak",
+				"/home/simenhg/github/FEMA/src/Makefile"
+			],
+			[
+				"fem",
 				"/home/simenhg/github/FEMA/src/FEMTypes.f90"
 			]
 		],
@@ -1003,6 +202,10 @@
 		"height": 500.0,
 		"selected_items":
 		[
+			[
+				"",
+				"/home/simenhg/github/FEMA/FEMA.sublime-project"
+			]
 		],
 		"width": 380.0
 	},

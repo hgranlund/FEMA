@@ -11,7 +11,7 @@
 			"file": "src/FEMTypes.f90",
 			"settings":
 			{
-				"buffer_size": 484,
+				"buffer_size": 674,
 				"line_ending": "Unix"
 			}
 		},
@@ -27,15 +27,7 @@
 			"file": "src/FEM.f90",
 			"settings":
 			{
-				"buffer_size": 1730,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/FEMMethods.f90",
-			"settings":
-			{
-				"buffer_size": 8136,
+				"buffer_size": 2920,
 				"line_ending": "Unix"
 			}
 		},
@@ -43,7 +35,15 @@
 			"file": "src/math.f90",
 			"settings":
 			{
-				"buffer_size": 5195,
+				"buffer_size": 0,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/FEMMethods.f90",
+			"settings":
+			{
+				"buffer_size": 14553,
 				"line_ending": "Unix"
 			}
 		}
@@ -114,7 +114,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 3,
 			"sheets":
 			[
 				{
@@ -122,15 +122,15 @@
 					"file": "src/FEMTypes.f90",
 					"settings":
 					{
-						"buffer_size": 484,
+						"buffer_size": 674,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								484,
-								484
+								674,
+								674
 							]
 						],
 						"settings":
@@ -176,15 +176,15 @@
 					"file": "src/FEM.f90",
 					"settings":
 					{
-						"buffer_size": 1730,
+						"buffer_size": 2920,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								219,
+								219
 							]
 						],
 						"settings":
@@ -201,10 +201,36 @@
 				},
 				{
 					"buffer": 3,
+					"file": "src/math.f90",
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Fortran/Syntaxes/Fortran - Modern.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
 					"file": "src/FEMMethods.f90",
 					"settings":
 					{
-						"buffer_size": 8136,
+						"buffer_size": 14553,
 						"regions":
 						{
 						},
@@ -223,40 +249,6 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 0,
-			"sheets":
-			[
-				{
-					"buffer": 4,
-					"file": "src/math.f90",
-					"settings":
-					{
-						"buffer_size": 5195,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1339,
-								1397
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Fortran/Syntaxes/Fortran - Modern.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 612.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -281,18 +273,11 @@
 				0,
 				1,
 				1
-			],
-			[
-				1,
-				0,
-				2,
-				1
 			]
 		],
 		"cols":
 		[
 			0.0,
-			0.5,
 			1.0
 		],
 		"rows":
