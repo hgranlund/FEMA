@@ -23,10 +23,7 @@ contains
     integer :: status, RGSMLen,i,j, GTRGConverter(DOF*size(Nodes))
     real , ALLOCATABLE :: GlobalStiffnessMatrix(:,:), LoadVector(:)
 
-    if (errorFlag .NE. 0)then
-       print *, 'Errorflag at begining of CalcDisplacement'
-       return
-    end if
+    if (errorFlag .NE. 0) return
 
     call SetElementProperties(Elms, Nodes)  
     CALL GlobalToRedusedGlobalStiffnessMatrixConverter(GTRGConverter, Nodes)
