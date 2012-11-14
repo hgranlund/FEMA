@@ -59,27 +59,34 @@ contains
   end Subroutine ReadInput
 
   Subroutine WriteOutput()
-    integer ::n
-    write (file_out,*,iostat=errorFlag), '==============================================================='
-    write (file_out,*,iostat=errorFlag), '==============================================================='
-    write(file_out,*, iostat=errorFlag) 'Forskyvningsvector'
-    write(file_out, *, iostat=errorFlag) DisplacementVector
-    write (file_out,*,iostat=errorFlag), ''
-    write (file_out,*,iostat=errorFlag), '==============================================================='
-    write(file_out,*, iostat=errorFlag) 'ElementNr:' 
-    write(file_out,*, iostat=errorFlag) '  Areal,          Lengde,         Cos(theta),       Node1,        Node2'
-    write(file_out,*, iostat=errorFlag) '  Fx1,            Fy1,            Mr1;               Fx2,          Fy2,           Mr2 '
-    write(file_out,*, iostat=errorFlag) ''
+    integer ::n, numberOfElm
+
+    numberOfElm = size(Elms)
+    write(file_out,*, iostat=errorFlag), numberOfElm
+    do n=1,numberOfElm
+      write (file_out,*,iostat=errorFlag), Nodes(Elms(n)%node1)%x,&
+      & Nodes(Elms(n)%node1)%y,Nodes(Elms(n)%node2)%x,Nodes(Elms(n)%node2)%y
+    end do
+!     write (file_out,*,iostat=errorFlag), '==============================================================='
+!     write (file_out,*,iostat=errorFlag), '==============================================================='
+!     write(file_out,*, iostat=errorFlag) 'Forskyvningsvector'
+!     write(file_out, *, iostat=errorFlag) DisplacementVector
+!     write (file_out,*,iostat=errorFlag), ''
+!     write (file_out,*,iostat=errorFlag), '==============================================================='
+!     write(file_out,*, iostat=errorFlag) 'ElementNr:' 
+!     write(file_out,*, iostat=errorFlag) '  Areal,          Lengde,         Cos(theta),       Node1,        Node2'
+!     write(file_out,*, iostat=errorFlag) '  Fx1,            Fy1,            Mr1;               Fx2,          Fy2,           Mr2 '
+!     write(file_out,*, iostat=errorFlag) ''
     
 
-    do n=1, ubound(Elms,1)
-      write(file_out,*, iostat=errorFlag) 'ElementNr:', n
-      write(file_out,*, iostat=errorFlag) Elms(n)%a,Elms(n)%l,Elms(n)%cosT,Elms(n)%node1,Elms(n)%node2
-      write(file_out,*, iostat=errorFlag) Elms(n)%ForceVector
-      write(file_out,*, iostat=errorFlag) ''
+!     do n=1, ubound(Elms,1)
+!       write(file_out,*, iostat=errorFlag) 'ElementNr:', n
+!       write(file_out,*, iostat=errorFlag) Elms(n)%a,Elms(n)%l,Elms(n)%cosT,Elms(n)%node1,Elms(n)%node2
+!       write(file_out,*, iostat=errorFlag) Elms(n)%ForceVector
+!       write(file_out,*, iostat=errorFlag) ''
 
-    end do
-       if ( errorFlag /= 0 ) stop "Write error in file file_out"
+!     end do
+!        if ( errorFlag /= 0 ) stop "Write error in file file_out"
 
   end Subroutine WriteOutput
 
