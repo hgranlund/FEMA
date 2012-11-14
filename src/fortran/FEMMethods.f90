@@ -54,7 +54,6 @@ contains
        print *, '##### Forskyvninger: '
        print *,  DisplacementVector
     end if
-
     call SetElementForces(Elms, DisplacementVector, GTRGConverter)
   end subroutine DoFEA
 
@@ -346,35 +345,33 @@ contains
 
 
 
+
   !###############################
-  ! Prosedyren kalkulerer kreftene til elementet ut i fra forskyvningene
+  ! Prosedyren kalkulerer kreftene til elementet ut i fra forskyvningene 
   !
   ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.0
+  ! Date/version: 02-11-12/ 1.1
   !###############################
 
-  Subroutine LoadsOnElement(ElementLoadVector,elm, ElementDisplacementVector)
-    real, intent(in) :: ElementDisplacementVector(:) 
+  Subroutine LoadsOnElement(elm)
     type (element), intent(inout) :: elm
-    real, intent(out):: ElementLoadVector(:) 
 
     real :: LocalStiffnessMatrix(DOF*2,DOF*2), ElmsRotationMatrix(6,6)
 
-    ElmsRotationMatrix=Transpose(RotationMatrix(elm%cosT,elm%sinT))
-
+    ElmsRotationMatrix =Transpose(RotationMatrix(elm%cosT,elm%sinT))
     call LocalStiffness(LocalStiffnessMatrix, elm)
-    ElementLoadVector = matmul(ElmsRotationMatrix, ElementDisplacementVector)
-    ElementLoadVector = matmul(LocalStiffnessMatrix, ElementLoadVector)
+    elm%ForceVector = matmul(ElmsRotationMatrix, elm%Displacement)
+    elm%ForceVector = matmul(LocalStiffnessMatrix, elm%ForceVector)
   end Subroutine LoadsOnElement
 
 
 
 
   !###############################
-  ! Prosedyren kalkulerer kreftene på alle elementet ut i fra forskyvningene
+  ! Prosedyren kalkulerer kreftene på alle elementet ut i fra forskyvningene og setter de locale forskyvningene til hvert element
   !
   ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.0
+  ! Date/version: 02-11-12/ 1.1
   !###############################
 
   Subroutine SetElementForces(Elms, DisplacementVector, GTRGConverter)
@@ -383,15 +380,14 @@ contains
     integer , intent(in) :: GTRGConverter(:)
 
     integer :: i,j
-    real ::  ElementDisplacementVector(DOF*2)
 
 
     do i =1,size(Elms)
        do j=1,DOF
-          ElementDisplacementVector(j)=DisplacementVector(GTRGConverter(((Elms(i)%node1-1)*DOF) +j))
-          ElementDisplacementVector(j+3)=DisplacementVector(GTRGConverter(((Elms(i)%node2-1)*DOF) +j) )
+          Elms(i)%Displacement(j)=DisplacementVector(GTRGConverter(((Elms(i)%node1-1)*DOF) +j))
+          Elms(i)%Displacement(j+3)=DisplacementVector(GTRGConverter(((Elms(i)%node2-1)*DOF) +j) )
        end do
-       call LoadsOnElement(Elms(i)%ForceVector, Elms(i), ElementDisplacementVector )
+       call LoadsOnElement(Elms(i))
        if(pr_switch>5)then
           print * ,''
           print *,'Krefter på element nr : ', i
@@ -412,7 +408,6 @@ contains
   !###############################
 
   subroutine SetElementProperties(Elms, Nodes)
-
     type (element), intent(inout) :: Elms(:)
     type (node) , intent(in) :: Nodes(:)
 

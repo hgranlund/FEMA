@@ -12,7 +12,7 @@
     integer , parameter ::  DOF=3 !     ! DOF= Degrace of freedom. Maksimalt antall frihaetsgrader per node
 
     type  element
-       real :: e,a,i,l, cosT , sinT, ForceVector(DOF*2)
+       real :: e,a,i,l, cosT , sinT, ForceVector(DOF*2), Displacement(DOF*2)
        integer :: node1, node2 
     end type element
 

@@ -18,7 +18,11 @@
 
  static float rotAngle = 0.;
  static GLuint Window = 0;
+ static int numberOfElms=0;
  static float **beamCoord;
+ static float **forceVector;
+ static float **displacementVector;
+
 // static GLuint TexObj[2];
  static GLfloat Angle = 0.0f;
 // static GLboolean UseObj = GL_FALSE;
@@ -60,30 +64,73 @@
     glEnable (GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glHint (GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
-    glLineWidth (1.5);
+    glLineWidth (2.0);
 
     glClearColor(0.0, 0.0, 0.0, 0.0);
 }
 
-static void display(void)
+float adjustPoint(float point,float ratio, float offset)
 {
-    glClear(GL_COLOR_BUFFER_BIT);
-    glClearColor(1.0, 0.0, 0.0, 0.0);
+    return (point/ratio)-offset;
+}
+
+void drawElements(void)
+{
     int i = 0;
-    for (i = 0; i < 6; ++i)
+    float scale, offsetX,offsetY ;
+    scale= 9000;
+    offsetX=0.5;
+    offsetY=0.5;
+    for (i = 0; i < numberOfElms; ++i)
     {
-        glColor3f (0.0, 1.0, 0.0);
-        glPushMatrix();
         glRotatef(-rotAngle, 0.0, 0.0, 0.1);
         glBegin (GL_LINES);
-        glVertex2f (beamCoord[i][0], beamCoord[i][1]);
-        glVertex2f (beamCoord[i][2], beamCoord[i][3]);
-        glEnd ();
-        glPopMatrix();
-    }
+        glVertex2f (adjustPoint(beamCoord[i][0], scale,offsetX),adjustPoint(beamCoord[i][1], scale,offsetY) );
+        glVertex2f (adjustPoint(beamCoord[i][2], scale,offsetX), adjustPoint(beamCoord[i][3], scale,offsetY));
+
+    } 
+    glEnd ();
+}
+
+static drawMomentDiagrams()
+{
+    int i;
+    float M,Fy;
+    double t, tMax;
+    for (i = 0; i < numberOfElms; ++i)
+        tMax = 9000;
+        t=0;
+        M=forceVector[i][2];
+        Fy=forceVector[i][1];
+    {
+        glBegin(GL_LINE_LOOP);
+        for (t;t<=9000;t+=1) {
+            glVertex2d(t,t);
+            glVertex2d(t,t);
+        }
+        glEnd();
+    } 
+
+}
+
+
+
+static void display(void)
+{
+
+    glColor3f (1.0, 1.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glPushMatrix();
+    drawElements();
+
+
+    drawMomentDiagrams();
+    glPopMatrix();
 
     glFlush();
 }
+
 
 
 
@@ -154,10 +201,11 @@ void keyboard(unsigned char key, int x, int y)
 
 static void readInput(void)
 {
-    int numberOfElm, i, j;
-    scanf("%d", &numberOfElm);
-    beamCoord=malloc(numberOfElm * sizeof(float*));
-    for (i = 0; i < numberOfElm; i++)
+    int  i, j;
+    scanf("%d", &numberOfElms);
+
+    beamCoord=malloc(numberOfElms * sizeof(float*));
+    for (i = 0; i < numberOfElms; i++)
     {
         beamCoord[i]=malloc(4*sizeof(float));
         for ( j = 0; j < 4; j++)
@@ -165,34 +213,55 @@ static void readInput(void)
             scanf("%f", &beamCoord[i][j]);
         }
     }
-    for (i = 0; i < numberOfElm; i++){
-        for (j = 0; j < 4; j++)
-            printf("| %10.4f ", beamCoord[i][j]);
-        printf("\n");
-    }
-}
 
-
-int main( int argc, char *argv[] )
-{
-    glutInit(&argc, argv);
-    glutInitWindowPosition(0, 0);
-    glutInitWindowSize(700, 700);
-    glutInitDisplayMode( GLUT_RGB | GLUT_DEPTH | GLUT_SINGLE );
-
-    init();
-    readInput();
-    Window = glutCreateWindow("Texture Objects");
-    if (!Window)
+    forceVector=malloc(numberOfElms * sizeof(float*));
+    for (i = 0; i < numberOfElms; i++)
     {
-        exit(1);
+        forceVector[i]=malloc(6*sizeof(float));
+        for ( j = 0; j < 6; j++)
+        {
+            scanf("%f", &forceVector[i][j]);
+        }
     }
-    glutReshapeFunc( reshape );
-    glutKeyboardFunc( key );
-    glutKeyboardFunc (keyboard);
+
+    displacementVector=malloc(numberOfElms * sizeof(float*));
+    for (i = 0; i < numberOfElms; i++)
+    {
+        displacementVector[i]=malloc(6*sizeof(float));
+        for ( j = 0; j < 6; j++)
+        {
+            scanf("%f", &displacementVector[i][j]);
+        }
+
+        for (i = 0; i < numberOfElms; i++){
+            for (j = 0; j < 6; j++){
+                printf("| %10.4f ", forceVector[i][j]);}
+                printf("\n");
+            }
+        }
+    }
+
+
+    int main( int argc, char *argv[] )
+    {
+        glutInit(&argc, argv);
+        glutInitWindowPosition(0, 0);
+        glutInitWindowSize(700, 700);
+        glutInitDisplayMode( GLUT_RGB | GLUT_DEPTH | GLUT_SINGLE );
+
+        init();
+        readInput();
+        Window = glutCreateWindow("Texture Objects");
+        if (!Window)
+        {
+            exit(1);
+        }
+        glutReshapeFunc( reshape );
+        glutKeyboardFunc( key );
+        glutKeyboardFunc (keyboard);
 
     // glutIdleFunc( idle );
-    glutDisplayFunc(display);
-    glutMainLoop();
-    return 0;
-}
+        glutDisplayFunc(display);
+        glutMainLoop();
+        return 0;
+    }

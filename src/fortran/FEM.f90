@@ -64,9 +64,16 @@ contains
     numberOfElm = size(Elms)
     write(file_out,*, iostat=errorFlag), numberOfElm
     do n=1,numberOfElm
-      write (file_out,*,iostat=errorFlag), Nodes(Elms(n)%node1)%x,&
+      write (file_out,fmt="( F15.4 F15.4 F15.4 F15.4)",iostat=errorFlag), Nodes(Elms(n)%node1)%x,&
       & Nodes(Elms(n)%node1)%y,Nodes(Elms(n)%node2)%x,Nodes(Elms(n)%node2)%y
     end do
+    do n=1,numberOfElm
+      write (file_out,fmt="( F15.4 F15.4 F15.4 F15.4 F15.4 F15.4 )",iostat=errorFlag), Elms(n)%ForceVector
+    end do
+    do n=1,numberOfElm
+      write (file_out,fmt="( F15.4 F15.4 F15.4 F15.4 F15.4 F15.4 )",iostat=errorFlag), Elms(n)%Displacement
+    end do
+    
 !     write (file_out,*,iostat=errorFlag), '==============================================================='
 !     write (file_out,*,iostat=errorFlag), '==============================================================='
 !     write(file_out,*, iostat=errorFlag) 'Forskyvningsvector'
@@ -86,7 +93,7 @@ contains
 !       write(file_out,*, iostat=errorFlag) ''
 
 !     end do
-!        if ( errorFlag /= 0 ) stop "Write error in file file_out"
+    if ( errorFlag /= 0 ) stop "Write error in file file_out"
 
   end Subroutine WriteOutput
 
