@@ -84,25 +84,6 @@ module FEMUtility
 
   end subroutine swapRow
 
-!   !###############################
-!   ! WriteElementCoordinats skriver kordinatene til hver element til IOEnhet oiUnit
-!   !
-!   ! Author: Simen Haugerud Granlund
-!   ! Date/version: 09-11-12/ 1.0
-!   !###############################
 
-!   subroutine WriteElementCoordinats(ioUnit,Elms, Nodes, errorFlag)
-!     integer , intent(in)::ioUnit
-!      type (elements),   intent(in) :: Elms(:) 
-!      type (elements),   intent(in) :: Nodes(:) 
-
-!      integer :: i,j
-     
-!      do i = 1, size(Elms)
-
-
-!      end do
-    
-!   end subroutine ElementCoordinats
 
  end module FEMUtility

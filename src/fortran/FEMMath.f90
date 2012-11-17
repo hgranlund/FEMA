@@ -3,34 +3,6 @@
 module FEMMath
   use FEMUtility
   implicit none
-!   interface 
-!      subroutine GaussSolver(A,B,X,len, errorFlag) 
-!        integer, intent(in) :: len
-!        integer, intent(inout) :: errorFlag
-!        real, intent(inout)  :: A(len,len), B(len)
-!        REAL, intent(out) :: X(len)
-!      end Subroutine GaussSolver
-
-!      subroutine BackwardSubstitution(A,B,X,len ,errorFlag)
-!        integer, intent(in) :: len
-!        integer, intent(inout) :: errorFlag
-!        real, intent(inout)  :: A(len,len), B(len)
-!        REAL, intent(out) :: X(len)
-!      end Subroutine BackwardSubstitution
-
-!      real  function  AngelFromPoints(x1,y1,x2,y2)
-!        real, intent(in)::x1,y1,x2,y2
-!      end function AngelFromPoints
-
-!      real  function  LengthBetweenPoints(x1,y1,x2,y2)
-!        real, intent(in)::x1,y1,x2,y2
-!      end function LengthBetweenPoints
-
-!      function RotationMatrix(cosT,sinT)
-!        real, intent(in) :: cosT, sinT 
-!      end function RotationMatrix
-!   end interface
-
 
 contains
 
@@ -180,12 +152,10 @@ contains
 
     RotationMatrix(3,3)=1
     RotationMatrix(6,6)=1
-
     RotationMatrix(1,1)=cosT
     RotationMatrix(2,2)=cosT
     RotationMatrix(4,4)=cosT
     RotationMatrix(5,5)=cosT
-
     RotationMatrix(1,2)=-sinT
     RotationMatrix(2,1)=sinT
     RotationMatrix(4,5)=-sinT

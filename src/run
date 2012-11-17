@@ -1,6 +1,6 @@
 #!/bin/bash
 touch temp.dat
-./fortran/FEM < fortran/input.dat > temp.dat
+./fortran/FEM < fortran/inputE53.dat > temp.dat
 cat temp.dat
 ./c/texobj < temp.dat
 rm temp.dat

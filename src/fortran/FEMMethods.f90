@@ -345,7 +345,6 @@ contains
 
 
 
-
   !###############################
   ! Prosedyren kalkulerer kreftene til elementet ut i fra forskyvningene 
   !
@@ -363,7 +362,6 @@ contains
     elm%ForceVector = matmul(ElmsRotationMatrix, elm%Displacement)
     elm%ForceVector = matmul(LocalStiffnessMatrix, elm%ForceVector)
   end Subroutine LoadsOnElement
-
 
 
 
@@ -399,7 +397,6 @@ contains
 
 
 
-
   !###############################
   ! Prosedyren populerer verdiene til elementene
   !
@@ -424,5 +421,33 @@ contains
        Elms(n)%sinT=(y2-y1)/Elms(n)%l
     end do
   end subroutine SetElementProperties
+
+
+
+
+  !###############################
+  ! BiggestNodeValue bytter rad r1 med r2 i matrisen A
+  !
+  ! Author: Simen Haugerud Granlund
+  ! Date/version: 02-11-12/ 1.0
+  !###############################
+
+  function BiggestNodeValue(Nodes)
+    type (node) , intent(in) :: Nodes(:)
+    real :: BiggestNodeValue
+
+    integer :: i,temp
+  
+    BiggestNodeValue=0
+    do i=0,ubound(Nodes,1)
+      if (abs(Nodes(i)%x) > BiggestNodeValue )then
+        BiggestNodeValue = abs(Nodes(i)%x)
+      end if
+      if (abs(Nodes(i)%y) > BiggestNodeValue ) then
+        BiggestNodeValue = abs(Nodes(i)%y)
+       end if 
+    end do
+
+end function BiggestNodeValue
 
 end module FemMethods

@@ -63,7 +63,6 @@
     glEnable (GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glHint (GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
-    glLineWidth (4.0);
 
     glClearColor(0.0, 0.0, 0.0, 0.0);
 }
@@ -119,6 +118,8 @@ void drawElements(void)
     // glScalef(0.1,0.1, 1);
     glRotatef(0, 0.0, 0.0, 0.1);
     glTranslated(-0.5  , -0.5, 0);
+    glLineWidth (5.0);
+
     glBegin (GL_LINES);
     glColor3f (0.0, 0.0, 0.0);
     for (i = 0; i < numberOfElms; ++i)
@@ -143,19 +144,25 @@ static void drawMomentDiagrams(void)
         pervec[1]=beamCoord[i][3]-beamCoord[i][1];
         xMax = getLengthOfVector(pervec)*scale;
         x=0;
-        dx=(xMax)/50;
-        scaleValue=200000000;
+        dx=(xMax)/300;
+        scaleValue=20000*scale;
         getVectorRotation(pervec);
+
         glTranslated(-0.5  , -0.5, 0);
         glTranslated((beamCoord[i][0]), (beamCoord[i][1]), 0);
         glRotatef(getVectorRotation(pervec), 0, 0, 0.1);
+        glLineWidth(2);
         glBegin(GL_LINES);
-        glColor3f (0.5, 0.5, 0.5);
+        glColor3f (1.0, 0.0, 0.0);
         printf(" xmax = %f | dx =%f | scaleValue = %f | Fy = %f | M = %f | pervec 1 =%f | pervec2= %f \n",xMax, dx, scaleValue,Fy,M,pervec[0],pervec[1]);
+        glVertex2d(x/scale, 0);
         for (x;x<=xMax;x+=dx) {
-            glVertex2d(x/scale, momentFunction(x, M, Fy)/scaleValue);
-            glVertex2d(x/scale, 0);
+            glColor3f (0.1, 0.1, 0.1);
+            glVertex2d(x/scale, -momentFunction(x, M, Fy)/scaleValue);
+                glColor3f (0.5, 0.5, 0.5);
+                glVertex2d(x/scale, 0);
         }
+        glVertex2d(xMax/scale, 0);
         glEnd();
         glPopMatrix();
     } 
@@ -169,8 +176,8 @@ static void display(void)
     glColor3f(1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
     glClearColor(0.9, 0.9, 0.9, 0.9);
-    drawElements();
     drawMomentDiagrams();
+    drawElements();
     glFlush();
 }
 
@@ -245,8 +252,7 @@ void keyboard(unsigned char key, int x, int y)
 static void readInput(void)
 {
     int  i, j;
-    scanf("%d", &numberOfElms);
-    scale = 9000;
+    scanf("%d %f", &numberOfElms, &scale);
     beamCoord=malloc(numberOfElms * sizeof(float*));
     for (i = 0; i < numberOfElms; i++)
     {
@@ -254,7 +260,7 @@ static void readInput(void)
         for ( j = 0; j < 4; j++)
         {
             scanf("%f", &beamCoord[i][j]);
-            beamCoord[i][j] =beamCoord[i][j]/9000;
+            beamCoord[i][j] =beamCoord[i][j]/scale;
         }
     }
 
