@@ -1,0 +1,106 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+AngelFromPoints	fortran/FEMMath.f90	/^  real  function  AngelFromPoints(/;"	f	module:FEMMath
+AngelFromPoints	fortran/math.f90	/^  real  function  AngelFromPoints(/;"	f	module:Math
+Angle	c/texobj.c	/^ static GLfloat Angle = 0.0f;$/;"	v	file:
+BackwardSubstitution	fortran/FEMMath.f90	/^  subroutine BackwardSubstitution(/;"	s	module:FEMMath
+BackwardSubstitution	fortran/math.f90	/^  subroutine BackwardSubstitution(/;"	s	module:Math
+CC	c/Makefile	/^CC = gcc$/;"	m
+CFLAGS	c/Makefile	/^CFLAGS = -lglut -lGLU -lGL -lm$/;"	m
+DOF	fortran/FEMTypes.f90	/^      integer :: nodeNr, DOF$/;"	k	type:load
+DOF	fortran/FEMTypes.f90	/^    integer , parameter ::  DOF=/;"	v	module:FEMTypes
+Displacement	fortran/FEMTypes.f90	/^       real :: e,a,i,l, cosT , sinT, ForceVector(DOF*2), Displacement(/;"	k	type:element
+DisplacementVector	fortran/FEM.f90	/^  real , ALLOCATABLE :: DisplacementVector(/;"	v	program:FEM
+DoFEA	fortran/FEMMethods.f90	/^  subroutine DoFEA(/;"	s	module:FemMethods
+Elms	fortran/FEM.f90	/^  type (element),ALLOCATABLE :: Elms(/;"	v	program:FEM
+FC	fortran/Makefile	/^FC = gfortran$/;"	m
+FEM	fortran/FEM.f90	/^program FEM$/;"	p
+FEMMath	fortran/FEMMath.f90	/^module FEMMath$/;"	m
+FEMTypes	fortran/FEMTypes.f90	/^  module FEMTypes$/;"	m
+FEMUtility	fortran/FEMUtility.f90	/^module FEMUtility$/;"	m
+FemMethods	fortran/FEMMethods.f90	/^module FemMethods$/;"	m
+ForceVector	fortran/FEMTypes.f90	/^       real :: e,a,i,l, cosT , sinT, ForceVector(/;"	k	type:element
+GDOF	fortran/FEMTypes.f90	/^       integer :: GDOF(/;"	k	type:node
+GaussSolver	fortran/FEMMath.f90	/^  subroutine GaussSolver(/;"	s	module:FEMMath
+GaussSolver	fortran/math.f90	/^  subroutine GaussSolver(/;"	s	module:Math
+GlobalStiffness	fortran/FEMMethods.f90	/^  subroutine GlobalStiffness(/;"	s	module:FemMethods
+GlobalToRedusedGlobalStiffnessMatrixConverter	fortran/FEMMethods.f90	/^  Subroutine GlobalToRedusedGlobalStiffnessMatrixConverter(/;"	s	module:FemMethods
+LengthBetweenPoints	fortran/FEMMath.f90	/^  real  function  LengthBetweenPoints(/;"	f	module:FEMMath
+LengthBetweenPoints	fortran/math.f90	/^  real  function  LengthBetweenPoints(/;"	f	module:Math
+Loads	fortran/FEM.f90	/^  type (load), ALLOCATABLE :: Loads(/;"	v	program:FEM
+LoadsOnElement	fortran/FEMMethods.f90	/^  Subroutine LoadsOnElement(/;"	s	module:FemMethods
+LocalStiffness	fortran/FEMMethods.f90	/^  subroutine LocalStiffness(/;"	s	module:FemMethods
+LocalStiffnessWithRotation	fortran/FEMMethods.f90	/^  subroutine LocalStiffnessWithRotation(/;"	s	module:FemMethods
+Math	fortran/math.f90	/^module Math$/;"	m
+Nodes	fortran/FEM.f90	/^  type (node), ALLOCATABLE :: Nodes(/;"	v	program:FEM
+NullifyRealMatrix	fortran/FEMUtility.f90	/^  subroutine NullifyRealMatrix(/;"	s	module:FEMUtility
+NullifyRealVector	fortran/FEMUtility.f90	/^  subroutine NullifyRealVector(/;"	s	module:FEMUtility
+OBJECTS	c/Makefile	/^OBJECTS = bezier.o texobj.o$/;"	m
+OBJECTS	fortran/Makefile	/^OBJECTS = FEMUtility.o FEMMath.o FEMTypes.o FEMMethods.o FEM.o $/;"	m
+PopulateLoads	fortran/FEMMethods.f90	/^  subroutine PopulateLoads(/;"	s	module:FemMethods
+PrintMatrix	fortran/FEMUtility.f90	/^   Subroutine PrintMatrix(/;"	s	module:FEMUtility
+ReadInput	fortran/FEM.f90	/^  Subroutine ReadInput(/;"	s	program:FEM
+RotationMatrix	fortran/FEMMath.f90	/^  function RotationMatrix(/;"	f	module:FEMMath
+RotationMatrix	fortran/math.f90	/^  function RotationMatrix(/;"	f	module:Math
+SetElementForces	fortran/FEMMethods.f90	/^  Subroutine SetElementForces(/;"	s	module:FemMethods
+SetElementProperties	fortran/FEMMethods.f90	/^  subroutine SetElementProperties(/;"	s	module:FemMethods
+SwapRow	fortran/FEMUtility.f90	/^  subroutine SwapRow(/;"	s	module:FEMUtility
+Window	c/bezier.c	/^ static GLuint Window = 0;$/;"	v	file:
+Window	c/texobj.c	/^ static GLuint Window = 0;$/;"	v	file:
+WriteOutput	fortran/FEM.f90	/^  Subroutine WriteOutput(/;"	s	program:FEM
+a	fortran/FEMTypes.f90	/^       real/;"	k	type:element
+adjustPoint	c/texobj.c	/^float adjustPoint(float point,float ratio, float offset)$/;"	f
+beamCoord	c/texobj.c	/^ static float **beamCoord;$/;"	v	file:
+cosT	fortran/FEMTypes.f90	/^       real :: e,a,i,l, cosT /;"	k	type:element
+ctrlpoints	c/bezier.c	/^ GLfloat ctrlpoints[4][4][3] = {$/;"	v
+displacementVector	c/texobj.c	/^ static float **displacementVector;$/;"	v	file:
+display	c/bezier.c	/^ static void display(void)$/;"	f	file:
+display	c/line.c	/^void display(void)$/;"	f
+display	c/texobj.c	/^static void display(void)$/;"	f	file:
+drawElements	c/texobj.c	/^void drawElements(void)$/;"	f
+e	fortran/FEMTypes.f90	/^       rea/;"	k	type:element
+element	fortran/FEMTypes.f90	/^    type  element$/;"	t	module:FEMTypes
+errorFlag	fortran/FEM.f90	/^  integer ::  errorFlag,/;"	v	program:FEM
+file_in	fortran/FEM.f90	/^  integer ::  errorFlag,status,i,file_in,/;"	v	program:FEM
+file_out	fortran/FEM.f90	/^  integer ::  errorFlag,status,i,file_in,file_out$/;"	v	program:FEM
+forceVector	c/texobj.c	/^ static float **forceVector;$/;"	v	file:
+i	fortran/FEM.f90	/^  in/;"	v	program:FEM
+i	fortran/FEMTypes.f90	/^       real :: e,a,i,/;"	k	type:element
+idle	c/bezier.c	/^ static void idle(void){$/;"	f	file:
+idle	c/texobj.c	/^static void idle( void )$/;"	f	file:
+init	c/line.c	/^void init(void)$/;"	f
+init	c/texobj.c	/^ static void init(void)$/;"	f	file:
+initlights	c/bezier.c	/^ static void initlights(void)$/;"	f	file:
+key	c/bezier.c	/^ static void key(unsigned char k, int x, int y)$/;"	f	file:
+key	c/texobj.c	/^static void key(unsigned char k, int x, int y)$/;"	f	file:
+keyboard	c/line.c	/^void keyboard(unsigned char key, int x, int y)$/;"	f
+keyboard	c/texobj.c	/^void keyboard(unsigned char key, int x, int y)$/;"	f
+l	fortran/FEMTypes.f90	/^       real /;"	k	type:element
+load	fortran/FEMTypes.f90	/^    type  load$/;"	t	module:FEMTypes
+main	c/bezier.c	/^ int main(int argc, char** argv)$/;"	f
+main	c/line.c	/^int main(int argc, char** argv)$/;"	f
+main	c/texobj.c	/^    int main( int argc, char *argv[] )$/;"	f
+myReshape	c/bezier.c	/^ static void myReshape(int w, int h)$/;"	f	file:
+myinit	c/bezier.c	/^ static void myinit(void)$/;"	f	file:
+node	fortran/FEMTypes.f90	/^    type  node /;"	t	module:FEMTypes
+node1	fortran/FEMTypes.f90	/^       integer :: node1,/;"	k	type:element
+node2	fortran/FEMTypes.f90	/^       integer :: node1, node2 /;"	k	type:element
+nodeNr	fortran/FEMTypes.f90	/^      integer :: nodeNr,/;"	k	type:load
+numberOfElms	c/texobj.c	/^ static int numberOfElms=0;$/;"	v	file:
+pr_switch	fortran/FEMUtility.f90	/^    integer , parameter :: pr_switch=/;"	v	module:FEMUtility
+readInput	c/texobj.c	/^static void readInput(void)$/;"	f	file:
+reshape	c/line.c	/^void reshape(int w, int h)$/;"	f
+reshape	c/texobj.c	/^static void reshape( int w, int h )$/;"	f	file:
+rotAngle	c/line.c	/^static float rotAngle = 0.;$/;"	v	file:
+rotAngle	c/texobj.c	/^ static float rotAngle = 0.;$/;"	v	file:
+sinT	fortran/FEMTypes.f90	/^       real :: e,a,i,l, cosT , sinT,/;"	k	type:element
+status	fortran/FEM.f90	/^  integer ::  errorFlag,status,/;"	v	program:FEM
+swapAB	fortran/FEMMath.f90	/^  subroutine swapAB(/;"	s	module:FEMMath
+totalDegrees	fortran/FEMMethods.f90	/^  integer Function totalDegrees(/;"	f	module:FemMethods
+value	fortran/FEMTypes.f90	/^       real :: value$/;"	k	type:load
+x	fortran/FEMTypes.f90	/^       real :: x,/;"	k	type:node
+y	fortran/FEMTypes.f90	/^       real :: x,y$/;"	k	type:node
