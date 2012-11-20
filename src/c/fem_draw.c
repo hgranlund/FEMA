@@ -2,19 +2,64 @@
 #include "fem_math.h"
 
 
+struct RGB
+{
+	float r;
+	float g;
+	float b;
+};
 
+
+void drawString (void * font, char *s, float x, float y, float z){
+	unsigned int i;
+	glRasterPos3f(x, y, z);
+
+	for (i = 0; i < strlen(s); i++)
+		glutBitmapCharacter (font, s[i]);
+}
+
+void femScale(void)
+{
+	glScalef(0.4,0.4, 1);
+}
+
+void drawLine(float x1, float y1, float x2, float y2, struct RGB rgb)
+{
+	glBegin(GL_LINES);
+	glColor3f(rgb.r, rgb.g, rgb.b);      glVertex2f( x1, y1 );
+	glColor3f(rgb.r, rgb.g, rgb.b);  glVertex2f(  x2, y2 );
+	glEnd();
+}
+
+void drawCircle(float cx, float cy, float r, int segments) 
+{ 
+	float theta = (2 * 3.1415/ (float)segments); 
+	float c = cosf(theta);
+	float s = sinf(theta);
+	float t;
+	int i;
+	float x = r;
+	float y = 0; 
+
+	glBegin(GL_LINE_LOOP); 
+	for(i = 0; i < segments; i++) 
+	{ 
+		glVertex2f(x + cx, y + cy); 
+		t = x;
+		x = c * x - s * y;
+		y = s * t + c * y;
+	} 
+	glEnd(); 
+}
 
 void drawElements(void)
 {
 	glPushMatrix();
 	int i = 0;
-	float offsetX,offsetY ;
-	offsetX=0;
-	offsetY=0;
-    // glScalef(0.1,0.1, 1);
+	float lineWith=7;
+	femScale();
 	glRotatef(0, 0.0, 0.0, 0.1);
-	glTranslated(-0.5  , -0.5, 0);
-	glLineWidth (7.0);
+	glLineWidth (lineWith);
 
 	glBegin (GL_LINES);
 	glColor3f (0.0, 0.0, 0.0);
@@ -27,10 +72,18 @@ void drawElements(void)
 	glPopMatrix();
 }
 
+void drawDiagrams(void)
+{
+
+
+}
+
+
 void drawMomentDiagrams(void)
 {
+
 	int i;
-	float M,Fy,x, xMax ,dx ,scaleValue, pervec[2];
+	float M,Fy,x, xMax ,dx ,scaleValue, pervec[2], beamRotation;
 	for (i = 0; i < numberOfElms; ++i)
 	{
 		glPushMatrix();
@@ -42,9 +95,11 @@ void drawMomentDiagrams(void)
 		x=0;
 		dx=(xMax)/500;
 		scaleValue=20000*scale;
-		glTranslated(-0.5  , -0.5, 0);
-		glTranslated((beamCoord[i][0]), (beamCoord[i][1]), 0);
-		glRotatef(vectorRotation(pervec), 0, 0, 0.1);
+		beamRotation=vectorRotation(pervec);
+		perpendicularUnitVector(pervec);
+		femScale();
+		glTranslated((beamCoord[i][0]-pervec[0]*1.5), (beamCoord[i][1])-pervec[1]*1.5, 0);
+		glRotatef(beamRotation, 0, 0, 0.1);
 		glLineWidth(1);
 		glBegin(GL_LINES);
 		glColor3f (1.0, 0.0, 0.0);
@@ -59,33 +114,38 @@ void drawMomentDiagrams(void)
 		}
 		glVertex2d(xMax/scale, 0);
 		glEnd();
+		struct RGB rgb = {0.,0.,0.};
+		drawLine(0,0,xMax/scale,0,rgb);
 		glPopMatrix();
 	}
 }
 void drawShearDiagrams(void)
 {
 	int i;
-	float Fy, xMax  ,scaleValue, pervec[2];
+	float Fy, xMax  ,beamRotation, pervec[2];
 	for (i = 0; i < numberOfElms; ++i)
 	{
 		glPushMatrix();
-		Fy=forceVector[i][1]/scale/6;
+		Fy=forceVector[i][1]/scale/10;
 		pervec[0]=beamCoord[i][2]-beamCoord[i][0];
 		pervec[1]=beamCoord[i][3]-beamCoord[i][1];
 		xMax = lengthOfVector(pervec);
-		glTranslated(-0.5  , -0.5, 0);
-		glTranslated((beamCoord[i][0]), (beamCoord[i][1]), 0);
-		glRotatef(vectorRotation(pervec), 0, 0, 0.1);
-		glLineWidth(2);
-		// glColor3f (1.0, 0.0, 0.0);
-		printf(" xmax = %f | scaleValue = %f | Fy = %f  | pervec 1 =%f | pervec2= %f \n",xMax,  scaleValue,Fy,pervec[0],pervec[1]);
-			glBegin( GL_POLYGON );
-			glColor3f(0., 0., 1.);      glVertex2f( 0,Fy);
-			glColor3f(0., 0., 1.);      glVertex2f(  xMax,  Fy );
-			glColor3f(0., 1., 1.);      glVertex2f(  xMax, 0 );
-			glColor3f(0., 1., 1.);      glVertex2f( 0, 0 );
+		beamRotation=vectorRotation(pervec);
+		femScale();
+		perpendicularUnitVector(pervec);
+		glTranslated((beamCoord[i][0]-pervec[0]), (beamCoord[i][1])-pervec[1], 0);
+		glRotatef(beamRotation, 0, 0, 0.1);
+		glLineWidth(1);
+		printf(" xmax = %f |  Fy = %f  | pervec 1 =%f | pervec2= %f \n",xMax,Fy,pervec[0],pervec[1]);
+		glBegin( GL_POLYGON );
+		glColor3f(0., 0., 1.);      glVertex2f( 0,Fy);
+		glColor3f(0., 0., 1.);      glVertex2f(  xMax,  Fy );
+		glColor3f(0., 1., 1.);      glVertex2f(  xMax, 0 );
+		glColor3f(0., 1., 1.);      glVertex2f( 0, 0 );
 		glVertex2d(xMax/scale, 0);
 		glEnd();
+		struct RGB rgb = {0.,0.,0.};
+		drawLine(0,0,xMax,0,rgb);
 		glPopMatrix();
 	} 
 
@@ -94,28 +154,36 @@ void drawShearDiagrams(void)
 void drawAxialForceDiagrams(void)
 {
 	int i;
-	float Fx, xMax  ,scaleValue, pervec[2];
+	float Fx, xMax  ,beamRotation, pervec[2];
 	for (i = 0; i < numberOfElms; ++i)
 	{
 		glPushMatrix();
-		Fx=forceVector[i][0]/scale/6;
+		Fx=forceVector[i][0]/scale/10;
 		pervec[0]=beamCoord[i][2]-beamCoord[i][0];
 		pervec[1]=beamCoord[i][3]-beamCoord[i][1];
+		beamRotation=vectorRotation(pervec);
 		xMax = lengthOfVector(pervec);
-		glTranslated(-0.5  , -0.5, 0);
-		glTranslated((beamCoord[i][0]), (beamCoord[i][1]), 0);
-		glRotatef(vectorRotation(pervec), 0, 0, 0.1);
-		glLineWidth(2);
+		perpendicularUnitVector(pervec);
+		femScale();
+		glTranslated((beamCoord[i][0]-pervec[0]*0.4), (beamCoord[i][1])-pervec[1]*0.4, 0);
+		glRotatef(beamRotation, 0, 0, 0.1);
+		glLineWidth(1);
 		// glColor3f (1.0, 0.0, 0.0);
-		printf(" xmax = %f | scaleValue = %f | Fx = %f  | pervec 1 =%f | pervec2= %f \n",xMax,  scaleValue,Fx,pervec[0],pervec[1]);
-			glBegin( GL_POLYGON );
-			glColor3f(0., 0., 1.);      glVertex2f( 0,Fx);
-			glColor3f(0., 0., 1.);      glVertex2f(  xMax,  Fx );
-			glColor3f(0., 1., 1.);      glVertex2f(  xMax, 0 );
-			glColor3f(0., 1., 1.);      glVertex2f( 0, 0 );
+		printf(" xmax = %f| Fx = %f  | pervec 1 =%f | pervec2= %f \n",xMax,Fx,pervec[0],pervec[1]);
+		glBegin( GL_POLYGON );
+		glColor3f(0., 0., 1.);      glVertex2f( 0,Fx);
+		glColor3f(0., 0., 1.);      glVertex2f(  xMax,  Fx );
+		glColor3f(0., 1., 1.);      glVertex2f(  xMax, 0 );
+		glColor3f(0., 1., 1.);      glVertex2f( 0, 0 );
 		glVertex2d(xMax/scale, 0);
 		glEnd();
+		struct RGB rgb = {0.,0.,0.};
+		drawLine(0,0,xMax,0,rgb);
 		glPopMatrix();
 	} 
+	glColor3f (0.0, 0.0, 0.0);
+	drawCircle(0.006, 0.02, 0.05, 100);
+	drawString(GLUT_BITMAP_HELVETICA_18, "N", -0.01, 0, 0); 
 
 }
+

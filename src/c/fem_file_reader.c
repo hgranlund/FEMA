@@ -21,7 +21,7 @@ void readFile(char *filename)
             for ( j = 0; j < 4; j++)
             {
                 fscanf(file,"%f", &beamCoord[i][j]);
-                beamCoord[i][j] =beamCoord[i][j]/scale;
+                beamCoord[i][j] =beamCoord[i][j]/scale-0.5;
             }
         }
 

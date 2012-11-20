@@ -426,7 +426,8 @@ contains
 
 
   !###############################
-  ! BiggestNodeValue bytter rad r1 med r2 i matrisen A
+  ! BiggestNodeValue retunerer den største node kordinaten 
+  ! Kan brukes som en skaleringsfaktor ved grafisk tegning
   !
   ! Author: Simen Haugerud Granlund
   ! Date/version: 02-11-12/ 1.0
@@ -449,5 +450,61 @@ contains
     end do
 
 end function BiggestNodeValue
+
+
+
+!   !###############################
+!   ! BiggestValues retunerer den største node kordinaten og de største kreftene (Fx,Fy,M)
+!   ! Kan brukes som en skaleringsfaktor ved grafisk tegning
+!   !
+!   ! Author: Simen Haugerud Granlund
+!   ! Date/version: 02-11-12/ 1.0
+!   !###############################
+
+!   subroutine BiggestValues(Biggest, Nodes, Elms)
+!     type (node) , intent(in) :: Nodes(:)
+!     type (element), intent(in) :: Elms(:)
+!     real , intent(out):: Biggest(4)
+
+!     real :: Fx,Fy,M
+!     integer :: i,temp,l
+  
+!     call NullifyRealVector(Biggest)
+!     l=size(Nodes(0)%ForceVector)
+!     Fx=0
+!     Fy=0
+!     M=0
+
+!     do i=0,ubound(Nodes,1)
+!       if (abs(Nodes(i)%x) > Biggest(0) )then
+!         Biggest(0) = abs(Nodes(i)%x)
+!       end if
+!       if (abs(Nodes(i)%y) > Biggest(0) ) then
+!         Biggest(0) = abs(Nodes(i)%y)
+!        end if 
+!     end do
+
+
+!     do i=lbound(Elms), ubound(Elms)
+!       if (abs(Elms(i)%ForceVector(0)) > Fx )then
+!         fx=abs(Elms(i)%ForceVector(0))
+!     end if
+!           if (abs(Elms(i)%ForceVector(3)) > Fx )then
+!         fx=abs(Elms(i)%ForceVector(3))
+!     end if
+!           if (abs(Elms(i)%ForceVector(1)) > Fy )then
+!         fx=abs(Elms(i)%ForceVector(1))
+!     end if
+!           if (abs(Elms(i)%ForceVector(4)) > Fy )then
+!         fx=abs(Elms(i)%ForceVector(4))
+!     end if
+!     if (abs(N
+!     if (abs(Nodes(i)%y) > Biggest(0) ) then
+!       Biggest(0) = abs(Nodes(i)%y)
+!     end if           
+
+!   end do
+
+! end subroutine BiggestValues
 
 end module FemMethods

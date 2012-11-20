@@ -9,15 +9,15 @@ program FEM
 
 
   file_in=5
-  file_out=6
+!   file_out=6
   errorFlag=0
 
 !   file_in=10
-!   file_out=11
+  file_out=11
 !   open(unit=file_in, file='inputE52S224.dat', iostat=errorFlag, status="old", action="read")
 !   if ( errorFlag /= 0 ) stop "Error opening file_in"
-!   open(unit=file_out, file='output.dat', iostat=errorFlag, status="unknown", action="write")
-!   if ( errorFlag /= 0 ) stop "Error opening file_out"
+  open(unit=file_out, file='temp.dat', iostat=errorFlag, status="unknown", action="write")
+  if ( errorFlag /= 0 ) stop "Error opening file_out"
   
 
 
@@ -39,6 +39,7 @@ contains
   Subroutine ReadInput()
     integer ::n, numberOfNodes, numberOfElm,numberOfLoads
     type (element) :: elm
+
 
     read(file_in,*,iostat=errorFlag) numberOfNodes, numberOfElm, numberOfLoads
     allocate (Nodes(numberOfNodes))

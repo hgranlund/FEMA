@@ -34,7 +34,7 @@ void normalize(float *vec)
     vec[1] *= c;
 }
 
-void getPerpendicularUnitVector(float* vec)
+void perpendicularUnitVector(float* vec)
 {
     printf("%f %f \n", vec[0], vec[1]);
     float  s, xtemp;

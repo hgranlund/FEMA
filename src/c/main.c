@@ -24,8 +24,8 @@ void display(void)
     glColor3f(1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
     glClearColor(0.9, 0.9, 0.9, 0.9);
-    // drawMomentDiagrams();
-    // drawShearDiagrams();
+    drawMomentDiagrams();
+    drawShearDiagrams();
     drawAxialForceDiagrams();
     drawElements();
     glFlush();
@@ -34,7 +34,7 @@ void display(void)
 void draw(int argc, char **argv){
   glutInit(&argc, argv);
   glutInitWindowPosition(0, 0);
-  glutInitWindowSize(700, 700);
+  glutInitWindowSize(900, 900);
   glutInitDisplayMode( GLUT_RGB | GLUT_DEPTH | GLUT_SINGLE );
   init();
   Window = glutCreateWindow("Texture Objects");
