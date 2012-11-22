@@ -35,3 +35,8 @@ void reshape( int w, int h )
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
+
+void idle( void )
+{
+    glutPostRedisplay();
+}

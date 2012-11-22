@@ -16,13 +16,10 @@ float lengthOfVector(float* vec)
 }
 float vectorRotation(float* vec)
 {
-    // return atan2(vec[1],vec[2])*(180/3.1459);
     float angle = asin(vec[1]/lengthOfVector(vec))*(180/3.1459);
     if (vec[0]<0){
         angle=180-angle;
     }
-    // float angle = acos(vec[0]/getLengthOfVector(vec))*(180/3.1459);
-    printf("Vinkel til elent %f\n", angle); 
     return angle;
 }
 
@@ -36,7 +33,6 @@ void normalize(float *vec)
 
 void perpendicularUnitVector(float* vec)
 {
-    printf("%f %f \n", vec[0], vec[1]);
     float  s, xtemp;
     xtemp=vec[0];
     vec[0]=vec[1];
@@ -44,5 +40,4 @@ void perpendicularUnitVector(float* vec)
     s= lengthOfVector(vec);
     vec[0]=vec[0]/s;
     vec[1]=vec[1]/s;
-    printf("%f %f \n", vec[0], vec[1]);
 }

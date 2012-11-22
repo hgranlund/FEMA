@@ -6,6 +6,7 @@
 void init();
 
 void reshape(int, int);
+void idle(void);
 
 
 

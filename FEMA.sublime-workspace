@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"glc",
+				"glColor3f(GLfloat red, GLfloat green, GLfloat blue)	void"
+			],
+			[
 				"dr",
 				"drawShearDiagrams()	void"
 			],
@@ -78,10 +82,6 @@
 			[
 				"sq",
 				"squereF(float x)	float"
-			],
-			[
-				"glc",
-				"glColor3b(GLbyte red, GLbyte green, GLbyte blue)	void"
 			],
 			[
 				"scale",
@@ -203,7 +203,7 @@
 			"file": "src/c/fem_draw.c",
 			"settings":
 			{
-				"buffer_size": 5716,
+				"buffer_size": 6021,
 				"line_ending": "Unix"
 			}
 		},
@@ -248,18 +248,10 @@
 			}
 		},
 		{
-			"file": "/home/simenhg/.config/sublime-text-2/Packages/SublimeClang/SublimeClang.sublime-settings",
-			"settings":
-			{
-				"buffer_size": 13236,
-				"line_ending": "Unix"
-			}
-		},
-		{
 			"file": "src/c/fem_draw.h",
 			"settings":
 			{
-				"buffer_size": 384,
+				"buffer_size": 404,
 				"line_ending": "Unix"
 			}
 		},
@@ -299,9 +291,13 @@
 	"build_system": "Packages/User/FEMAC.sublime-build",
 	"command_palette":
 	{
-		"height": 306.0,
+		"height": 392.0,
 		"selected_items":
 		[
+			[
+				"dele",
+				"File: Delete"
+			],
 			[
 				"clan",
 				"Preferences: SublimeClang Settings – Default"
@@ -444,6 +440,8 @@
 	},
 	"file_history":
 	[
+		"/home/simenhg/github/FEMA/src/c/FEMvis.c",
+		"/home/simenhg/.config/sublime-text-2/Packages/SublimeClang/SublimeClang.sublime-settings",
 		"/home/simenhg/.config/sublime-text-2/Packages/SublimeClang/Default.sublime-keymap",
 		"/home/simenhg/.config/sublime-text-2/Packages/User/Default (Linux).sublime-keymap",
 		"/home/simenhg/.config/sublime-text-2/Packages/User/SublimeClang.sublime-settings",
@@ -472,7 +470,6 @@
 		"/home/simenhg/.config/sublime-text-2/Packages/User/FEMAC.sublime-build",
 		"/usr/include/GL/gl.h",
 		"/home/simenhg/workspace/FEMA/src/c/texobj.c99",
-		"/home/simenhg/.config/sublime-text-2/Packages/SublimeClang/SublimeClang.sublime-settings",
 		"/home/simenhg/.config/sublime-text-2/Packages/Default/Preferences.sublime-settings",
 		"/home/simenhg/workspace/FEMA/src/fortran/FEMA.sublime-workspace",
 		"/home/simenhg/github/FEMA/src/FEMMath.f90",
@@ -499,6 +496,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"rgb",
 			", ",
 			"  [",
 			"forceVector",
@@ -552,7 +550,7 @@
 	"groups":
 	[
 		{
-			"selected": 11,
+			"selected": 4,
 			"sheets":
 			[
 				{
@@ -567,8 +565,8 @@
 						"selection":
 						[
 							[
-								6343,
-								6343
+								6898,
+								6898
 							]
 						],
 						"settings":
@@ -1020,15 +1018,15 @@
 					"file": "src/c/fem_draw.c",
 					"settings":
 					{
-						"buffer_size": 5716,
+						"buffer_size": 6021,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								2797,
+								2797
 							]
 						],
 						"settings":
@@ -1125,7 +1123,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1500.0,
+						"translation.y": 1755.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1711,15 +1709,15 @@
 					"file": "src/c/fem_draw.c",
 					"settings":
 					{
-						"buffer_size": 5716,
+						"buffer_size": 6021,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2288,
-								2288
+								2668,
+								2668
 							]
 						],
 						"settings":
@@ -1823,134 +1821,18 @@
 				},
 				{
 					"buffer": 10,
-					"file": "/home/simenhg/.config/sublime-text-2/Packages/SublimeClang/SublimeClang.sublime-settings",
-					"settings":
-					{
-						"buffer_size": 13236,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3730,
-								3730
-							]
-						],
-						"settings":
-						{
-							"annotations":
-							[
-								"TODO",
-								"README",
-								"FIXME"
-							],
-							"csslint_options":
-							{
-								"adjoining-classes": "warning",
-								"box-model": true,
-								"box-sizing": "warning",
-								"compatible-vendor-prefixes": "warning",
-								"display-property-grouping": true,
-								"duplicate-background-images": "warning",
-								"duplicate-properties": true,
-								"empty-rules": true,
-								"errors": true,
-								"fallback-colors": "warning",
-								"floats": "warning",
-								"font-faces": "warning",
-								"font-sizes": "warning",
-								"gradients": "warning",
-								"ids": "warning",
-								"import": "warning",
-								"important": "warning",
-								"known-properties": true,
-								"outline-none": "warning",
-								"overqualified-elements": "warning",
-								"qualified-headings": "warning",
-								"regex-selectors": "warning",
-								"rules-count": "warning",
-								"shorthand": "warning",
-								"star-property-hack": "warning",
-								"text-indent": "warning",
-								"underscore-property-hack": "warning",
-								"unique-headings": "warning",
-								"universal-selector": "warning",
-								"vendor-prefix": true,
-								"zero-units": "warning"
-							},
-							"gjslint_ignore":
-							[
-								110
-							],
-							"gjslint_options":
-							[
-							],
-							"javascript_linter": "jshint",
-							"jshint_options":
-							{
-								"browser": true,
-								"evil": true,
-								"regexdash": true,
-								"sub": true,
-								"trailing": true,
-								"wsh": true
-							},
-							"pep8": true,
-							"pep8_ignore":
-							[
-								"E501"
-							],
-							"perl_linter": "perlcritic",
-							"pyflakes_ignore":
-							[
-							],
-							"pyflakes_ignore_import_*": true,
-							"sublimelinter": true,
-							"sublimelinter_delay": 2,
-							"sublimelinter_disable":
-							[
-							],
-							"sublimelinter_executable_map":
-							{
-							},
-							"sublimelinter_fill_outlines": false,
-							"sublimelinter_gutter_marks": false,
-							"sublimelinter_mark_style": "outline",
-							"sublimelinter_notes": false,
-							"sublimelinter_objj_check_ascii": false,
-							"sublimelinter_popup_errors_on_save": false,
-							"sublimelinter_syntax_map":
-							{
-								"C++": "c",
-								"Python Django": "python",
-								"Ruby on Rails": "ruby"
-							},
-							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/JavaScript/JSON.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1485.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 11,
 					"file": "src/c/fem_draw.h",
 					"settings":
 					{
-						"buffer_size": 384,
+						"buffer_size": 404,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								375,
-								375
+								99,
+								99
 							]
 						],
 						"settings":
@@ -2168,7 +2050,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 12,
+					"buffer": 11,
 					"file": "src/c/fem_math.h",
 					"settings":
 					{
@@ -2282,7 +2164,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 13,
+					"buffer": 12,
 					"file": "src/c/fem_file_reader.c",
 					"settings":
 					{
@@ -2398,7 +2280,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 14,
+					"buffer": 13,
 					"file": "src/c/fem_file_reader.h",
 					"settings":
 					{
@@ -2512,7 +2394,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 15,
+					"buffer": 14,
 					"file": "src/c/Makefile",
 					"settings":
 					{
@@ -2799,6 +2681,22 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"femv",
+				"c/FEMvis.c"
+			],
+			[
+				"main",
+				"c/main.c"
+			],
+			[
+				"daw.h",
+				"c/fem_draw.h"
+			],
+			[
+				"draw.c",
+				"c/fem_draw.c"
+			],
 			[
 				"dr.c",
 				"c/fem_draw.c"

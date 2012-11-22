@@ -2,7 +2,7 @@
 #define FEM_KEYBOARD_H
 #include <GL/glut.h>
 
-
+extern int viewState;
 
 
 

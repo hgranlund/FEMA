@@ -154,7 +154,6 @@ static void drawMomentDiagrams(void)
         glLineWidth(2);
         glBegin(GL_LINES);
         glColor3f (1.0, 0.0, 0.0);
-        printf(" xmax = %f | dx =%f | scaleValue = %f | Fy = %f | M = %f | pervec 1 =%f | pervec2= %f \n",xMax, dx, scaleValue,Fy,M,pervec[0],pervec[1]);
         glVertex2d(x/scale, 0);
         for (x;x<=xMax;x+=dx) {
             glColor3f (0.1, 0.1, 0.1);
