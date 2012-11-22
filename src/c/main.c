@@ -24,9 +24,7 @@ void display(void)
     glColor3f(1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
     glClearColor(0.9, 0.9, 0.9, 0.9);
-    drawMomentDiagrams();
-    drawShearDiagrams();
-    drawAxialForceDiagrams();
+    drawDiagrams();
     drawElements();
     glFlush();
 }
