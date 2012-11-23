@@ -16,8 +16,8 @@ void keyboard(unsigned char key, int x, int y)
     case 'M':
     	viewState=0;
     	break;
-    case 'n':
-    case 'N':
+    case 'a':
+    case 'A':
     	viewState=1;
     	break;
     case 'S':

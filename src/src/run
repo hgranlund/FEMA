@@ -1,6 +1,0 @@
-#!/bin/bash
-touch temp.dat
-./fortran/FEM < fortran/input.dat > temp.dat
-cat temp.dat
-./c/FEMVis 
-rm temp.dat

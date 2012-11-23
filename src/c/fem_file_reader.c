@@ -13,7 +13,7 @@ void readFile(char *filename)
     if (file != NULL){
         printf("leser fil: %s\n", filename);
         int  i, j;
-        fscanf(file ,"%d %f", &numberOfElms, &scale);
+        fscanf(file ,"%d %d %f", &numberOfElms, &numberOfLoads, &scale);
         beamCoord=malloc(numberOfElms * sizeof(float*));
         for (i = 0; i < numberOfElms; i++)
         {
@@ -44,10 +44,24 @@ void readFile(char *filename)
                 fscanf(file,"%f", &displacementVector[i][j]);
             }
         }
-        // for (i = 0; i < numberOfElms; i++){
-        //     for (j = 0; j < 6; j++){
-        //         printf("| %10.4f ", forceVector[i][j]);
-        //     }
+        loadVector=malloc(numberOfLoads * sizeof(float*));
+        for (i = 0; i < numberOfLoads; i++)
+        {
+            loadVector[i]=malloc(6*sizeof(float));
+            for ( j = 0; j < 6; j++)
+            {
+                fscanf(file,"%f", &loadVector[i][j]);
+            }
+            loadVector[i][1]=loadVector[i][1]/scale;
+            loadVector[i][2]=loadVector[i][2]/scale;
+        }
+
+
+        for (i = 0; i < numberOfLoads; i++){
+            for (j = 0; j < 6; j++){
+                printf("| %10.4f ", loadVector[i][j]);
+            }
+        }
         //     printf("\n");
         // }    for (i = 0; i < numberOfElms; i++){
         //     for (j = 0; j < 4; j++){

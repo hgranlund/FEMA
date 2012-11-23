@@ -60,10 +60,11 @@ contains
   end Subroutine ReadInput
 
   Subroutine WriteOutput()
-    integer ::n, numberOfElm
+    integer ::n, numberOfElm, numberOfLoads
 
+    numberOfLoads=size(Loads)
     numberOfElm = size(Elms)
-    write(file_out,*, iostat=errorFlag), numberOfElm, BiggestNodeValue(Nodes)
+    write(file_out,*, iostat=errorFlag), numberOfElm, numberOfLoads, BiggestNodeValue(Nodes)
 
     do n=1,numberOfElm
       write (file_out,fmt="( F15.4 F15.4 F15.4 F15.4)",iostat=errorFlag), Nodes(Elms(n)%node1)%x,&
@@ -75,8 +76,12 @@ contains
     do n=1,numberOfElm
       write (file_out,fmt="( F15.4 F15.4 F15.4 F15.4 F15.4 F15.4 )",iostat=errorFlag), Elms(n)%Displacement
     end do
+    do n=1,numberOfLoads
+      write (file_out,fmt="( I15 F15.4 F15.4 F15.4)",iostat=errorFlag), Loads(n)%DOF, Nodes(Loads(n)%nodeNr)%x, &
+      &Nodes(Loads(n)%nodeNr)%y, Loads(n)%value
+    end do
     
-    if ( errorFlag /= 0 ) stop "Write error in file file_out"
+    if ( errorFlag /= 0 ) stop "Write error in file file_out" 
 
   end Subroutine WriteOutput
 

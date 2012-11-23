@@ -1,6 +1,7 @@
 
 #include "fem_graphics.h"
 
+int currentViewState=0;
 
 void init(void)
 {
@@ -38,5 +39,8 @@ void reshape( int w, int h )
 
 void idle( void )
 {
-    glutPostRedisplay();
+    if (currentViewState != viewState){
+        currentViewState=viewState;
+        glutPostRedisplay();
+    }
 }

@@ -14,7 +14,8 @@
 float rotAngle = 0.;
 GLuint Window = 0;
 int numberOfElms=0;
-float scale,**beamCoord, **forceVector, **displacementVector;
+int numberOfLoads=0;
+float scale,**beamCoord, **forceVector, **displacementVector, **loadVector;
 int viewState;
 
 // static GLuint TexObj[2];N
@@ -25,23 +26,34 @@ void display(void)
   glColor3f(1.0, 1.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
   glClearColor(0.9, 0.9, 0.9, 0.9);
-  drawDiagrams();
-  printf("%d\n", viewState);
   switch ( viewState ) {
     case 0:
+    drawDiagrams();
     drawMomentDiagrams();
+    drawHeader("Moment Diagrams");
     break;
     case 1:
+    drawDiagrams();
     drawAxialForceDiagrams();
+    drawHeader("Normal Force Diagrams");
     break;
     case 2:
+    drawDiagrams();
     drawShearDiagrams();
+    drawHeader("Shear Force Diagrams");
+    break;
+    case 3:
+    drawForces();
+    drawHeader("Initial State");
+    break;
+    case 4:
+    drawHeader("The Frame");
     break;
     default:
-    drawMomentDiagrams();
     break;
   }
   drawElements();
+  drawNavigationMeny();
   glFlush();
 }
 
@@ -59,7 +71,7 @@ void draw(int argc, char **argv){
   }
   glutReshapeFunc( reshape );
   glutKeyboardFunc (keyboard);
-    glutIdleFunc( idle );
+  glutIdleFunc( idle );
   glutDisplayFunc(display);
   glutMainLoop();
 }
