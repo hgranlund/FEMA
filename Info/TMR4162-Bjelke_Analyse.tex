@@ -1,0 +1,142 @@
+\documentclass[10pt,a4paper, norsk]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage[norsk, english]{babel}
+\usepackage{geometry, lmodern}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{url}
+\usepackage{color}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black]{hyperref}
+\author{Simen Haugerud Granlund}
+\title{TMR4162 - Ramme Analyse}
+
+\hypersetup{
+pdfauthor = {Simen Haugerud Granlund},
+pdftitle = {TMR4162 - Ramme Analyse},
+pdfsubject = {},
+pdfkeywords = {},
+pdfcreator = {} } 
+
+\begin{document}
+\maketitle
+\lstset{language=C++,basicstyle=\footnotesize} %\begin{titlepage}
+\maketitle
+\thispagestyle{empty} 	%fjerner sidetall på første side
+\newpage %\end{titlepage}
+
+\section*{Innledning}
+\paragraph*{}
+Jeg valgte å ta oppgaven "ramme analyse". Grunnen til dette er at jeg synes teorien rundt finite element analyses (FEA) er mye mer interessent og passer bedre til mitt studie enn Poisson-likningen. Jeg valgte også å legge til flere elementer i oppgaven. Oppgaven presiserte at vi bare trengte 2 frihetsgrader per bjelke, samt at vi kun trengte å presentere resultater for bøyemomentet. Jeg valgte å bruke 6 frihetsgrader per bjelke, slik at jeg fikk meg både  vertikal og horisontal forskyvninger og rotasjon. De resultatene jeg ville skulle vises var; Moment diagram, skjærkraft diagram, Normalkraft diagram og starttilstanden. Til dette trenger programmet å regne ut Momenter og normale og aksielle krefter til alle bjelker.
+
+\paragraph*{}
+Det jeg ville legge mest vekt må under oppgaven var god struktur av koden slik at jeg enkelt kan utvide med nye funksjonaliteter. Med en god struktur er det enkelt å sette seg inn i koden og en slipper å strukturere mye på nytt om en vil legge til nye funksjonaliteter. Jeg liker generelt ikke mye kommentarer i koden. Koden skal være leselig og forstålig uten en hel haug av kommentarer. Selvfølgelig er det steder hvor kommentarer er passende, men generelt holder det med god struktur og navngiving.
+
+
+\section*{Teori}
+
+Her har jeg tenkt å kort beskrive de teoriene som er brukt i programmet. Jeg vil kun ta med de prinsippene, likningene og matrisene jeg brukte i koden og ikke beskrive i detalj hvordan jeg kan frem til dem basert på lærebøker. 
+
+
+\subsection*{Elementmetoden}
+Teorien bak elementmetoden ble utarbeidet på 1940-tallet, men man så ikke den store nytteverdien av den før datamaskinen kom til verden. Det første programmet som implementerte elementmetoden var NASTRAN skrevet i Fortran i 1965 \cite{wikinastran}.
+Elementmetoden er i prinsippet en numerisk metode for å finne approksimasjoner til differensiallikninger. Den er ofte brukt innenfor en rekke felter: strømning, varmeleding, svinginger, elektriske felt og liknende. I denne oppgaven brukte jeg den for å løse styrkebergnegrer på en rammekonstruksjon. 
+
+\paragraph*{}
+Elementmetoden går ut på å dele konstruksjonen inn i elementer, jo flere elementer jo mer nøyaktige resultater får man. For hvert element blir stivheten til elementet kalkulert. Stivheten er basert på e-modulen, arealet og det andre arealmomentet til elementet. Disse stivhetene blir så addert sammen for å finne systemets stivhet. Vi kan deretter bruke sammenhangen mellom stivhet(k), forskyvninger(v) og krefter(S) \eqref{eq:skv} til å kalkulere knutepunktenes forskyvninger.
+\begin{equation} \label{eq:skv}
+S=k*v
+\end{equation}
+
+\subsubsection*{Lokal stivhetsmatrise}
+For å regne ut den lokale stivheten til et element kan en bruke stivhetsmatrisen \eqref{eq:Lstivhet}. 
+
+\begin{equation} \label{eq:Lstivhet}
+k  = \begin{bmatrix} 
+\frac{EA}{L} & 0 & 0 & -\frac{EA}{L} & 0 & 0 \\
+0 	& \frac{12EI}{L^3} & -\frac{6EI}{L^2} & 0 & -\frac{12EI}{L^3} & -\frac{6EI}{L^2} \\
+0 	&	-\frac{6EI}{L^2} 	& 	\frac{4EI}{L} & 0 & \frac{6EI}{L^2} 	& 	\frac{2EI}{L}\\
+-\frac{EA}{L} & 0 & 0 & \frac{EA}{L} & 0 & 0 \\
+0 	& -\frac{12EI}{L^3} & \frac{6EI}{L^2} & 0 & \frac{12EI}{L^3} & \frac{6EI}{L^2} \\
+0 & -\frac{6EI}{L^2} & \frac{2EI}{L} &0& \frac{6EI}{L^2} & \frac{4EI}{L}
+\end{bmatrix}
+\end{equation}
+
+
+
+
+Denne stivhetsmatrisen vil nå gjelde for lokalt for det enkelte elementet. Vi må derfor transformere matrisen slik at den gjelder globalt. Dette kan vi gjøre med en enkel rotasjonsmatrise \eqref{eq:Rot}. 
+
+\begin{equation} \label{eq:Rot}
+R  = \begin{bmatrix}
+\cos \theta & -\sin \theta &   0&0&0&0\\[3pt]
+\sin \theta & \cos \theta  & 0&0&0&0\\[3pt]
+0 &0 & 1&0&0&0\\
+0&0&0&\cos \theta & -\sin \theta&   0 \\[3pt]
+0&0&0&\sin \theta & \cos \theta  & 0\\[3pt]
+0&0&0&0 &0 & 1\\
+\end{bmatrix} 
+\end{equation}
+
+Vi kan enkelt transformere kreftene $S$ og forskyvningene $v$ ved sammenhengene:
+\begin{equation} \label{eq:roteq}
+S_G=RS_L  \text{ og } v_G=Rv_L 
+\end{equation}
+
+Vi kan nå ved hjelp av \ref{eq:skv} og \ref{eq:roteq} finne en sammenheng mellom den globale $_G$ og den loakale $_L$ stivhetsmatrisen.
+
+\begin{equation}
+S_G=RS_L=Rk_Lv_L=Rk_LR^{-1}v_G=k_Gv_G 
+\end{equation}
+\begin{equation} \label{eq:klkg}
+k_G=Rk_LR^{-1}
+\end{equation}
+
+\subsubsection*{Global stivhetsmatrise}
+For å addere alle elementstivhetsmatrisene til en global stivhetsmatrise er det normalt å bruke en IEG-matrise. IEG-matrisen er en relasjon mellom elementene og det tilhørende nodeparret. Den globale stivhetsmatrisen holder på stivhetene til alle nodene i systemet, mens de enkelte elementstivhetsmatrise inneholder kun stivheten til sine to tilhørende noder. Når de skal adderes skal stivhetene til elementstivhetsmatrisene adderes inn i de tilhørende nodene i den globale stivhetsmatrisen. 
+
+\subsubsection*{Grensebetingelser}
+Nå står vi bare igjen med et lineært ligningssystem av typen $kv=S$, hvor forskyvningene $(v)$ er ukjente. Dette likningssystemet vil nå være uløselig, fordi stivhetsmatrisen $k$ er singulær. Denne singulariteten skyldes at vi enda ikke har sakt hvor konstruksjonen er fastbundet. For et system med 3 frihetsgrader per node trenger vi 3 fastbuende frihetsgrader. Når vi har innført disse grensebetingelsene vil systemet være løselig.
+
+\subsubsection*{Elementkrefter}
+Når vi vil regne ut krefter på de forskjellige elementene kan vi igjen bruke ligning \ref{eq:skv}. Vi må nå huske at vi må transformere matrisene til det koordinatsystemet vi ønsker. 
+
+
+\subsection*{Fargefunksjon}
+
+
+
+
+\section*{Programmet} 
+
+
+\section*{Diskusjon}
+
+
+\section*{Konklusjon}
+
+\paragraph{} 
+
+
+\begin{thebibliography}{9}
+
+\bibitem{wikinastran}
+  Wikipedia,
+  \url{http://en.wikipedia.org/wiki/Finite_element_method}
+  
+
+\bibitem{waloen}
+  Åge Ø. Waløen,
+  1995, 
+  Dimensjonering ved hjelp av elementmetoden, NTNU
+ 
+\bibitem{FEM}
+	Dyryl L. Logen, 2011, A First Course in the Finite Element Method
+
+
+\end{thebibliography}
+
+\end{document}
