@@ -9,5 +9,7 @@ float lengthOfVector(float* vec);
 float vectorRotation(float* vec);
 void normalize(float *vec);
 void perpendicularUnitVector(float* vec);
+float min(float x, float y);
+float clamp(float value, float lower, float max);
 
 #endif

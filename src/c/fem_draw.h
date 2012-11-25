@@ -4,6 +4,7 @@
 #include "GL/glut.h"
 #include <stdio.h>
 #include <string.h>
+#include "math.h"
 
 extern int numberOfElms, numberOfLoads;
 extern float scale,**beamCoord, **forceVector, **displacementVector , **loadVector;

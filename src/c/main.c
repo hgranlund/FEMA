@@ -28,18 +28,18 @@ void display(void)
   glClearColor(0.9, 0.9, 0.9, 0.9);
   switch ( viewState ) {
     case 0:
-    drawDiagrams();
     drawMomentDiagrams();
+    drawDiagrams();
     drawHeader("Moment Diagrams");
     break;
     case 1:
-    drawDiagrams();
     drawAxialForceDiagrams();
+    drawDiagrams();
     drawHeader("Normal Force Diagrams");
     break;
     case 2:
-    drawDiagrams();
     drawShearDiagrams();
+    drawDiagrams();
     drawHeader("Shear Force Diagrams");
     break;
     case 3:
@@ -60,7 +60,7 @@ void display(void)
 void draw(int argc, char **argv){
   glutInit(&argc, argv);
   glutInitWindowPosition(0, 0);
-  glutInitWindowSize(900, 900);
+  glutInitWindowSize(1000, 900);
   glutInitDisplayMode( GLUT_RGB | GLUT_DEPTH | GLUT_SINGLE );
   init();
   viewState=1;

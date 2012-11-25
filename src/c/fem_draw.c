@@ -1,6 +1,6 @@
 #include "fem_draw.h"
 #include "fem_math.h"
-
+#
 
 struct RGB
 {
@@ -14,18 +14,12 @@ struct RGB gray = {0.5,0.5,0.5};
 struct RGB red = {1.,0.,0.};
 
 
-struct RGB colorBlindRYB(float x, float max)
+struct RGB colorBlindRYB(float x, float maxValue)
 {
-	float colordx=max;
-	float r=0;
-	float g=0;
-	float b=0;
-	if (x<colordx){
-		b=1- (abs(x)/colordx);
-	}
-	if (abs(colordx-x)<colordx){
-		r=1- (abs(colordx-x)/colordx);
-	}
+	float value = 4 * x/maxValue;
+	float r   = clamp(min(value - 1.0, -value + 4.5) ,0,1);
+	float g = clamp(min(value - 0.5, -value + 3.5), 0,1);
+	float b  = clamp(min(value + 0.5, -value + 2.5),0,1);
 	struct RGB rgb ={r,g,b};
 	return rgb;
 };
@@ -117,7 +111,6 @@ void drawArrow(float x,float y, float len)
 
 	float  lengthOfHead;
 	lengthOfHead= 0.05;
-    // glBindTexture(GL_TEXTURE_2D,0);
 	glBegin(GL_LINES);
 	glVertex2d(x,y);
 	glVertex2d(x,y+len);
@@ -151,24 +144,27 @@ void drawElements(void)
 
 void drawColorBar(float x, float y,float biggestvalue, char* Type)
 {
-	float ddy=0.15;
-	float ddx=0.012;
-	drawSymbole(0.7-ddx, -0.6,Type, black);
+	int i;
+	float dl;
+	float ddy=0.3;
+	float ddx=0.024;
+	glPopMatrix();
+	drawSymbole(x-0.01, y + 0.05,Type, black);
 	char s[100] ="0.0000" ;
 	sprintf(s,"%8e", biggestvalue);
-	drawString(s, 0.75+ddx,   -0.65, black);
+	drawString(s, x+ddx+0.03,  y-0.01, black);
 	sprintf(s,"%8e", 0.000);
-	drawString(s,0.75+ddx,   -0.95, black);
-
-
-	glPushMatrix();
+	y=y-ddy;
+	drawString(s,x+ddx+0.03, y, black);
 	setColor(colorBlindRYB(biggestvalue,biggestvalue));
-	glBegin( GL_POLYGON );
-	glVertex2f( 0.7-ddx,-0.8+ddy);
-	glVertex2f(  0.7+ddx,   -0.8+ddy);
-	setColor(colorBlindRYB(0,biggestvalue));
-	glVertex2f(  0.7+ddx, -0.8-ddy );
-	glVertex2f( 0.7-ddx, -0.8-ddy );
+	glBegin( GL_LINES );
+	for (i = 1; i < 500; i++)
+	{
+		dl = (float)i/500.0;
+		setColor(colorBlindRYB(dl,1));
+		glVertex2f( x,y+ddy*dl);
+		glVertex2f(  x+ddx,y+ddy*dl);
+	}
 	glEnd();
 	glPopMatrix();
 
@@ -193,8 +189,9 @@ void drawDiagrams(void)
 		glLineWidth(1);
 		drawDottetLine(0, 0, 0, 1, gray);
 		drawDottetLine(xMax, 0, xMax, 1, gray);
+		glLineWidth(2);
+		drawDottetLine(-0.1, 1, xMax+0.1, 1, black);
 		glPopMatrix();
-
 	}
 }
 
@@ -208,7 +205,7 @@ void drawHeader(char* header){
 void drawNavigationMeny()
 {
 	glPushMatrix();
-	drawString("Key Funktions: ",  -0.95, -0.8, black);
+	drawString("Key Functions: ",  -0.95, -0.8, black);
 	drawString("Initial State: 'I'    |     Frame: 'F'      |      Moment Diagrams: 'M'" ,  -0.95, -0.9, black);
 	drawString("Shear Force Diagrams: 'S'    |     Axial Force Diagrams: 'A'",  -0.95, -0.95, black);
 	glEnd();
@@ -268,7 +265,9 @@ void drawMomentDiagrams(void)
 		xMax = lengthOfVector(pervec)*scale;
 		if (biggestMoment< abs(momentFunction(xMax, M, Fy))){
 			biggestMoment=abs(momentFunction(xMax, M, Fy));
-			
+		}	
+		if (biggestMoment< abs(momentFunction(0, M, Fy))){
+			biggestMoment=abs(momentFunction(0, M, Fy));
 		}
 	}
 
@@ -289,7 +288,6 @@ void drawMomentDiagrams(void)
 		glRotatef(beamRotation, 0, 0, 0.1);
 		glLineWidth(1);
 		glBegin(GL_LINES);
-		setColor(colorBlindRYB( abs(momentFunction(x, M, Fy)),biggestMoment));
 		glVertex2d(x/scale, 0);
 		for (x;x<=xMax;x+=dx) {
 			setColor(colorBlindRYB( abs(momentFunction(x, M, Fy)),biggestMoment));
@@ -297,30 +295,27 @@ void drawMomentDiagrams(void)
 			glVertex2d(x/scale, 0);
 		}
 		glEnd();
-		// drawSymbole(xMax/scale/2, 0.1, "M",black);
-		glVertex2d(xMax/scale, 0);
-		drawLine(0,0,xMax/scale,0,black);
 		glPopMatrix();
 	}
-	drawSymbole(0, 0,"M", black);
-	drawColorBar(0.7, -0.8, biggestMoment, "M");
+	drawSymbole(-0.9, 0.9,"M", black);
+	drawColorBar(0.65, -0.65, biggestMoment, "M");
 }
 
 void drawShearDiagrams(void)
 {
-	int i;
-	float Fy, xMax  ,beamRotation, pervec[2], biggestShear;
+	int i,y;
+	float Fy, xMax  ,beamRotation, pervec[2], biggestShear,scaleFactor;
 	biggestShear=0;
 	for (i = 0; i < numberOfElms; ++i)
 	{
-		if (abs(forceVector[i][1])>biggestShear){
+		if (abs(forceVector[i][1])>abs(biggestShear)){
 			biggestShear=forceVector[i][1];
 		}
 	}
 	for (i = 0; i < numberOfElms; ++i)
 	{
 		glPushMatrix();
-		Fy=forceVector[i][3]/biggestShear/4;
+		Fy=forceVector[i][4]/biggestShear/4;
 		pervec[0]=beamCoord[i][2]-beamCoord[i][0];
 		pervec[1]=beamCoord[i][3]-beamCoord[i][1];
 		xMax = lengthOfVector(pervec);
@@ -330,35 +325,30 @@ void drawShearDiagrams(void)
 		glTranslated((beamCoord[i][0]-pervec[0]), (beamCoord[i][1])-pervec[1], 0);
 		glRotatef(beamRotation, 0, 0, 0.1);
 		glLineWidth(1);
-		// printf(" xmax = %f |  Fy = %f  | pervec 1 =%f | pervec2= %f \n",xMax,Fy,pervec[0],pervec[1]);
-		glBegin( GL_POLYGON );
-		setColor(colorBlindRYB(forceVector[i][1], biggestShear));
-		glVertex2f( 0,Fy);
-		glVertex2f(  xMax,  Fy );
-		
-		setColor(colorBlindRYB(0, biggestShear));
-		glVertex2f(  xMax, 0 );
-		glVertex2f( 0, 0 );
-		glVertex2d(xMax/scale, 0);
+		glBegin( GL_LINES );
+		for (y=0;y<=500;y++) {
+			scaleFactor=(float)y/500;
+			setColor(colorBlindRYB( abs(forceVector[i][4]*scaleFactor),biggestShear));
+			glVertex2d(0, Fy*scaleFactor);
+			glVertex2d(xMax, Fy*scaleFactor);
+		}
 		glEnd();
-		struct RGB rgb = {0.,0.,0.};
-		drawLine(0,0,xMax,0,rgb);
 		glPopMatrix();
 	} 
-	drawSymbole(0, 0,"S", black);
-	drawColorBar(0.7, -0.8, biggestShear, "S");
+	drawSymbole(-0.9, 0.9,"S", black);
+	drawColorBar(0.65, -0.65, biggestShear, "S");
 
 }
 
 void drawAxialForceDiagrams(void)
 {
-	int i;
-	float Fx, xMax  ,beamRotation, pervec[2],biggestNormal;
+	int i,y;
+	float Fx, xMax  ,beamRotation, pervec[2],biggestNormal,scaleFactor;
 	biggestNormal=0;
 	for (i = 0; i < numberOfElms; ++i)
 	{
 		if (abs(forceVector[i][0])>biggestNormal){
-			biggestNormal=forceVector[i][0];
+			biggestNormal=abs(forceVector[i][0]);
 		}
 	}
 	for (i = 0; i < numberOfElms; ++i)
@@ -374,22 +364,18 @@ void drawAxialForceDiagrams(void)
 		glTranslated((beamCoord[i][0]-pervec[0]), (beamCoord[i][1])-pervec[1], 0);
 		glRotatef(beamRotation, 0, 0, 0.1);
 		glLineWidth(1);
-		// printf(" xmax = %f| Fx = %f  | pervec 1 =%f | pervec2= %f \n",xMax,Fx,pervec[0],pervec[1]);
-		glBegin( GL_POLYGON );
-		setColor(colorBlindRYB(forceVector[i][0], biggestNormal));
-		glVertex2f( 0,Fx);
-		glVertex2f(  xMax,  Fx );
-		setColor(colorBlindRYB(0, biggestNormal));
-		glVertex2f(  xMax, 0 );
-		glVertex2f( 0, 0 );
-		glVertex2d(xMax/scale, 0);
+		glBegin( GL_LINES );
+		for (y=0;y<=500;y++) {
+			scaleFactor=(float)y/500;
+			setColor(colorBlindRYB( abs(forceVector[i][0]*scaleFactor),biggestNormal));
+			glVertex2d(0, Fx*scaleFactor);
+			glVertex2d(xMax, Fx*scaleFactor);
+		}
 		glEnd();
-		struct RGB rgb = {0.,0.,0.};
-		drawLine(0,0,xMax,0,rgb);
 		glPopMatrix();
 	} 
-	drawSymbole(0, 0,"N", black);
-	drawColorBar(0.7, -0.8, biggestNormal, "N");
+	drawSymbole(-0.9, 0.9,"N", black);
+	drawColorBar(0.65, -0.65, biggestNormal, "N");
 
 }
 

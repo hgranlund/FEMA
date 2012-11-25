@@ -41,3 +41,16 @@ void perpendicularUnitVector(float* vec)
     vec[0]=vec[0]/s;
     vec[1]=vec[1]/s;
 }
+
+float min(float x, float y)
+    {
+        return (x < y ? x : y);
+    }
+
+float clamp(float value, float lower, float max){
+    if (value > max)
+        value = max;
+    if (value < lower)
+        value = lower;
+    return value;
+}
