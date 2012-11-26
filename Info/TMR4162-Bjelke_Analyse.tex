@@ -105,10 +105,43 @@ Nå står vi bare igjen med et lineært ligningssystem av typen $kv=S$, hvor for
 Når vi vil regne ut krefter på de forskjellige elementene kan vi igjen bruke ligning \ref{eq:skv}. Vi må nå huske at vi må transformere matrisene til det koordinatsystemet vi ønsker. 
 
 
-\subsection*{Ligningsløser}
+\subsection*{Ligningsløser}'
+Når man skal modellere mange fysiske og interiørmessigere problemer kan en nesten ikke unngå å løse store linear ligningssystem. Det finnes derfor mange forskjellige metoder å løse disse på og alle har visse fordeler og ulemper.
 Det finnes to kategorier av ligningsløsere: dirkete og iterative. De direkte løser settet eksakt, men bruker ofte lenger tid en en iterativ løser. Gauss metoden er et eksempel på en direkteløser. En iterativ løser finner en approksimasjon av løsningen, og kan ha problemer med konvergens i visse tilfeller. 
 
 \subsubsection*{Gauss}
+
+Gauss metoden består av to deler. Den ene er eliminasjon, hvor du utfører elementære rad operasjoner til du for en triangulær form. Deretter gjøres en tilbakesubstitusjon for å finne x-verdiene. De finnes i hovedsak 3 forskjellige rad operasjoner:
+\begin{enumerate}
+\item Multiplisere en rad med et tall som ikke er null.
+\item Addere to rader
+\item Bytte om to rader
+\end{enumerate}
+
+Kjøretiden til gauss kan kalkuleres ut i fra antall iterasjoner som gjøres. Om vi antar det er $n$ likninger som skal løses kan kjøretiden kalkuleres som vist i \eqref{eq:gausstid}.
+
+\begin{equation} \label{eq:gausstid}
+E(n) = \sum_{k=1}^{n-1} (n-k) + 2 \sum_{k=1}^{n-1} (n-k)(n-k-1) = O(n^3)
+\end{equation}
+
+På samme måte kan vi kalkulere kjøretiden til tilbakesubstitusjonen:
+\begin{equation} \label{eq:gaussseideltid}
+T(n) = 2\sum_{i=1}^{n} (n-i) + n = O(n^2)
+\end{equation}
+
+
+\subsubsection*{Gauss-Seidel}
+Gauss-seidel er en iterativ ligningsløser, som fungerer best på spinkle matriser. Den har en iterativ del, beskrevet i likning \ref{eq:gauss-seidel}. I hver iterasjon bruker Gauss-Seidel  den forrige utregnede verdien, som gjør at den ikke kan kjøre parallelt. 
+ 
+ \begin{equation} \label{seideliterater}
+   x_j^{m+1} = \frac{1}{a_{jj}}  (b_j - \sum_{k=1}^{j-1} a_{jk} x_k^{m+1} - \sum_{k=j+1}^n a_{jk}x^m)
+ \end{equation}
+
+Her kan vi ikke finne kjøretiden på samme måte som ved en direkteløser, siden vi hele tiden kan forbedre resultatet ved å kjøre en iterasjon til. Vi må derfor se på konvergens, parallellitet og hvilken nøyaktighet man skal ha. Det finnes noen enkle konvergeringsregler for Gauss-Seidel, som sier at metoden garantert konvergerer om:
+\begin{enumerate}
+\item Matrisen (A) er strengt eller uavvendelige diagonalt dominerende.
+\item Matrisen (A) er positive klar (Positive-definite)
+\end{enumerate}
 
 
 
@@ -149,3 +182,5 @@ Det finnes to kategorier av ligningsløsere: dirkete og iterative. De direkte l�
 \end{thebibliography}
 
 \end{document}
+
+  Det er en del måter å implementere gauss på. Jeg valgte å bruke partiell pivotering, hvor en eliminerer rad for rad men et såkalt pivot element. Dette elementet bør være så stort som mulig for å minske avrundingsfeil. 
