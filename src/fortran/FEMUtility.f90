@@ -1,19 +1,8 @@
 module FEMUtility
 	implicit none
-
-	   ! pr_switch brukes til å bestemme hva som skal printes ut.  0= ingen ting, 10 = alt 
-
     integer , parameter :: pr_switch=0
 
 	contains 
-
-
-  !###############################
-  !PrintMatrix printer Matrisen A
-  !
-  ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.0
-  !###############################
 
    Subroutine PrintMatrix(A)
     real, intent(inout) :: A(:,:)
@@ -29,14 +18,6 @@ module FEMUtility
   end Subroutine PrintMatrix
 
 
-
-  !###############################
-  !NullifyRealMatrix Setter alle elementene i Matrix til null
-  !
-  ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.0
-  !###############################
-
   subroutine NullifyRealMatrix(Matrix)
     real, intent(inout) :: Matrix(:,:) 
 
@@ -47,13 +28,6 @@ module FEMUtility
   end subroutine NullifyRealMatrix
 
 
-  !###############################
-  !NullifyRealVector Setter alle elementene i vector til null
-  !
-  ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.0
-  !###############################
-
   subroutine NullifyRealVector(Vector)
     real, intent(inout) :: Vector(:) 
 
@@ -63,27 +37,6 @@ module FEMUtility
     
   end subroutine NullifyRealVector
 
-
-  !###############################
-  ! SwapRow bytter rad r1 med r2 i matrisen A
-  !
-  ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.0
-  !###############################
-
-  subroutine SwapRow(A,r1,r2)
-    real, intent(inout) :: A(:,:)
-    integer, intent(in) :: r1,r2
-
-!     integer:: n = size(A, 1)
-    real :: swap(size(A, 1))
-
-    swap=A(r1,:)
-    A(r1,:)=A(r2,:)
-    A(r1,:)=swap
-
-  end subroutine swapRow
-
-
+  
 
  end module FEMUtility

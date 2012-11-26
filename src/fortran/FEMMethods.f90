@@ -1,16 +1,18 @@
-module FemMethods
-  use FEMTypes
-  use FEMMath
-  implicit none
-
-contains
-
-  !###############################
-  !Methoden kalkulerer forsyvnigene til systemet
+  !##############################
+  !
   !
   ! Author: Simen Haugerud Granlund
   ! Date/version: 02-11-12/ 1.0
   !###############################
+
+
+module FemMethods
+  use FEMTypes
+  use FEMMath
+  use FEMUtility
+  implicit none
+
+contains
 
   subroutine DoFEA(DisplacementVector, Elms,Nodes,Loads,errorFlag)
     integer, intent(inout) :: errorFlag
@@ -27,7 +29,7 @@ contains
 
     call SetElementProperties(Elms, Nodes)  
     CALL GlobalToRedusedGlobalStiffnessMatrixConverter(GTRGConverter, Nodes)
-    RGSMLen = TotalDegrees(Nodes)
+    RGSMLen = TotalDegreesOfFreedom(Nodes)
     allocate (GlobalStiffnessMatrix(RGSMLen,RGSMLen) , LoadVector(RGSMLen), stat=errorFlag)
     if (errorFlag .NE. 0)then
        print *, "***Not Enough Memory*** when allocating in CalcDisplacement "
@@ -40,31 +42,23 @@ contains
 
     call GlobalStiffness(GlobalStiffnessMatrix,Elms,Nodes,GTRGConverter,errorFlag)
     call PopulateLoads(LoadVector,Loads,GTRGConverter, errorflag)
-    if (pr_switch>4)then
-       print * ,''
-       print *, '##### GlobalStivhetsmatrise: '
-       call PrintMatrix(GlobalStiffnessMatrix)
-       print *, 'loadvector: ', LoadVector
-    end if
-
     call GaussSolver(GlobalStiffnessMatrix,LoadVector,DisplacementVector,RGSMLen,Errorflag)
 
     if (pr_switch>2)then
        print * ,''
+       print *, '##### GlobalStivhetsmatrise: '
+       call PrintMatrix(GlobalStiffnessMatrix)
+       print *, 'loadvector: ', LoadVector
        print *, '##### Forskyvninger: '
        print *,  DisplacementVector
     end if
-    call SetElementForces(Elms, DisplacementVector, GTRGConverter)
+    call CalculateElementForces(Elms, DisplacementVector, GTRGConverter)
   end subroutine DoFEA
 
 
-  !###############################
+
   !LS LocalStiffnesMatrix er den genererte lokale stivhetsmatrisen
   !Elm er elementet i fokus
-  !
-  ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.0
-  !###############################
 
   subroutine LocalStiffness(LS, Elm)
     real , intent(out) :: LS(:,:)
@@ -112,13 +106,7 @@ contains
   end subroutine LocalStiffness
 
 
-
-  !##############################
   !LocalStiffnessWithRotation genererer den globale stivhetsmatrisen til elmentet (elm) direkte
-  !
-  ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.0
-  !###############################
 
   subroutine LocalStiffnessWithRotation(LS, elm)
     real , intent(out) :: LS(:,:)
@@ -137,16 +125,9 @@ contains
     t2 = (6*inertia)/l
     t3 = e/l
 
-    if (pr_switch > 7)then
-       print *,''
-       print * , '##### LocalStiffness:'
-       print *,"C: ",c," S: ", s ," I: ",inertia, " L:",l,  &
-            &"(12 *I) /L**2:", t1, "(6*I)/L:", t2, "E/L:", t3
-    end if
 
     LS(1,1)=t3*((a*c**2)+(t1*s**2))
     LS(2,1)=t3*(a-t1)*c*s
-!     LS(3,1)=t3*(-t2*s)
     LS(3,1)=t3*(t2*s)
 
     LS(4,1)=-LS(1,1)
@@ -189,9 +170,11 @@ contains
     LS(5,6)=LS(6,5)
     LS(6,6)=LS(3,3)
 
-    if ( pr_switch >9 ) then
+    if ( pr_switch >8 ) then
        print *, ''
-       print *, '###### LocalStiffnessMatrix'
+       print *, '###### LocalStiffnessMatrix \n'
+       print *,"C: ",c," S: ", s ," I: ",inertia, " L:",l,  &
+            &"(12 *I) /L**2:", t1, "(6*I)/L:", t2, "E/L:", t3
        call PrintMatrix(LS)
     end if
 
@@ -199,12 +182,9 @@ contains
 
 
 
-  !###############################
+
   !En prosedyre som genererer  den reduserte globale stivhetsmatrisen direkte
-  !
-  ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.0
-  !###############################
+
 
   subroutine GlobalStiffness(GlobalStiffnessMatrix, Elms,Nodes,GTRGConverter,errorFlag)
     integer ,intent(in)::GTRGConverter(:)
@@ -249,14 +229,6 @@ contains
   end subroutine GlobalStiffness
 
 
-
-  !###############################
-  ! Prosedyren populerer Kraftvektoren (LoadVectors)
-  !
-  ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.0
-  !###############################
-
   subroutine PopulateLoads(LoadVector,Loads,GTRGConverter,errorflag)
     integer, intent(in) :: GTRGConverter(:),Errorflag
     type (load), intent(in) :: Loads(:)
@@ -283,13 +255,9 @@ contains
 
 
 
-  !###############################
   ! Genererer en konverteringsmatrise som konverterer fra den globalestivhetsmatrisen til den reduserte globalestivhetsmatrisen.
   ! Den reduserte globlaestivhetsmatrisen er alle grensebetingelser tatt i be
-  !
-  ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.0
-  !###############################
+
 
   Subroutine GlobalToRedusedGlobalStiffnessMatrixConverter(GTRGConverter,Nodes)
     type (node), intent(in):: Nodes(:)
@@ -320,39 +288,25 @@ contains
   end Subroutine GlobalToRedusedGlobalStiffnessMatrixConverter
 
 
-
-
-  !###############################
   ! Kalkulerer hvor mange grader av frihet alle nodene har tilsammen
-  !
-  ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.0
-  !###############################
 
-  integer Function totalDegrees(Nodes)
+  integer Function totalDegreesOfFreedom(Nodes)
     type (node), intent(in):: Nodes(:)
 
     integer ::i,j
 
-    totalDegrees=0
+    totalDegreesOfFreedom=0
     do i=1,ubound(Nodes,1)
        do j=1,3
-          totalDegrees = totalDegrees+Nodes(i)%GDOF(j)
+          totalDegreesOfFreedom = totalDegreesOfFreedom+Nodes(i)%GDOF(j)
        end do
     end do
-  end Function totalDegrees
+  end Function totalDegreesOfFreedom
 
 
-
-
-  !###############################
   ! Prosedyren kalkulerer kreftene til elementet ut i fra forskyvningene 
-  !
-  ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.1
-  !###############################
 
-  Subroutine LoadsOnElement(elm)
+  Subroutine CalkulateLoadsOnElement(elm)
     type (element), intent(inout) :: elm
 
     real :: LocalStiffnessMatrix(DOF*2,DOF*2), ElmsRotationMatrix(6,6)
@@ -361,18 +315,14 @@ contains
     call LocalStiffness(LocalStiffnessMatrix, elm)
     elm%ForceVector = matmul(ElmsRotationMatrix, elm%Displacement)
     elm%ForceVector = matmul(LocalStiffnessMatrix, elm%ForceVector)
-  end Subroutine LoadsOnElement
+  end Subroutine CalkulateLoadsOnElement
 
 
 
-  !###############################
+
   ! Prosedyren kalkulerer kreftene på alle elementet ut i fra forskyvningene og setter de locale forskyvningene til hvert element
-  !
-  ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.1
-  !###############################
 
-  Subroutine SetElementForces(Elms, DisplacementVector, GTRGConverter)
+  Subroutine CalculateElementForces(Elms, DisplacementVector, GTRGConverter)
     type (element), intent(inout) :: Elms(:)
     real, intent(in) ::  DisplacementVector(:)
     integer , intent(in) :: GTRGConverter(:)
@@ -385,7 +335,7 @@ contains
           Elms(i)%Displacement(j)=DisplacementVector(GTRGConverter(((Elms(i)%node1-1)*DOF) +j))
           Elms(i)%Displacement(j+3)=DisplacementVector(GTRGConverter(((Elms(i)%node2-1)*DOF) +j) )
        end do
-       call LoadsOnElement(Elms(i))
+       call CalkulateLoadsOnElement(Elms(i))
        if(pr_switch>5)then
           print * ,''
           print *,'Krefter på element nr : ', i
@@ -393,16 +343,8 @@ contains
        end if
     end do
 
-  end Subroutine SetElementForces
+  end Subroutine CalculateElementForces
 
-
-
-  !###############################
-  ! Prosedyren populerer verdiene til elementene
-  !
-  ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.0
-  !###############################
 
   subroutine SetElementProperties(Elms, Nodes)
     type (element), intent(inout) :: Elms(:)
@@ -425,86 +367,26 @@ contains
 
 
 
-  !###############################
-  ! BiggestNodeValue retunerer den største node kordinaten 
-  ! Kan brukes som en skaleringsfaktor ved grafisk tegning
-  !
-  ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.0
-  !###############################
 
-  function BiggestNodeValue(Nodes)
+  ! BiggestNodeCoordinate retunerer den største node kordinaten 
+
+  function BiggestNodeCoordinate(Nodes)
     type (node) , intent(in) :: Nodes(:)
-    real :: BiggestNodeValue
+    real :: BiggestNodeCoordinate
 
     integer :: i,temp
   
-    BiggestNodeValue=0
+    BiggestNodeCoordinate=0
     do i=0,ubound(Nodes,1)
-      if (abs(Nodes(i)%x) > BiggestNodeValue )then
-        BiggestNodeValue = abs(Nodes(i)%x)
+      if (abs(Nodes(i)%x) > BiggestNodeCoordinate )then
+        BiggestNodeCoordinate = abs(Nodes(i)%x)
       end if
-      if (abs(Nodes(i)%y) > BiggestNodeValue ) then
-        BiggestNodeValue = abs(Nodes(i)%y)
+      if (abs(Nodes(i)%y) > BiggestNodeCoordinate ) then
+        BiggestNodeCoordinate = abs(Nodes(i)%y)
        end if 
     end do
 
-end function BiggestNodeValue
+end function BiggestNodeCoordinate
 
-
-
-!   !###############################
-!   ! BiggestValues retunerer den største node kordinaten og de største kreftene (Fx,Fy,M)
-!   ! Kan brukes som en skaleringsfaktor ved grafisk tegning
-!   !
-!   ! Author: Simen Haugerud Granlund
-!   ! Date/version: 02-11-12/ 1.0
-!   !###############################
-
-!   subroutine BiggestValues(Biggest, Nodes, Elms)
-!     type (node) , intent(in) :: Nodes(:)
-!     type (element), intent(in) :: Elms(:)
-!     real , intent(out):: Biggest(4)
-
-!     real :: Fx,Fy,M
-!     integer :: i,temp,l
-  
-!     call NullifyRealVector(Biggest)
-!     l=size(Nodes(0)%ForceVector)
-!     Fx=0
-!     Fy=0
-!     M=0
-
-!     do i=0,ubound(Nodes,1)
-!       if (abs(Nodes(i)%x) > Biggest(0) )then
-!         Biggest(0) = abs(Nodes(i)%x)
-!       end if
-!       if (abs(Nodes(i)%y) > Biggest(0) ) then
-!         Biggest(0) = abs(Nodes(i)%y)
-!        end if 
-!     end do
-
-
-!     do i=lbound(Elms), ubound(Elms)
-!       if (abs(Elms(i)%ForceVector(0)) > Fx )then
-!         fx=abs(Elms(i)%ForceVector(0))
-!     end if
-!           if (abs(Elms(i)%ForceVector(3)) > Fx )then
-!         fx=abs(Elms(i)%ForceVector(3))
-!     end if
-!           if (abs(Elms(i)%ForceVector(1)) > Fy )then
-!         fx=abs(Elms(i)%ForceVector(1))
-!     end if
-!           if (abs(Elms(i)%ForceVector(4)) > Fy )then
-!         fx=abs(Elms(i)%ForceVector(4))
-!     end if
-!     if (abs(N
-!     if (abs(Nodes(i)%y) > Biggest(0) ) then
-!       Biggest(0) = abs(Nodes(i)%y)
-!     end if           
-
-!   end do
-
-! end subroutine BiggestValues
 
 end module FemMethods

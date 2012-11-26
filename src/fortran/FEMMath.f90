@@ -1,18 +1,13 @@
 
 
 module FEMMath
-  use FEMUtility
   implicit none
 
 contains
 
 
-  !###############################
+
   ! Gauss elimination with partial pivoting
-  !
-  ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.0
-  !###############################
 
   subroutine GaussSolver(A,B,X,len,errorFlag)
     integer, intent(in) :: len
@@ -31,14 +26,6 @@ contains
                 call swapAB(A,B,k,i)
           end if
        end do
-
-       if (pr_switch>9) then
-          print * ,''
-          print *, 'Matrisen etter swap, iterasjon...: ' , k 
-          call PrintMatrix(A)
-          print *, B
-
-       end if
 
        ! Tester om matrisen er singulær
        if (abs(A(k,k))< epsilon(A(k,k))) THEN
@@ -59,22 +46,8 @@ contains
     end do
 
     call BackwardSubstitution(A,B,X,len,errorFlag)
-
-    if (pr_switch >5)then
-       print *, ''
-       print *, 'Matrisen A etter gauss eliminisjon:'
-       call PrintMatrix(A)
-       print *, 'B matrix: ', B
-    end if
   end subroutine GaussSolver
 
-
-  !###############################
-  ! Tilbake substitusjon
-  !
-  ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.0
-  !###############################
 
   subroutine BackwardSubstitution(A,B,X,len ,errorFlag)
     integer, intent(in) :: len
@@ -92,21 +65,13 @@ contains
        end do
        X(k)=(B(k)-tmp)/A(k,k)
        if (abs(A(k,k)) == 0) THEN
-          print *, ''
-          print *, 'Matrisen har ikke en unik løsing'
           errorFlag = 5
-          x(k)=1 !om det ikke finnes en unik løsning setter jeg x = 1
+          x(k)=1 
+          print *, ''
+          print *, '####There is no unik solution! Set x',k,'equals 1'
        end if
     end do
   end subroutine BackwardSubstitution
-
-
-  !###############################
-  ! Funksjonen retunerer vinklen (rad) mellom x-aksen og linjen som er definert av punktene (x1,y1) og (x2,y2)
-  !
-  ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.0
-  !###############################
 
   real  function  AngelFromPoints(x1,y1,x2,y2)
     real, intent(in)::x1,y1,x2,y2
@@ -118,14 +83,6 @@ contains
     AngelFromPoints = atan(dy/dx)
   end function AngelFromPoints
 
-
-  !###############################
-  ! Funksjonen retunerer lengden til linjen som er definert av punktene (x1,y1) og (x2,y2)
-  !
-  ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.0
-  !###############################
-
   real  function  LengthBetweenPoints(x1,y1,x2,y2)
     real, intent(in)::x1,y1,x2,y2
 
@@ -136,19 +93,13 @@ contains
     LengthBetweenPoints = sqrt(dx**2+dy**2)
   end function LengthBetweenPoints
 
-  !###############################
-  ! Retunerer rotasjonsmatrisen med 6 frihetsgrader 
-  !
-  ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.0
-  !###############################
 
   function RotationMatrix(cosT,sinT)
     real, intent(in) :: cosT, sinT 
 
     real :: RotationMatrix(6,6)
 
-    call NullifyRealMatrix(RotationMatrix)
+    call NullifyMatrix(RotationMatrix)
 
     RotationMatrix(3,3)=1
     RotationMatrix(6,6)=1
@@ -164,13 +115,20 @@ contains
   end function RotationMatrix
 
 
+  subroutine SwapRow(A,r1,r2)
+    real, intent(inout) :: A(:,:)
+    integer, intent(in) :: r1,r2
 
-  !###############################
-  ! swapRow bytter rad r1 med r2 i matrisen A og vector B
-  !
-  ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.0
-  !###############################
+    real :: swap(size(A, 1))
+
+    swap=A(r1,:)
+    A(r1,:)=A(r2,:)
+    A(r1,:)=swap
+
+  end subroutine swapRow
+
+
+  ! swapRow bytter rad r1 med r2 i matrisen A og vektoren B
 
   subroutine swapAB(A,B,r1,r2)
     real, intent(inout) :: A(:,:), B(:)
@@ -183,5 +141,14 @@ contains
     B(r1)=B(r2)
     B(r1)=swapB
   end subroutine swapAB
+
+  subroutine NullifyMatrix(Matrix)
+    real, intent(inout) :: Matrix(:,:) 
+
+    integer i,j
+
+    forall (i=lbound(Matrix,1):ubound(Matrix,1), j=lbound(Matrix,2):ubound(Matrix,2)) Matrix(i,j)=0
+    
+  end subroutine NullifyMatrix
 
 end module FEMMath

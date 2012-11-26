@@ -141,97 +141,22 @@ Her kan vi ikke finne kjøretiden på samme måte som ved en direkteløser, side
 \begin{enumerate}
 \item Matrisen (A) er strengt eller uavvendelige diagonalt dominerende.
 \item Matrisen (A) er positive bestemt (Positive-definite)
-\end{enumerate}file:///home/simenhg/invece%20kinematics/inverceKinematics.tex
+\end{enumerate}
 
 
+\subsection*{Fargefunksjon}
 
-\subsection*{OpenGL}
-Opengl er et API for å rendre 2d og 3d grafikk. Mange av kallene går rett på GPU'en, slik at vi får økt ytelsen. Strukturen er bygget opp som en tilstandsmaskin, hvor vi hele tiden forandrer tilstanden til programmet. Vi kan for eksempel sette hvilken farge eller linjetykkelse som skal brukes videre, ved kommandoene glColor3f() og glLineWith().
-
-\paragraph*{}
-OpenGL opererer med en stakk av 3 matriser, hvor do på hver matrise kan utføre rotasjoner, forskyvninger og skaleringer. Hver gang en matrise operasjon blir kalt blir den utført på den gjeldene matrisen. De forskjellige operasjonene er standard matrise operasjoner, hvor matrisen blir multiplisert med en operasjons matrise.
-
-\begin{equation}
-glRotate(\theta	,x,y,z)  = \begin{bmatrix}
-1 & 0&  0 &0 \\
-0   &\cos \theta &  -\sin \theta &0\\
-0 &  \sin \theta   & \cos \theta &0\\
-0&0&0&1
-\end{bmatrix} * \begin{bmatrix}
-\cos \theta  & 0 &  \sin \theta &0\\
-0  & 1  & 0 & 0\\
--\sin \theta &  0 &  \cos \theta  &0\\
-0&0&0&1
-\end{bmatrix} 
-*
-\begin{bmatrix}
-\cos \theta & -\sin \theta &   0 &0\\[3pt]
-\sin \theta & \cos \theta  & 0 &0\\[3pt]
-0 &0 & 1 &0\\
-0&0&0&1\\
-\end{bmatrix}
-\end{equation}
-\begin{equation}
-glScale(x,y,z)=
-\begin{bmatrix}
-x &0&0&0\\
-0&y&0&0\\
-0&0&x&0\\
-0&0&0&1
-\end{bmatrix}
-\end{equation}
-\begin{equation}
-glTranslate(x,y,z)=
-\begin{bmatrix}
-1 &0&0&x\\
-0&1&0&y\\
-0&0&1&z\\
-0&0&0&1
-\end{bmatrix}
-\end{equation}
-
-For å lage og dytte ut matriser på stakken brukes glPushMatrix() og glPopMatrix(). Når du har hentet ut en matrise kan du utføre rutiner på denne. Modellmatrisen er den mest essensielle matrisen, her kan du utføre rutiner som å tegne streker, polygoner og lignende. 
 
 
 
 
 \section*{Programmet} 
 
-\subsection*{Bruk}
-\subsubsection*{Installasjon }
-\subsubsection*{Input filen}
-
-
-\subsection*{Fortran}
-\subsubsection*{Struktur}
-\subsubsection*{Program-analyse}
-\subsubsection*{Optimaliseringer}
-\subsubsection*{Tidsbruk}
-\subsubsection*{Resultater}
-
-
-
-\subsection*{C}
-
-\subsubsection*{Struktur}
-\subsubsection*{Optimaliseringer}
-\subsubsection*{Tidsbruk}
-\subsubsection*{Visualisering}
-
-
-
-
-\subsection*{Fargefunksjon}
-En fargefunksjon er en funksjon genererer en farge basert på en verdi. Den kan for eksempel returene en rgb verdi. Fargemodellen rgb baserer seg på og blande, blå, grønn og rød, til ønsket farge. 
-
 
 \section*{Diskusjon}
 
-hvorfor jeg valte ting: gauss, innpt stdin
 
 \section*{Konklusjon}
-
-lærte nytt tankemønster ved å programere funksjonelt
 
 \paragraph{} 
 
@@ -250,9 +175,7 @@ lærte nytt tankemønster ved å programere funksjonelt
  
 \bibitem{FEM}
 	Dyryl L. Logen, 2011, A First Course in the Finite Element Method
-	
-\bibitem{kreyzig}
-Erwin Kreyszig, 2006, Advanced Engineering Mathematics, 9th Edition
+
 
 \end{thebibliography}
 

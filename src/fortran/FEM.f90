@@ -9,10 +9,10 @@ program FEM
 
 
   file_in=5
-!   file_out=6
+! file_out=6
   errorFlag=0
 
-!   file_in=10
+! file_in=10
   file_out=11
 !   open(unit=file_in, file='inputE52S224.dat', iostat=errorFlag, status="old", action="read")
 !   if ( errorFlag /= 0 ) stop "Error opening file_in"
@@ -22,7 +22,7 @@ program FEM
 
 
   call ReadInput() 
-  allocate (DisplacementVector(totalDegrees(Nodes)), stat=errorFlag)
+  allocate (DisplacementVector(totalDegreesOfFreedom(Nodes)), stat=errorFlag)
   IF (errorFlag .NE. 0)then
      print *, "***Not Enough Memory*** when allocating Displacement "
      return
@@ -64,7 +64,7 @@ contains
 
     numberOfLoads=size(Loads)
     numberOfElm = size(Elms)
-    write(file_out,*, iostat=errorFlag), numberOfElm, numberOfLoads, BiggestNodeValue(Nodes)
+    write(file_out,*, iostat=errorFlag), numberOfElm, numberOfLoads, BiggestNodeCoordinate(Nodes)
 
     do n=1,numberOfElm
       write (file_out,fmt="( F15.4 F15.4 F15.4 F15.4)",iostat=errorFlag), Nodes(Elms(n)%node1)%x,&
