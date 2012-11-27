@@ -14,13 +14,25 @@ contains
     integer, intent(inout) :: errorFlag
     real, intent(inout)  :: A(len,len), B(len)
     REAL, intent(out) :: X(len)
-    integer i,j,k
-    REAL  :: akk
-
 
     if (errorFlag < 0) return
 
-    do k=1, len-1
+    call GaussElimination(A,B,X,len,errorFlag)
+    call BackwardSubstitution(A,B,X,len,errorFlag)
+  end subroutine GaussSolver
+
+
+  subroutine GaussElimination(A,B,X,len,errorFlag)
+    integer, intent(in) :: len
+    integer, intent(inout) :: errorFlag
+    real, intent(inout)  :: A(len,len), B(len)
+    REAL, intent(out) :: X(len)
+    
+
+    integer i,j,k
+    real  :: akk
+
+     do k=1, len-1
        do i=k+1 ,len
           IF ( (ABS(A(I,k))-abs(A(k,k))).gt. 0) then   
                 call swapAB(A,B,k,i)
@@ -44,10 +56,7 @@ contains
           A(i,k) =0 
        end do
     end do
-
-    call BackwardSubstitution(A,B,X,len,errorFlag)
-  end subroutine GaussSolver
-
+  end subroutine GaussElimination
 
   subroutine BackwardSubstitution(A,B,X,len ,errorFlag)
     integer, intent(in) :: len

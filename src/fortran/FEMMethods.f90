@@ -306,7 +306,7 @@ contains
 
   ! Prosedyren kalkulerer kreftene til elementet ut i fra forskyvningene 
 
-  Subroutine CalkulateLoadsOnElement(elm)
+  Subroutine CalculateLoadsOnElement(elm)
     type (element), intent(inout) :: elm
 
     real :: LocalStiffnessMatrix(DOF*2,DOF*2), ElmsRotationMatrix(6,6)
@@ -315,7 +315,7 @@ contains
     call LocalStiffness(LocalStiffnessMatrix, elm)
     elm%ForceVector = matmul(ElmsRotationMatrix, elm%Displacement)
     elm%ForceVector = matmul(LocalStiffnessMatrix, elm%ForceVector)
-  end Subroutine CalkulateLoadsOnElement
+  end Subroutine CalculateLoadsOnElement
 
 
 
@@ -335,7 +335,7 @@ contains
           Elms(i)%Displacement(j)=DisplacementVector(GTRGConverter(((Elms(i)%node1-1)*DOF) +j))
           Elms(i)%Displacement(j+3)=DisplacementVector(GTRGConverter(((Elms(i)%node2-1)*DOF) +j) )
        end do
-       call CalkulateLoadsOnElement(Elms(i))
+       call CalculateLoadsOnElement(Elms(i))
        if(pr_switch>5)then
           print * ,''
           print *,'Krefter på element nr : ', i
