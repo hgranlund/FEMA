@@ -171,12 +171,57 @@
 			"file": "src/fortran/FEM.f90",
 			"settings":
 			{
-				"buffer_size": 2930,
+				"buffer_size": 2940,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/c/fem_draw.c",
+			"settings":
+			{
+				"buffer_size": 8547,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "Package Control Messages\n========================\n\nAdvancedNewFile:\n---------------\n\n  New Features/Enhancements:\n  \n  - Add OS Specific Aliases to settings.\n  - Display an error when attempting to use an invalid alias.\n  - Display an error when attempting to open a directory in a view.\n  - Display an error if path creation fails.\n  \n  Please see the README for more information about the new settings.\n  \n  Bug Fixes:\n  - Status bar update causing errors when no view is present.\n  - Specifying absolute paths for Windows produced unexpected behavior.\n  \n",
+			"settings":
+			{
+				"buffer_size": 558,
+				"line_ending": "Unix",
+				"name": "Package Control Messages",
+				"scratch": true
+			}
+		},
+		{
+			"contents": "\n\nmodule FEMMath\n  implicit none\n\ncontains\n\n\n\n  ! Gauss elimination with partial pivoting\n\n  subroutine GaussSolver(A,B,X,len,errorFlag)\n    integer, intent(in) :: len\n    integer, intent(inout) :: errorFlag\n    real, intent(inout)  :: A(len,len), B(len)\n    REAL, intent(out) :: X(len)\n\n    if (errorFlag < 0) return\n\n    call GaussElimination(A,B,X,len,errorFlag)\n    call BackwardSubstitution(A,B,X,len,errorFlag)\n  end subroutine GaussSolver\n\n\n  subroutine GaussElimination(A,B,X,len,errorFlag)\n    integer, intent(in) :: len\n    integer, intent(inout) :: errorFlag\n    real, intent(inout)  :: A(len,len), B(len)\n    REAL, intent(out) :: X(len)\n    \n\n    integer i,j,k\n    real  :: akk\n\n     do k=1, len-1\n       do i=k+1 ,len\n          IF ( (ABS(A(I,k))-abs(A(k,k))).gt. 0) then   \n                call swapAB(A,B,k,i)\n          end if\n       end do\n\n       ! Tester om matrisen er singulær\n       if (abs(A(k,k))< epsilon(A(k,k))) THEN\n          print *, 'Matrisen er singulær'\n          errorFlag = -5\n          return\n       end if\n\n       ! utfører radoperasjoner\n       do  i= k+1, len\n          akk=A(k,k)\n          do j= k+1, len, 1                     \n             A(i,j) =  A(i,j)- A(k,j)*(A(i,k)/akk)\n          end do\n          B(i)=B(i)- A(i,k)*B(k)/A(k,k)\n          A(i,k) =0 \n       end do\n    end do\n  end subroutine GaussElimination\n  \n\n  subroutine BackwardSubstitution(A,B,X,len ,errorFlag)\n    integer, intent(in) :: len\n    integer, intent(inout) :: errorFlag\n    real, intent(inout)  :: A(len,len), B(len)\n    REAL, intent(out) :: X(len)\n\n    integer :: j,k\n    real :: tmp\n\n    do k =len , 1, -1\n       tmp = 0.0d0\n       do j = k+1, len\n          tmp = tmp + A(k,j)*X(j)\n       end do\n       X(k)=(B(k)-tmp)/A(k,k)\n       if (abs(A(k,k)) == 0) THEN\n          errorFlag = 5\n          x(k)=1 \n          print *, ''\n          print *, '####There is no unik solution! Set x',k,'equals 1'\n       end if\n    end do\n  end subroutine BackwardSubstitution\n\n  real  function  AngelFromPoints(x1,y1,x2,y2)\n    real, intent(in)::x1,y1,x2,y2\n\n    real :: dx,dy\n\n    dx=x2-x1\n    dy=y2-y1\n    AngelFromPoints = atan(dy/dx)\n  end function AngelFromPoints\n\n  real  function  LengthBetweenPoints(x1,y1,x2,y2)\n    real, intent(in)::x1,y1,x2,y2\n\n    real :: dx,dy\n\n    dx=x2-x1\n    dy=y2-y1\n    LengthBetweenPoints = sqrt(dx**2+dy**2)\n  end function LengthBetweenPoints\n\n\n  function RotationMatrix(cosT,sinT)\n    real, intent(in) :: cosT, sinT \n\n    real :: RotationMatrix(6,6)\n\n    call NullifyMatrix(RotationMatrix)\n\n    RotationMatrix(3,3)=1\n    RotationMatrix(6,6)=1\n    RotationMatrix(1,1)=cosT\n    RotationMatrix(2,2)=cosT\n    RotationMatrix(4,4)=cosT\n    RotationMatrix(5,5)=cosT\n    RotationMatrix(1,2)=-sinT\n    RotationMatrix(2,1)=sinT\n    RotationMatrix(4,5)=-sinT\n    RotationMatrix(5,4)=sinT\n\n  end function RotationMatrix\n\n\n  subroutine SwapRow(A,r1,r2)\n    real, intent(inout) :: A(:,:)\n    integer, intent(in) :: r1,r2\n\n    real :: swap(size(A, 1))\n\n    swap=A(r1,:)\n    A(r1,:)=A(r2,:)\n    A(r1,:)=swap\n\n  end subroutine swapRow\n\n\n  ! swapRow bytter rad r1 med r2 i matrisen A og vektoren B\n\n  subroutine swapAB(A,B,r1,r2)\n    real, intent(inout) :: A(:,:), B(:)\n    integer, intent(in) :: r1,r2\n\n    real :: swapA(size(A, 1)), swapB\n\n    call swapRow(A,r1,r2)\n    swapB=B(r1)\n    B(r1)=B(r2)\n    B(r1)=swapB\n  end subroutine swapAB\n\n  subroutine NullifyMatrix(Matrix)\n    real, intent(inout) :: Matrix(:,:) \n\n    integer i,j\n\n    forall (i=lbound(Matrix,1):ubound(Matrix,1), j=lbound(Matrix,2):ubound(Matrix,2)) Matrix(i,j)=0\n    \n  end subroutine NullifyMatrix\n\nend module FEMMath\n",
+			"file": "src/fortran/FEMMath.f90",
+			"file_size": 3609,
+			"file_write_time": 1353973949000000,
+			"settings":
+			{
+				"buffer_size": 3609,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/fortran/FEMUtility.f90",
+			"settings":
+			{
+				"buffer_size": 889,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/fortran/FEMMethods.f90",
+			"settings":
+			{
+				"buffer_size": 10379,
 				"line_ending": "Unix"
 			}
 		}
 	],
-	"build_system": "Packages/User/FEMAC.sublime-build",
+	"build_system": "Packages/User/FEMA.sublime-build",
 	"command_palette":
 	{
 		"height": 159.0,
@@ -388,426 +433,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"printf",
-			"colorBlindRYB(1, 1)",
-			"print",
-			" ,",
-			"8",
-			"currentFy",
-			"Fy*(y/Fy)",
-			"printf",
-			"x",
-			"drawColorBar",
-			"(float)(i/dl)",
-			"10",
-			"drawColorBar",
-			"i",
-			"Y",
-			"X",
-			"fourValue",
-			", ",
-			"  [",
-			"forceVector",
-			"glColor3f",
-			"}\n",
-			"llist",
-			"filename",
-			"numberOfElms",
-			"BiggestValue",
-			"Funcrion",
-			"subroutine",
-			"ang",
-			"xMax",
-			"scale",
-			"Scale",
-			"scale",
-			"dx",
-			"t",
-			"perVec",
-			"0",
-			"offsetY",
-			"DisplacementVector",
-			"Displacement",
-			"beamCoord",
-			"forceVector",
-			"beamCoord",
-			"F10",
-			"ratio",
-			"int",
-			"0",
-			"draw",
-			"pyth",
-			"elm",
-			"\"ctrl+shift+d\"",
-			"\n    ",
-			"sum"
-		],
-		"highlight": true,
-		"in_selection": false,
-		"preserve_case": false,
-		"regex": false,
-		"replace_history":
-		[
-		],
-		"reverse": false,
-		"show_context": true,
-		"use_buffer2": true,
-		"whole_word": false,
-		"wrap": true
-	},
-	"groups":
-	[
-		{
-			"selected": 0,
-			"sheets":
-			[
-				{
-					"buffer": 0,
-					"file": "src/fortran/FEM.f90",
-					"settings":
-					{
-						"buffer_size": 2930,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1870,
-								1870
-							]
-						],
-						"settings":
-						{
-							"annotations":
-							[
-								"TODO",
-								"README",
-								"FIXME"
-							],
-							"csslint_options":
-							{
-								"adjoining-classes": "warning",
-								"box-model": true,
-								"box-sizing": "warning",
-								"compatible-vendor-prefixes": "warning",
-								"display-property-grouping": true,
-								"duplicate-background-images": "warning",
-								"duplicate-properties": true,
-								"empty-rules": true,
-								"errors": true,
-								"fallback-colors": "warning",
-								"floats": "warning",
-								"font-faces": "warning",
-								"font-sizes": "warning",
-								"gradients": "warning",
-								"ids": "warning",
-								"import": "warning",
-								"important": "warning",
-								"known-properties": true,
-								"outline-none": "warning",
-								"overqualified-elements": "warning",
-								"qualified-headings": "warning",
-								"regex-selectors": "warning",
-								"rules-count": "warning",
-								"shorthand": "warning",
-								"star-property-hack": "warning",
-								"text-indent": "warning",
-								"underscore-property-hack": "warning",
-								"unique-headings": "warning",
-								"universal-selector": "warning",
-								"vendor-prefix": true,
-								"zero-units": "warning"
-							},
-							"gjslint_ignore":
-							[
-								110
-							],
-							"gjslint_options":
-							[
-							],
-							"javascript_linter": "jshint",
-							"jshint_options":
-							{
-								"browser": true,
-								"evil": true,
-								"regexdash": true,
-								"sub": true,
-								"trailing": true,
-								"wsh": true
-							},
-							"pep8": true,
-							"pep8_ignore":
-							[
-								"E501"
-							],
-							"perl_linter": "perlcritic",
-							"pyflakes_ignore":
-							[
-							],
-							"pyflakes_ignore_import_*": true,
-							"sublimelinter": true,
-							"sublimelinter_delay": 2,
-							"sublimelinter_disable":
-							[
-							],
-							"sublimelinter_executable_map":
-							{
-							},
-							"sublimelinter_fill_outlines": false,
-							"sublimelinter_gutter_marks": false,
-							"sublimelinter_mark_style": "outline",
-							"sublimelinter_notes": false,
-							"sublimelinter_objj_check_ascii": false,
-							"sublimelinter_popup_errors_on_save": false,
-							"sublimelinter_syntax_map":
-							{
-								"C++": "c",
-								"Python Django": "python",
-								"Ruby on Rails": "ruby"
-							},
-							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/Fortran/Syntaxes/Fortran - Modern.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 450.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
-			]
-		},
-		{
-			"sheets":
-			[
-			]
-		}
-	],
-	"incremental_find":
-	{
-		"height": 34.0
-	},
-	"input":
-	{
-		"height": 33.0
-	},
-	"layout":
-	{
-		"cells":
-		[
-			[
-				0,
-				0,
-				1,
-				1
-			],
-			[
-				1,
-				0,
-				2,
-				1
-			]
-		],
-		"cols":
-		[
-			0.0,
-			0.6828125,
-			1.0
-		],
-		"rows":
-		[
-			0.0,
-			1.0
-		]
-	},
-	"menu_visible": true,
-	"output.clang":
-	{
-		"height": 103.0
-	},
-	"output.clang_static_analyzer":
-	{
-		"height": 0.0
-	},
-	"output.exec":
-	{
-		"height": 127.0
-	},
-	"output.git":
-	{
-		"height": 100.0
-	},
-	"replace":
-	{
-		"height": 64.0
-	},
-	"save_all_on_build": true,
-	"select_file":
-	{
-		"height": 0.0,
-		"selected_items":
-		[
-			[
-				"fem",
-				"fortran/FEM.f90"
-			],
-			[
-				"dr",
-				"c/fem_draw.c"
-			],
-			[
-				"math.h",
-				"c/fem_math.h"
-			],
-			[
-				"main",
-				"c/main.c"
-			],
-			[
-				"run",
-				"run"
-			],
-			[
-				"math",
-				"c/fem_math.c"
-			],
-			[
-				"mat",
-				"c/fem_math.c"
-			],
-			[
-				"mat.c",
-				"c/fem_math.c"
-			],
-			[
-				"draw.h",
-				"c/fem_draw.h"
-			],
-			[
-				"draw",
-				"/home/simenhg/workspace/FEMA/src/c/fem_draw.c"
-			],
-			[
-				"fem_mat",
-				"c/fem_math.c"
-			],
-			[
-				"dra",
-				"c/fem_draw.c"
-			],
-			[
-				"gra",
-				"c/fem_graphics.c"
-			],
-			[
-				"re",
-				"c/fem_file_reader.c"
-			],
-			[
-				"read",
-				"c/fem_file_reader.c"
-			],
-			[
-				"rea",
-				"c/fem_file_reader.c"
-			],
-			[
-				"ma",
-				"c/Makefile"
-			],
-			[
-				"fem_dr",
-				"c/fem_draw.h"
-			],
-			[
-				"drw",
-				"c/fem_draw.c"
-			],
-			[
-				"fem_m",
-				"c/fem_math.c"
-			],
-			[
-				"make",
-				"fortran/Makefile"
-			],
-			[
-				"read.h",
-				"c/fem_file_reader.h"
-			],
-			[
-				"mak",
-				"c/Makefile"
-			],
-			[
-				"inpu",
-				"fortran/inputE53.dat"
-			],
-			[
-				"feutil",
-				"fortran/FEMUtility.f90"
-			],
-			[
-				"type",
-				"fortran/FEMTypes.f90"
-			],
-			[
-				"femty",
-				"fortran/FEMTypes.f90"
-			],
-			[
-				".c",
-				"c/bezier.c"
-			],
-			[
-				"",
-				"c/bezier"
-			],
-			[
-				"in",
-				"fortran/input.dat"
-			],
-			[
-				"femu",
-				"fortran/FEMUtility.f90"
-			],
-			[
-				"femt",
-				"fortran/FEMTypes.f90"
-			],
-			[
-				"fe",
-				"fortran/FEM.f90"
-			],
-			[
-				"te",
-				"c/texobj.c"
-			],
-			[
-				"util",
-				"src/FEMUtility.f90"
-			]
-		],
-		"width": 0.0
-	},
-	"select_project":
-	{
-		"height": 500.0,
-		"selected_items":
-		[
-			[
-				"",
-				"/home/simenhg/workspace/FEMA/FEMA.sublime-project"
-			]
-		],
-		"width": 380.0
-	},
-	"show_minimap": true,
-	"show_open_files": false,
-	"show_tabs": true,
-	"side_bar_visible": false,
-	"side_bar_width": 50.0,
-	"status_bar_visible": true
-}
+			"CalkulateLoadsOnElement",
+			"BiggestNodeValue",
+			"call",
+			"length",
+			"c

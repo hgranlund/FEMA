@@ -1,25 +1,15 @@
 program FEM
   use FEMMethods
   implicit none
-  integer ::  errorFlag,status,i,file_in,file_out
+  integer ::  errorFlag,status,i
   real , ALLOCATABLE :: DisplacementVector(:)
   type (element),ALLOCATABLE :: Elms(:)
   type (node), ALLOCATABLE :: Nodes(:)
   type (load), ALLOCATABLE :: Loads(:)
 
 
-  file_in=5
-! file_out=6
+
   errorFlag=0
-
-! file_in=10
-  file_out=11
-!   open(unit=file_in, file='inputE52S224.dat', iostat=errorFlag, status="old", action="read")
-!   if ( errorFlag /= 0 ) stop "Error opening file_in"
-  open(unit=file_out, file='temp.dat', iostat=errorFlag, status="unknown", action="write")
-  if ( errorFlag /= 0 ) stop "Error opening file_out"
-  
-
 
   call ReadInput() 
   allocate (DisplacementVector(totalDegreesOfFreedom(Nodes)), stat=errorFlag)
@@ -37,8 +27,13 @@ program FEM
 
 contains
   Subroutine ReadInput()
-    integer ::n, numberOfNodes, numberOfElm,numberOfLoads
+    integer ::n, numberOfNodes, numberOfElm,numberOfLoads, file_in
     type (element) :: elm
+
+!     file_in=10
+!   open(unit=file_in, file='inputE52S224.dat', iostat=errorFlag, status="old", action="read")
+!   if ( errorFlag /= 0 ) 
+      file_in=5
 
 
     read(file_in,*,iostat=errorFlag) numberOfNodes, numberOfElm, numberOfLoads
@@ -60,7 +55,13 @@ contains
   end Subroutine ReadInput
 
   Subroutine WriteOutput()
-    integer ::n, numberOfElm, numberOfLoads
+    integer ::n, numberOfElm, numberOfLoads, file_out
+
+      file_out=11
+      ! file_out=6
+
+      open(unit=file_out, file='temp.dat', iostat=errorFlag, status="unknown", action="write")
+      if ( errorFlag /= 0 ) stop "Error opening file_out"
 
     numberOfLoads=size(Loads)
     numberOfElm = size(Elms)
