@@ -55,23 +55,9 @@ void readFile(char *filename)
             loadVector[i][1]=loadVector[i][1]/scale;
             loadVector[i][2]=loadVector[i][2]/scale;
         }
-
-
-        for (i = 0; i < numberOfLoads; i++){
-            for (j = 0; j < 6; j++){
-                printf("| %10.4f ", loadVector[i][j]);
-            }
-        }
-        //     printf("\n");
-        // }    for (i = 0; i < numberOfElms; i++){
-        //     for (j = 0; j < 4; j++){
-        //         printf("| %10.4f ", beamCoord[i][j]);
-        //     }
-        //     printf("\n");
-        // }
     }
     else {
-        perror("kunne ikke åpne fil: \n");
+        printf("kunne ikke åpne fil %s: \n", filename);
     }
 
 }

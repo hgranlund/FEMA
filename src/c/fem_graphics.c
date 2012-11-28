@@ -8,12 +8,7 @@ void init(void)
 
     GLfloat values[2];
     glGetFloatv (GL_LINE_WIDTH_GRANULARITY, values);
-    printf ("GL_LINE_WIDTH_GRANULARITY value is %3.1f\n", values[0]);
-
     glGetFloatv (GL_LINE_WIDTH_RANGE, values);
-    printf ("GL_LINE_WIDTH_RANGE values are %3.1f %3.1f\n",
-        values[0], values[1]);
-
     glEnable (GL_LINE_SMOOTH);
     glEnable (GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

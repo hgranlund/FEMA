@@ -38,7 +38,7 @@ void drawString (char *s, float x, float y, struct RGB rgb)
 	setColor(rgb);
 	glRasterPos2f(x, y);
 
-	for (i = 0; i < )strlen(s); i++)
+	for (i = 0; i < strlen(s); i++)
 		glutBitmapCharacter (GLUT_BITMAP_HELVETICA_18, s[i]);
 	glPopAttrib();
 }

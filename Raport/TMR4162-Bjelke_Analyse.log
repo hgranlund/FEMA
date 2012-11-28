@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.9.4)  28 NOV 2012 03:25
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.9.4)  28 NOV 2012 16:06
 entering extended mode
  %&-line parsing enabled.
 **TMR4162-Bjelke_Analyse.tex
@@ -718,7 +718,7 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 \openout4 = `TMR4162-Bjelke_Analyse.toc'.
 
  [3]
-Overfull \hbox (2.96098pt too wide) in paragraph at lines 62--63
+Overfull \hbox (2.96098pt too wide) in paragraph at lines 64--65
 \T1/lmr/m/n/10 finne sys-temets stivhet. Vi kan deretter bruke sam-men-hangen m
 el-lom stivhet(k), forskyvninger(v)
  []
@@ -726,196 +726,77 @@ el-lom stivhet(k), forskyvninger(v)
 [4] [5]
 
 LaTeX Warning: Reference `eq:gauss-seidel' on page 6 undefined on input line 15
-0.
+3.
 
-[6] [7] <input.png, id=234, 980.66376pt x 332.24126pt>
+[6] [7] <input.png, id=229, 980.66376pt x 332.24126pt>
 File: input.png Graphic file (type png)
  <use input.png>
-Overfull \hbox (72.077pt too wide) in paragraph at lines 229--230
+Overfull \hbox (72.077pt too wide) in paragraph at lines 232--233
  [][] 
  []
 
 [8 <./input.png (PNG copy)>]
-<FEMAStructure.png, id=245, 1486.55376pt x 717.68124pt>
+<FEMAStructure.png, id=240, 1486.55376pt x 717.68124pt>
 File: FEMAStructure.png Graphic file (type png)
 
 <use FEMAStructure.png>
-Overfull \hbox (42.57323pt too wide) in paragraph at lines 254--255
+Overfull \hbox (42.57323pt too wide) in paragraph at lines 257--258
  [][] 
  []
 
-<FEMModels.png, id=248, 907.39pt x 288.07625pt>
+<FEMModels.png, id=243, 907.39pt x 288.07625pt>
 File: FEMModels.png Graphic file (type png)
  <use FEMModels.png>
-Overfull \hbox (35.44022pt too wide) in paragraph at lines 271--272
+Overfull \hbox (35.44022pt too wide) in paragraph at lines 274--275
  [][] 
  []
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
+
+LaTeX Warning: Command \r invalid in math mode on input line 284.
+
+
+LaTeX Warning: Command \r invalid in math mode on input line 284.
+
+
+LaTeX Warning: Command \r invalid in math mode on input line 284.
+
+
+LaTeX Warning: Command \r invalid in math mode on input line 284.
+
+
+LaTeX Warning: Command \r invalid in math mode on input line 284.
+
+
+LaTeX Warning: Command \r invalid in math mode on input line 284.
+
 [9 <./FEMAStructure.png>]
-
-LaTeX Warning: Command \r invalid in math mode on input line 281.
-
-
-LaTeX Warning: Command \r invalid in math mode on input line 281.
-
-
-LaTeX Warning: Command \r invalid in math mode on input line 281.
-
-
-LaTeX Warning: Command \r invalid in math mode on input line 281.
-
-
-LaTeX Warning: Command \r invalid in math mode on input line 281.
-
-
-LaTeX Warning: Command \r invalid in math mode on input line 281.
-
-LaTeX Font Info:    Try loading font information for OT1+lmtt on input line 304
+LaTeX Font Info:    Try loading font information for OT1+lmtt on input line 314
 .
-(/usr/share/texmf/tex/latex/lm/ot1lmtt.fd
+ (/usr/share/texmf/tex/latex/lm/ot1lmtt.fd
 File: ot1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-! Missing } inserted.
-<inserted text> 
-                }
-l.304 ...ment, C=$\cos(\theta)$, S=$\sin(\theta)$}
-                                                   C=cos(\theta), S=\sin(\th...
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
+) [10 <./FEMModels.png>]
 
-! Missing } inserted.
-<inserted text> 
-                }
-l.304 ...ment, C=$\cos(\theta)$, S=$\sin(\theta)$}
-                                                   C=cos(\theta), S=\sin(\th...
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
+LaTeX Warning: Reference `eq:e' on page 11 undefined on input line 321.
 
-! Missing } inserted.
-<inserted text> 
-                }
-l.304 ...ment, C=$\cos(\theta)$, S=$\sin(\theta)$}
-                                                   C=cos(\theta), S=\sin(\th...
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
-! Missing $ inserted.
-<inserted text> 
-                $
-l.304 ...ment, C=$\cos(\theta)$, S=$\sin(\theta)$}
-                                                   C=cos(\theta), S=\sin(\th...
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-! Missing \cr inserted.
-<inserted text> 
-                \cr 
-l.304 ...ment, C=$\cos(\theta)$, S=$\sin(\theta)$}
-                                                   C=cos(\theta), S=\sin(\th...
-I'm guessing that you meant to end an alignment here.
-
-! Missing { inserted.
-<inserted text> 
-                {
-l.304 ...ment, C=$\cos(\theta)$, S=$\sin(\theta)$}
-                                                   C=cos(\theta), S=\sin(\th...
-I've put in what seems to be necessary to fix
-the current column of the current alignment.
-Try to go on, since this might almost work.
-
-! Missing { inserted.
-<inserted text> 
-                {
-l.304 ...ment, C=$\cos(\theta)$, S=$\sin(\theta)$}
-                                                   C=cos(\theta), S=\sin(\th...
-I've put in what seems to be necessary to fix
-the current column of the current alignment.
-Try to go on, since this might almost work.
-
-! Missing $ inserted.
-<inserted text> 
-                $
-l.304 ...ment, C=$\cos(\theta)$, S=$\sin(\theta)$}
-                                                   C=cos(\theta), S=\sin(\th...
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-! Missing } inserted.
-<inserted text> 
-                }
-l.304 ...ment, C=$\cos(\theta)$, S=$\sin(\theta)$}
-                                                   C=cos(\theta), S=\sin(\th...
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
-! Misplaced \crcr.
-\endaligned ->\crcr 
-                    \egroup \restorecolumn@ \egroup 
-l.305 \end{aligned}
-                   
-I can't figure out why you would want to use a tab mark
-or \cr or \span just now. If something like a right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-! Extra }, or forgotten \endgroup.
-\endaligned ->\crcr \egroup 
-                            \restorecolumn@ \egroup 
-l.305 \end{aligned}
-                   
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
-
-! Extra }, or forgotten \endgroup.
-\endaligned ...cr \egroup \restorecolumn@ \egroup 
-                                                  
-l.305 \end{aligned}
-                   
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
-
-
-Overfull \hbox (58.89539pt too wide) detected at line 306
-[][] []\OML/lmm/m/it/10 C \OT1/lmr/m/n/10 = \OML/lmm/m/it/10 cos\OT1/lmr/m/n/10
- (\OML/lmm/m/it/10 ^^R\OT1/lmr/m/n/10 )\OML/lmm/m/it/10 ; S \OT1/lmr/m/n/10 = [
-](\OML/lmm/m/it/10 ^^R\OT1/lmr/m/n/10 )[] 
- []
-
-[10 <./FEMModels.png>] [11] [12] (./TMR4162-Bjelke_Analyse.aux)
+[11] [12] (./TMR4162-Bjelke_Analyse.aux)
 
 LaTeX Warning: There were undefined references.
 
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
  ) 
 Here is how much of TeX's memory you used:
- 7867 strings out of 495061
- 109109 string characters out of 1182622
- 203542 words of memory out of 3000000
- 10788 multiletter control sequences out of 15000+50000
+ 7870 strings out of 495061
+ 109120 string characters out of 1182622
+ 204600 words of memory out of 3000000
+ 10789 multiletter control sequences out of 15000+50000
  56917 words of font info for 59 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
- 38i,13n,58p,783b,372s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 38i,13n,58p,857b,372s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-rmtt.enc}{/usr/share/texmf/fonts/enc/
 dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/sha
 re/texmf/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/share/texmf/fonts/enc/dvips/lm/
@@ -929,9 +810,9 @@ re/texmf/fonts/type1/public/lm/lmr5.pfb></usr/share/texmf/fonts/type1/public/lm
 /lmr7.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/
 fonts/type1/public/lm/lmsy7.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.
 pfb>
-Output written on TMR4162-Bjelke_Analyse.pdf (12 pages, 411516 bytes).
+Output written on TMR4162-Bjelke_Analyse.pdf (12 pages, 413036 bytes).
 PDF statistics:
- 355 PDF objects out of 1000 (max. 8388607)
- 84 named destinations out of 1000 (max. 500000)
- 256 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 356 PDF objects out of 1000 (max. 8388607)
+ 86 named destinations out of 1000 (max. 500000)
+ 248 words of extra memory for PDF output out of 10000 (max. 10000000)
 

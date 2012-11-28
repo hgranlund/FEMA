@@ -30,6 +30,7 @@ contains
     call SetElementProperties(Elms, Nodes)  
     CALL GlobalToRedusedGlobalStiffnessMatrixConverter(GTRGConverter, Nodes)
     RGSMLen = TotalDegreesOfFreedom(Nodes)
+    print *, 'DOF         = ', RGSMLen
     allocate (GlobalStiffnessMatrix(RGSMLen,RGSMLen) , LoadVector(RGSMLen), stat=errorFlag)
     if (errorFlag .NE. 0)then
        print *, "***Not Enough Memory*** when allocating in CalcDisplacement "
@@ -39,14 +40,15 @@ contains
     call NullifyRealMatrix(GlobalStiffnessMatrix)
     call NullifyRealVector(DisplacementVector)
     call NullifyRealVector(LoadVector)
-
     call GlobalStiffness(GlobalStiffnessMatrix,Elms,Nodes,GTRGConverter,errorFlag)
     call PopulateLoads(LoadVector,Loads,GTRGConverter, errorflag)
-!   call GaussSolver(GlobalStiffnessMatrix,LoadVector,DisplacementVector,RGSMLen,Errorflag)
-
-    call GaussSeidel(GlobalStiffnessMatrix,LoadVector,DisplacementVector,RGSMLen,Errorflag)
-    print * , 'gaussseisel', DisplacementVector
-
+    if (RGSMLen > 1000)then 
+        Print *, 'Using GaussSeidel...'
+        call GaussSeidel(GlobalStiffnessMatrix,LoadVector,DisplacementVector,RGSMLen,Errorflag)
+    else
+      Print *, 'Using Gauss Elimination...'
+      call GaussSolver(GlobalStiffnessMatrix,LoadVector,DisplacementVector,RGSMLen,Errorflag)
+    end if
     if (pr_switch>2)then
        print * ,''
        print *, '##### GlobalStivhetsmatrise: '

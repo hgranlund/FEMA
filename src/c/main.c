@@ -79,7 +79,7 @@ void draw(int argc, char **argv){
 
 int main( int argc, char *argv[] )
 {
-  readFile("temp.dat");
+  readFile("FortranOutput.dat");
   draw(argc, argv);
 
   return 0;

@@ -38,6 +38,8 @@ Simen Haugerud Granlund, Trondheim 2011.
 
 \tableofcontents
 \newpage
+
+
 \section{Innledning}
 \paragraph{}
 Jeg valgte å ta oppgaven "ramme analyse". Grunnen til dette er at jeg synes teorien rundt finite element analyses (FEA) er mye mer interessent og passer bedre til mitt studie enn Poisson-likningen. Jeg valgte også å legge til flere elementer i oppgaven. Oppgaven presiserte at vi bare trengte 2 frihetsgrader per bjelke, samt at vi kun trengte å presentere resultater for bøyemomentet. Jeg valgte å bruke 6 frihetsgrader per bjelke, slik at jeg fikk meg både  vertikal og horisontal forskyvninger og rotasjon. De resultatene jeg ville skulle vises var; Moment diagram, skjærkraft diagram, Normalkraft diagram og starttilstanden. Til dette trenger programmet å regne ut Momenter og normale og aksielle krefter til alle bjelker.
@@ -55,11 +57,12 @@ Her har jeg tenkt å kort beskrive de teoriene som er brukt i programmet. Jeg vi
 Teorien bak elementmetoden ble utarbeidet på 1940-tallet, men man så ikke den store nytteverdien av den før datamaskinen kom til verden. Det første programmet som implementerte elementmetoden var NASTRAN skrevet i Fortran i 1965 \cite{wikinastran}.
 Elementmetoden er i prinsippet en numerisk metode for å finne approksimasjoner til differensiallikninger. Den er ofte brukt innenfor en rekke felter: strømning, varmeleding, svinginger, elektriske felt og liknende. I denne oppgaven brukte jeg den for å løse styrkebergnegrer på en rammekonstruksjon. 
 
-\paragraph{}
+\paragraph*{}
 Elementmetoden går ut på å dele konstruksjonen inn i elementer, jo flere elementer jo mer nøyaktige resultater får man. Alle elementer har en node i hver ende. Selve rammekonstruksjonen blir representer av et nettverk av noder og elementer, hvor kreftene er festet til nodene. Det er i disse nodene verdier, som forskyving, krefter og momenter, blir kalkulert.
 
 \paragraph*{}
 For hvert element blir stivheten til elementet kalkulert. Stivheten er basert på e-modulen, arealet og det andre arealmomentet til elementet. Disse stivhetene blir så addert sammen for å finne systemets stivhet. Vi kan deretter bruke sammenhangen mellom stivhet(k), forskyvninger(v) og krefter(S) \eqref{eq:skv} til å kalkulere knutepunktenes forskyvninger.
+
 \begin{equation} \label{eq:skv}
 S=k*v
 \end{equation}
@@ -157,7 +160,7 @@ Her kan vi ikke finne kjøretiden på samme måte som ved en direkteløser, side
 \begin{enumerate}
 \item Matrisen (A) er strengt eller uavvendelige diagonalt dominerende.
 \item Matrisen (A) er positive bestemt (Positive-definite)
-\end{enumerate}file:///home/simenhg/invece%20kinematics/inverceKinematics.tex
+\end{enumerate}
 
 
 
@@ -286,8 +289,15 @@ Et annet element jeg fant veldig nyttig fra Kolbein \cite{KolbeinBellProgram} va
 
 
 \subsubsection{Program-analyse}
+
 \subsubsection{Optimaliseringer og tidsbruk}
-De delene av programmet som har høyest asymptotisk kjøretid er generering av global stivhetsmatrise og ligningsløseren. Jeg har sett litt på hvordan disse kan optimaliseres. 
+Når vi skal se på den asymptotiske kjøretiden til programmet, er det 2 algoritmer vi må tenke på. Den ene er ligningsløseren, mens den andre er generering av den globale stivhetsmatrisen. Om vi angir $n$ til å være grader av frihet i kunstaksjonen og $e$ til å være antall elementer, kan vi kalkulere kjøretiden. Kjøretiden til Gauss eliminasjonen er vist i \eqref{eq:gausstid}. For stivhetsmatrisen blir alle elementene iterert over og For hvert element addert inn i hovedmatrisen. Kjøretiden blir derfor:
+
+\begin{equation} \label{eq:en3}
+T(n) = \sum_{k=1}^{e} (k)*(12+12+12+24+24) \sum_{k=1}^{n} (n-k)(n-k) = O(e*n^2)
+\end{equation}  
+
+
 Den første enkle justeringen jeg gjorde var å kalkulere den globale elementstivhetsmatrisen direkte. Vanligvis ville denne matrisen blitt laget ved å bruke likning \ref{eq:Lstivhet} og \ref{eq:Rot} på formen $k_G=R*k_L*R^T$. Det vil si at vi trenger å gjøre to matrisemultiplikasjoner og en transponering, for å få rotert matrisen. Jeg valgte da å kalkulere denne, på forhånd, slik at $k_G$ blir. 
 
 \begin{equation} 
@@ -301,20 +311,29 @@ AC^2+\frac{12I}{L^2} S^2  & (A-\frac{12I}{L^2})CS  &  -\frac{6I}{L}S & -(AC^2+\f
  & & & & (AC^2+\frac{12I}{L^2}C^2) & -\frac{6I}{L}C \\
  Symmetri & & & & & 4I \\
 \end{bmatrix} \\
-& \mathtt{Where: E=E-modul, I=Annet arealmoment, C=$\cos(\theta)$, S=$\sin(\theta)$} C=cos(\theta), S=\sin(\theta) \\
+& \mathtt{ Where: E=E-modul, I=Annet arealmoment, } C=cos(\theta), S=\sin(\theta) \\
 \end{aligned}
 \end{equation}
 
 Dette vil ikke forbedre kjøretiden asymptotisk sett, men vil fjerne noen konstantledd.
 
 \paragraph*{}
-En annen ting jeg gjorde var å forbedre genereringen av den globale stivhetsmatrisen. Dette blir vanligvis gjort ved å først lage den fulle matrisen deretter, ved hjelp av grensebetingelser, redusere matrisen. For å unngå to operasjoner lagde jeg den reduserte matrisen direkte. Dette gjorde jeg ved å lage en konverteringsvektor, som mappet verdier fra den tenkte fulle til den reduserte globale stivhetsmatrisen.
+En annen ting jeg gjorde var å forbedre genereringen av den globale stivhetsmatrisen. Dette blir vanligvis gjort ved å først lage den fulle matrisen deretter, ved hjelp av grensebetingelser, redusere matrisen. For å unngå to operasjoner lagde jeg den reduserte matrisen direkte. Dette gjorde jeg ved å lage en konverteringsvektor, som mappet verdier fra den tenkte fulle til den reduserte globale stivhetsmatrisen. Jeg laget også en konverteringsvektor fra de de enkelte elementstivhetsmatrisene til den globale stivhetsmatrisen. Dette gjorde at jeg ikke trengte å iterere igjennom hele den globale stivhetsmatrisen hver gang jeg en elementmatrise skulle adderes. Dette vil si at kjøretiden på å lage den globale stivhetsmatrisen gikk fra \eqref{eq:en3} til\eqref{eq:e}
+
+\begin{equation} \label{eq:e}
+T(n) = \sum_{k=1}^{e} (k)*(12+12)= O(e)
+\end{equation}  
 
 \paragraph*{}
-Det område jeg muligens kunne spare mest tid var å velge en god iterativ ligningsløser. Jeg lagde derfor en implementasjon av gauss-seidel. Det jeg så  var at ved så små matriser jeg opererte med var det lurest å gå for den direkte versjonen. Den neste funksjonaliteten jeg hadde tenkt å implementere i dette programmet var meshing, altså dele elementene inn i mindre biter. Da ville jeg ha fått et mye større likningssett å løse, som ville gjort at en iterativ metode kunne lønt seg. 
+Det område jeg muligens kunne spare mest tid var å velge en god iterativ ligningsløser. Jeg lagde derfor en implementasjon av gauss-seidel. Teoretisk sett tror jeg det ville vært lurest å gå for en iterativ ligningsløser som Gauss-Seidel. Grunnen til dette er at stivhetsmatrisen som oftest vil være spinkel, siden de fleste frihetsgradene ikke er avhengig av hverandre. De enkelte nodene er kun avhengig av de nærliggende nodene som gjør at vi vil få mage null-verdier i matrisen. Vi vil også få en sterk og alltid utfylt diagonal. Dette er to elementer som er svært positivt for konvergeringen til Gauss-Seidel. Det vil allikevel lønne seg å bruke Gauss eliminasjon på små matriser. Programmet vil derfor, avhengig av størrelsen på stivhetsmatrisen, velge hvilken ligningsløser som er best. 
+
+\paragraph*{}
+En annen ting som er vært å peke på når det gjelder fortran, er hvordan matriser traverseres. Fortran bygger matriser i en lang minneblokk med kolonnene etterhandene. Det vil derfor være lurt å traversere kolonne for kolonne. 
 
 
-\subsubsection{Tidsbruk}
+
+
+
 \subsubsection{Resultater}
 
 

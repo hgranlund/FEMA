@@ -1,5 +1,5 @@
 #!/bin/bash
 touch temp.dat
-./fortran/FEM < fortran/inputE53.dat
+./fortran/FEM
 ./c/FEMVis 
 rm temp.dat
