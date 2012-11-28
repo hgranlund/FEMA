@@ -171,7 +171,7 @@ void drawColorBar(float x, float y,float biggestvalue, char* Type)
 
 }
 
-void drawDiagrams(void)
+void drawDiagramInit(void)
 {
 	int i;
 	float xMax, pervec[2], beamRotation;
@@ -207,7 +207,7 @@ void drawNavigationMeny()
 	glPushMatrix();
 	drawString("Key Functions: ",  -0.95, -0.8, black);
 	drawString("Initial State: 'I'    |     Frame: 'F'      |      Moment Diagrams: 'M'" ,  -0.95, -0.9, black);
-	drawString("Shear Force Diagrams: 'S'    |     Axial Force Diagrams: 'A'",  -0.95, -0.95, black);
+	drawString("Shear Force Diagrams: 'S'    |     Axial Force Diagrams: 'A'    |  Close : 'Esc",  -0.95, -0.95, black);
 	glEnd();
 }
 

@@ -1,8 +1,8 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.9.4)  28 NOV 2012 16:06
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.9.4)  28 NOV 2012 15:58
 entering extended mode
  %&-line parsing enabled.
-**TMR4162-Bjelke_Analyse.tex
-(./TMR4162-Bjelke_Analyse.tex
+**bac.tex
+(./bac.tex
 LaTeX2e <2009/09/24>
 Babel <v3.8l> and hyphenation patterns for english, usenglishmax, dumylang, noh
 yphenation, loaded.
@@ -560,8 +560,8 @@ Package: atbegshi 2008/07/31 v1.9 At begin shipout hook (HO)
 File: hpdftex.def 2009/10/09 v6.79a Hyperref driver for pdfTeX
 \Fld@listcount=\count118
 )
-(./TMR4162-Bjelke_Analyse.aux)
-\openout1 = `TMR4162-Bjelke_Analyse.aux'.
+No file bac.aux.
+\openout1 = `bac.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 24.
 LaTeX Font Info:    ... okay on input line 24.
@@ -578,7 +578,7 @@ LaTeX Font Info:    ... okay on input line 24.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 24.
 LaTeX Font Info:    ... okay on input line 24.
 LaTeX Font Info:    Try loading font information for T1+lmr on input line 24.
- (/usr/share/texmf/tex/latex/lm/t1lmr.fd
+(/usr/share/texmf/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 *geometry auto-detecting driver*
@@ -647,10 +647,8 @@ Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
 )
 LaTeX Info: Redefining \ref on input line 24.
 LaTeX Info: Redefining \pageref on input line 24.
-
-(./TMR4162-Bjelke_Analyse.out) (./TMR4162-Bjelke_Analyse.out)
 \@outlinefile=\write3
-\openout3 = `TMR4162-Bjelke_Analyse.out'.
+\openout3 = `bac.out'.
 
 \AtBeginShipoutBox=\box31
 LaTeX Font Info:    Try loading font information for OT1+lmr on input line 26.
@@ -713,38 +711,87 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <5> on input line 32.
 
-[2] (./TMR4162-Bjelke_Analyse.toc)
+[2]
 \tf@toc=\write4
-\openout4 = `TMR4162-Bjelke_Analyse.toc'.
+\openout4 = `bac.toc'.
 
  [3]
+
+LaTeX Warning: Citation `wikinastran' on page 4 undefined on input line 57.
+
+
+LaTeX Warning: Reference `eq:skv' on page 4 undefined on input line 64.
+
+
 Overfull \hbox (2.96098pt too wide) in paragraph at lines 64--65
 \T1/lmr/m/n/10 finne sys-temets stivhet. Vi kan deretter bruke sam-men-hangen m
 el-lom stivhet(k), forskyvninger(v)
  []
 
-[4] [5]
+
+LaTeX Warning: Reference `eq:Lstivhet' on page 4 undefined on input line 71.
+
+[4]
+
+LaTeX Warning: Reference `eq:Rot' on page 5 undefined on input line 87.
+
+
+LaTeX Warning: Reference `eq:skv' on page 5 undefined on input line 105.
+
+
+LaTeX Warning: Reference `eq:roteq' on page 5 undefined on input line 105.
+
+
+LaTeX Warning: Reference `eq:Lstivhet' on page 5 undefined on input line 115.
+
+
+LaTeX Warning: Reference `eq:skv' on page 5 undefined on input line 115.
+
+[5]
+
+LaTeX Warning: Reference `eq:skv' on page 6 undefined on input line 124.
+
+
+LaTeX Warning: Reference `eq:gausstid' on page 6 undefined on input line 140.
+
 
 LaTeX Warning: Reference `eq:gauss-seidel' on page 6 undefined on input line 15
 3.
 
-[6] [7] <input.png, id=229, 980.66376pt x 332.24126pt>
+[6]
+
+LaTeX Warning: Reference `fig:input' on page 7 undefined on input line 228.
+
+[7] <input.png, id=85, 980.66376pt x 332.24126pt>
 File: input.png Graphic file (type png)
  <use input.png>
 Overfull \hbox (72.077pt too wide) in paragraph at lines 232--233
  [][] 
  []
 
-[8 <./input.png (PNG copy)>]
-<FEMAStructure.png, id=240, 1486.55376pt x 717.68124pt>
-File: FEMAStructure.png Graphic file (type png)
 
-<use FEMAStructure.png>
+LaTeX Warning: Citation `KolbeinBellFortran' on page 8 undefined on input line 
+238.
+
+
+LaTeX Warning: Citation `KolbeinBellProgram' on page 8 undefined on input line 
+238.
+
+[8 <./input.png (PNG copy)>]
+
+LaTeX Warning: Reference `fig:struktur' on page 9 undefined on input line 253.
+
+<FEMAStructure.png, id=96, 1486.55376pt x 717.68124pt>
+File: FEMAStructure.png Graphic file (type png)
+ <use FEMAStructure.png>
 Overfull \hbox (42.57323pt too wide) in paragraph at lines 257--258
  [][] 
  []
 
-<FEMModels.png, id=243, 907.39pt x 288.07625pt>
+
+LaTeX Warning: Reference `fig:flytF' on page 9 undefined on input line 270.
+
+<FEMModels.png, id=98, 907.39pt x 288.07625pt>
 File: FEMModels.png Graphic file (type png)
  <use FEMModels.png>
 Overfull \hbox (35.44022pt too wide) in paragraph at lines 274--275
@@ -753,6 +800,10 @@ Overfull \hbox (35.44022pt too wide) in paragraph at lines 274--275
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+LaTeX Warning: Citation `KolbeinBellProgram' on page 9 undefined on input line 
+278.
 
 
 LaTeX Warning: Command \r invalid in math mode on input line 284.
@@ -773,15 +824,41 @@ LaTeX Warning: Command \r invalid in math mode on input line 284.
 LaTeX Warning: Command \r invalid in math mode on input line 284.
 
 [9 <./FEMAStructure.png>]
+
+LaTeX Warning: Citation `KolbeinBellProgram' on page 10 undefined on input line
+ 287.
+
+
+LaTeX Warning: Reference `eq:gausstid' on page 10 undefined on input line 294.
+
+
+LaTeX Warning: Reference `eq:Lstivhet' on page 10 undefined on input line 301.
+
+
+LaTeX Warning: Reference `eq:Rot' on page 10 undefined on input line 301.
+
 LaTeX Font Info:    Try loading font information for OT1+lmtt on input line 314
 .
- (/usr/share/texmf/tex/latex/lm/ot1lmtt.fd
+(/usr/share/texmf/tex/latex/lm/ot1lmtt.fd
 File: ot1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-) [10 <./FEMModels.png>]
+) [10 <./FEMModels.png>] [11] [12]
+(./bac.aux
+! Missing \endcsname inserted.
+<to be read again> 
+                   \T1\o 
+l.61 ...nger og tidsbruk\relax }{equation.3.12}{}}
+                                                  
+The control sequence marked <to be read again> should
+not appear between \csname and \endcsname.
 
-LaTeX Warning: Reference `eq:e' on page 11 undefined on input line 321.
+! Extra \endcsname.
+\@newl@bel ... \bbl@tempa \csname #1@#2\endcsname 
+                                                  \def \bbl@tempb {#3}\@safe...
+l.61 ...nger og tidsbruk\relax }{equation.3.12}{}}
+                                                  
+I'm ignoring this, since I wasn't doing a \csname.
 
-[11] [12] (./TMR4162-Bjelke_Analyse.aux)
+)
 
 LaTeX Warning: There were undefined references.
 
@@ -790,13 +867,13 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  ) 
 Here is how much of TeX's memory you used:
- 7870 strings out of 495061
- 109120 string characters out of 1182622
- 204600 words of memory out of 3000000
- 10789 multiletter control sequences out of 15000+50000
+ 7830 strings out of 495061
+ 108225 string characters out of 1182622
+ 202961 words of memory out of 3000000
+ 10758 multiletter control sequences out of 15000+50000
  56917 words of font info for 59 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
- 38i,13n,58p,857b,372s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 38i,13n,58p,838b,372s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-rmtt.enc}{/usr/share/texmf/fonts/enc/
 dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/sha
 re/texmf/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/share/texmf/fonts/enc/dvips/lm/
@@ -810,9 +887,9 @@ re/texmf/fonts/type1/public/lm/lmr5.pfb></usr/share/texmf/fonts/type1/public/lm
 /lmr7.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/
 fonts/type1/public/lm/lmsy7.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.
 pfb>
-Output written on TMR4162-Bjelke_Analyse.pdf (12 pages, 413036 bytes).
+Output written on bac.pdf (12 pages, 395161 bytes).
 PDF statistics:
- 356 PDF objects out of 1000 (max. 8388607)
- 86 named destinations out of 1000 (max. 500000)
- 248 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 217 PDF objects out of 1000 (max. 8388607)
+ 85 named destinations out of 1000 (max. 500000)
+ 16 words of extra memory for PDF output out of 10000 (max. 10000000)
 

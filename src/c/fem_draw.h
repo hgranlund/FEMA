@@ -14,7 +14,7 @@ void drawElements(void);
 void drawMomentDiagrams(void);
 void drawShearDiagrams(void);
 void drawAxialForceDiagrams(void);
-void drawDiagrams(void);
+void drawDiagramInit(void);
 void drawForces(void);
 void drawHeader(char* header);
 void drawNavigationMeny(void);

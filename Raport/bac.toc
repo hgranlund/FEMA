@@ -1,0 +1,34 @@
+\select@language {english}
+\contentsline {section}{\numberline {1}Innledning}{4}{section.1}
+\contentsline {paragraph}{}{4}{section*.3}
+\contentsline {paragraph}{}{4}{section*.4}
+\contentsline {section}{\numberline {2}Teori}{4}{section.2}
+\contentsline {subsection}{\numberline {2.1}Elementmetoden}{4}{subsection.2.1}
+\contentsline {subsubsection}{\numberline {2.1.1}Lokal stivhetsmatrise}{4}{subsubsection.2.1.1}
+\contentsline {subsubsection}{\numberline {2.1.2}Global stivhetsmatrise}{5}{subsubsection.2.1.2}
+\contentsline {subsubsection}{\numberline {2.1.3}Grensebetingelser}{5}{subsubsection.2.1.3}
+\contentsline {subsubsection}{\numberline {2.1.4}Elementkrefter}{6}{subsubsection.2.1.4}
+\contentsline {subsection}{\numberline {2.2}Ligningsl\IeC {\o }ser}{6}{subsection.2.2}
+\contentsline {subsubsection}{\numberline {2.2.1}Gauss}{6}{subsubsection.2.2.1}
+\contentsline {subsubsection}{\numberline {2.2.2}Gauss-Seidel}{6}{subsubsection.2.2.2}
+\contentsline {subsection}{\numberline {2.3}OpenGL}{7}{subsection.2.3}
+\contentsline {paragraph}{}{7}{section*.8}
+\contentsline {section}{\numberline {3}Programmet}{7}{section.3}
+\contentsline {subsection}{\numberline {3.1}Beskrivelse}{7}{subsection.3.1}
+\contentsline {subsubsection}{\numberline {3.1.1}Bruk}{8}{subsubsection.3.1.1}
+\contentsline {subsubsection}{\numberline {3.1.2}Installasjon}{8}{subsubsection.3.1.2}
+\contentsline {subsubsection}{\numberline {3.1.3}Input filen}{8}{subsubsection.3.1.3}
+\contentsline {subsection}{\numberline {3.2}Fortran}{8}{subsection.3.2}
+\contentsline {subsubsection}{\numberline {3.2.1}Struktur}{8}{subsubsection.3.2.1}
+\contentsline {subsubsection}{\numberline {3.2.2}Program-analyse}{10}{subsubsection.3.2.2}
+\contentsline {subsubsection}{\numberline {3.2.3}Optimaliseringer og tidsbruk}{10}{subsubsection.3.2.3}
+\contentsline {subsubsection}{\numberline {3.2.4}Resultater}{11}{subsubsection.3.2.4}
+\contentsline {subsection}{\numberline {3.3}C}{11}{subsection.3.3}
+\contentsline {subsubsection}{\numberline {3.3.1}Struktur}{11}{subsubsection.3.3.1}
+\contentsline {subsubsection}{\numberline {3.3.2}Optimaliseringer}{11}{subsubsection.3.3.2}
+\contentsline {subsubsection}{\numberline {3.3.3}Tidsbruk}{11}{subsubsection.3.3.3}
+\contentsline {subsubsection}{\numberline {3.3.4}Visualisering}{12}{subsubsection.3.3.4}
+\contentsline {subsection}{\numberline {3.4}Fargefunksjon}{12}{subsection.3.4}
+\contentsline {section}{\numberline {4}Diskusjon}{12}{section.4}
+\contentsline {section}{\numberline {5}Konklusjon}{12}{section.5}
+\contentsline {paragraph}{}{12}{section*.15}

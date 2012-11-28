@@ -4,7 +4,7 @@
 extern int numberOfElms, numberOfLoads;
 extern float scale,**beamCoord, **forceVector, **displacementVector, **loadVector;
 
-void readInput(char *filename);
+void readFile(char *filename);
 
 
 #endif

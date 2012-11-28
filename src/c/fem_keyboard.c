@@ -6,12 +6,6 @@ void keyboard(unsigned char key, int x, int y)
 
     switch (key)
     {
-//         case 'r':
-//         case 'R':
-//         rotAngle += 20.;
-//         if (rotAngle >= 360.) rotAngle = 0.;
-//         glutPostRedisplay();
-//         break;
     case 'm':
     case 'M':
     	viewState=0;
@@ -32,8 +26,7 @@ void keyboard(unsigned char key, int x, int y)
     case 'f':
     	viewState=4;
     	break;
-    
-    case 27:  /*  Escape Key  */
+    case 27: 
         exit(0);
         break;
      default:

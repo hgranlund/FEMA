@@ -90,26 +90,26 @@ contains
     REAL, intent(out) :: X(len)
     
     integer i,j,k, iteration
-    real  :: error, maxError, limitError, XOld(len)
+    real  :: tempError, maxError, presition, XOld
 
     maxError=0;
     iteration=1E6
-    limitError=1E-12
-    XOld(:)=1
+    presition=1E-5
+    XOld=1
     X(:)=1
      do k=1, iteration
       maxError=0  
        do i=1, len
-          XOld(i)=X(i)
+          XOld=X(i)
           X(i)=B(i)/A(i,i)
           do j= 1, len
               if (j .EQ. i) cycle    
               X(i)= X(i) - ((A(i,j) * X(j)) / A(i,i) )              
           end do
-          error = abs(X(i)-XOld(i))
-          if (error .GT. maxError) maxError=error
+          tempError = abs(X(i)-XOld)
+          if (tempError .GT. maxError) maxError=tempError
        end do
-       if (maxError .LT. limitError)then
+       if (maxError .LT. presition)then
         print *,k
         return 
       end if
