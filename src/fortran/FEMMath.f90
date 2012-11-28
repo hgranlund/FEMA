@@ -58,6 +58,7 @@ contains
     end do
   end subroutine GaussElimination
 
+
   subroutine BackwardSubstitution(A,B,X,len ,errorFlag)
     integer, intent(in) :: len
     integer, intent(inout) :: errorFlag
@@ -81,6 +82,42 @@ contains
        end if
     end do
   end subroutine BackwardSubstitution
+
+  subroutine GaussSeidel(A,B,X,len,errorFlag)
+    integer, intent(in) :: len
+    integer, intent(inout) :: errorFlag
+    real, intent(inout)  :: A(len,len), B(len)
+    REAL, intent(out) :: X(len)
+    
+    integer i,j,k, iteration
+    real  :: error, maxError, limitError, XOld(len)
+
+    maxError=0;
+    iteration=1E6
+    limitError=1E-12
+    XOld(:)=1
+    X(:)=1
+     do k=1, iteration
+      maxError=0  
+       do i=1, len
+          XOld(i)=X(i)
+          X(i)=B(i)/A(i,i)
+          do j= 1, len
+              if (j .EQ. i) cycle    
+              X(i)= X(i) - ((A(i,j) * X(j)) / A(i,i) )              
+          end do
+          error = abs(X(i)-XOld(i))
+          if (error .GT. maxError) maxError=error
+       end do
+       if (maxError .LT. limitError)then
+        print *,k
+        return 
+      end if
+    end do
+    print * , 'GaussSeidel fant ikke løsning'
+    errorFlag =4
+  end subroutine GaussSeidel
+
 
   real  function  AngelFromPoints(x1,y1,x2,y2)
     real, intent(in)::x1,y1,x2,y2

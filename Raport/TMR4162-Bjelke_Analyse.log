@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.9.4)  28 NOV 2012 01:46
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.9.4)  28 NOV 2012 03:25
 entering extended mode
  %&-line parsing enabled.
 **TMR4162-Bjelke_Analyse.tex
@@ -773,74 +773,165 @@ LaTeX Warning: Command \r invalid in math mode on input line 281.
 
 LaTeX Warning: Command \r invalid in math mode on input line 281.
 
+LaTeX Font Info:    Try loading font information for OT1+lmtt on input line 304
+.
+(/usr/share/texmf/tex/latex/lm/ot1lmtt.fd
+File: ot1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+! Missing } inserted.
+<inserted text> 
+                }
+l.304 ...ment, C=$\cos(\theta)$, S=$\sin(\theta)$}
+                                                   C=cos(\theta), S=\sin(\th...
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.304 ...ment, C=$\cos(\theta)$, S=$\sin(\theta)$}
+                                                   C=cos(\theta), S=\sin(\th...
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.304 ...ment, C=$\cos(\theta)$, S=$\sin(\theta)$}
+                                                   C=cos(\theta), S=\sin(\th...
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.284 ...BellProgram} var ideen bak variabelen pr_
-                                                  switch. Ideen er har at pr...
+l.304 ...ment, C=$\cos(\theta)$, S=$\sin(\theta)$}
+                                                   C=cos(\theta), S=\sin(\th...
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
+! Missing \cr inserted.
+<inserted text> 
+                \cr 
+l.304 ...ment, C=$\cos(\theta)$, S=$\sin(\theta)$}
+                                                   C=cos(\theta), S=\sin(\th...
+I'm guessing that you meant to end an alignment here.
 
-LaTeX Warning: Command \r invalid in math mode on input line 284.
+! Missing { inserted.
+<inserted text> 
+                {
+l.304 ...ment, C=$\cos(\theta)$, S=$\sin(\theta)$}
+                                                   C=cos(\theta), S=\sin(\th...
+I've put in what seems to be necessary to fix
+the current column of the current alignment.
+Try to go on, since this might almost work.
 
-
-LaTeX Warning: Command \o invalid in math mode on input line 284.
-
-
-LaTeX Warning: Command \r invalid in math mode on input line 284.
-
-
-LaTeX Warning: Command \o invalid in math mode on input line 284.
+! Missing { inserted.
+<inserted text> 
+                {
+l.304 ...ment, C=$\cos(\theta)$, S=$\sin(\theta)$}
+                                                   C=cos(\theta), S=\sin(\th...
+I've put in what seems to be necessary to fix
+the current column of the current alignment.
+Try to go on, since this might almost work.
 
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.285 
-      
+l.304 ...ment, C=$\cos(\theta)$, S=$\sin(\theta)$}
+                                                   C=cos(\theta), S=\sin(\th...
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
+! Missing } inserted.
+<inserted text> 
+                }
+l.304 ...ment, C=$\cos(\theta)$, S=$\sin(\theta)$}
+                                                   C=cos(\theta), S=\sin(\th...
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
 
-Overfull \hbox (1068.72345pt too wide) in paragraph at lines 284--285
- \T1/lmr/m/n/10 Et an-net el-e-ment jeg fant veldig nyt-tig fra Kol-bein [[]] v
-ar ideen bak vari-abe-len pr$[]\OML/lmm/m/it/10 witch:Ideenerharatprintsvitsjen
-harenverdimellom\OT1/lmr/m/n/10 0\OML/lmm/m/it/10 og\OT1/lmr/m/n/10 10\OML/lmm/
-m/it/10 ; hvor\OT1/lmr/m/n/10 10\OML/lmm/m/it/10 printeraltog\OT1/lmr/m/n/10 0\
-OML/lmm/m/it/10 ikkeprinterutnoe:Dettefantjegveldignyttign\OT1/lmr/m/n/10 å\OML
-/lmm/m/it/10 rjegskullefeils\OT1/lmr/m/n/10 ø\OML/lmm/m/it/10 kekoden:Tankenera
-tprintsvitsjenealdriskalblifjernetslitatdetskalblilett\OT1/lmr/m/n/10 å\OML/lmm
-/m/it/10 feils\OT1/lmr/m/n/10 ø\OML/lmm/m/it/10 kekodenvedensenereanledning:$ 
+! Misplaced \crcr.
+\endaligned ->\crcr 
+                    \egroup \restorecolumn@ \egroup 
+l.305 \end{aligned}
+                   
+I can't figure out why you would want to use a tab mark
+or \cr or \span just now. If something like a right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+! Extra }, or forgotten \endgroup.
+\endaligned ->\crcr \egroup 
+                            \restorecolumn@ \egroup 
+l.305 \end{aligned}
+                   
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+! Extra }, or forgotten \endgroup.
+\endaligned ...cr \egroup \restorecolumn@ \egroup 
+                                                  
+l.305 \end{aligned}
+                   
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+
+Overfull \hbox (58.89539pt too wide) detected at line 306
+[][] []\OML/lmm/m/it/10 C \OT1/lmr/m/n/10 = \OML/lmm/m/it/10 cos\OT1/lmr/m/n/10
+ (\OML/lmm/m/it/10 ^^R\OT1/lmr/m/n/10 )\OML/lmm/m/it/10 ; S \OT1/lmr/m/n/10 = [
+](\OML/lmm/m/it/10 ^^R\OT1/lmr/m/n/10 )[] 
  []
 
-[10 <./FEMModels.png>] [11] (./TMR4162-Bjelke_Analyse.aux)
+[10 <./FEMModels.png>] [11] [12] (./TMR4162-Bjelke_Analyse.aux)
 
 LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 7826 strings out of 495061
- 108493 string characters out of 1182622
+ 7867 strings out of 495061
+ 109109 string characters out of 1182622
  203542 words of memory out of 3000000
- 10756 multiletter control sequences out of 15000+50000
- 55980 words of font info for 56 fonts, out of 3000000 for 9000
+ 10788 multiletter control sequences out of 15000+50000
+ 56917 words of font info for 59 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
- 38i,8n,58p,783b,372s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/en
-c/dvips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/s
-hare/texmf/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/share/texmf/fonts/enc/dvips/l
-m/lm-ec.enc}</usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texm
-f/fonts/type1/public/lm/lmbx12.pfb></usr/share/texmf/fonts/type1/public/lm/lmex
-10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi10.pfb></usr/share/texmf/fon
-ts/type1/public/lm/lmmi7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb>
-</usr/share/texmf/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/type1
-/public/lm/lmr17.pfb></usr/share/texmf/fonts/type1/public/lm/lmr5.pfb></usr/sha
-re/texmf/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf/fonts/type1/public/lm
-/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy7.pfb></usr/share/texmf
-/fonts/type1/public/lm/lmtt10.pfb>
-Output written on TMR4162-Bjelke_Analyse.pdf (11 pages, 405009 bytes).
+ 38i,13n,58p,783b,372s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/usr/share/texmf/fonts/enc/dvips/lm/lm-rmtt.enc}{/usr/share/texmf/fonts/enc/
+dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/sha
+re/texmf/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/share/texmf/fonts/enc/dvips/lm/
+lm-mathex.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}</usr/share/texmf/
+fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx12
+.pfb></usr/share/texmf/fonts/type1/public/lm/lmex10.pfb></usr/share/texmf/fonts
+/type1/public/lm/lmmi10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi7.pfb><
+/usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/
+public/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr17.pfb></usr/sha
+re/texmf/fonts/type1/public/lm/lmr5.pfb></usr/share/texmf/fonts/type1/public/lm
+/lmr7.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/
+fonts/type1/public/lm/lmsy7.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.
+pfb>
+Output written on TMR4162-Bjelke_Analyse.pdf (12 pages, 411516 bytes).
 PDF statistics:
- 343 PDF objects out of 1000 (max. 8388607)
- 80 named destinations out of 1000 (max. 500000)
+ 355 PDF objects out of 1000 (max. 8388607)
+ 84 named destinations out of 1000 (max. 500000)
  256 words of extra memory for PDF output out of 10000 (max. 10000000)
 

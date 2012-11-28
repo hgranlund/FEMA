@@ -281,15 +281,37 @@ Her vises også feilhåndterings flyten i programmet. Dette er implementert som 
 \end{align}
 
 \paragraph*{}
-Et annet element jeg fant veldig nyttig fra Kolbein \cite{KolbeinBellProgram} var ideen bak variabelen pr_switch. Ideen er har at print svitsjen har en verdi mellom 0 og 10, hvor 10 printer alt og 0 ikke printer ut noe. Dette fant jeg veldig nyttig når jeg skulle feilsøke koden. Tanken er at print svitsjene aldri skal bli fjernet slit at det skal bli lett å feil søke koden ved en senere anledning.  
+Et annet element jeg fant veldig nyttig fra Kolbein \cite{KolbeinBellProgram} var ideen bak variabelen $pr_switch$. Ideen er har at print svitsjen har en verdi mellom 0 og 10, hvor 10 printer alt og 0 ikke printer ut noe. Dette fant jeg veldig nyttig når jeg skulle feilsøke koden. Tanken er at print svitsjene aldri skal bli fjernet slit at det skal bli lett å feil søke koden ved en senere anledning.  
 
 
 
 \subsubsection{Program-analyse}
-\subsubsection{Optimaliseringer}
-lokal stivhetsmatrise med rotasjon
+\subsubsection{Optimaliseringer og tidsbruk}
+De delene av programmet som har høyest asymptotisk kjøretid er generering av global stivhetsmatrise og ligningsløseren. Jeg har sett litt på hvordan disse kan optimaliseres. 
+Den første enkle justeringen jeg gjorde var å kalkulere den globale elementstivhetsmatrisen direkte. Vanligvis ville denne matrisen blitt laget ved å bruke likning \ref{eq:Lstivhet} og \ref{eq:Rot} på formen $k_G=R*k_L*R^T$. Det vil si at vi trenger å gjøre to matrisemultiplikasjoner og en transponering, for å få rotert matrisen. Jeg valgte da å kalkulere denne, på forhånd, slik at $k_G$ blir. 
 
-generere redusert global stivhetsmatrse direkte
+\begin{equation} 
+\begin{aligned}
+& k_{with rotation} = \frac{E}{L} * \\ 
+&\begin{bmatrix}
+AC^2+\frac{12I}{L^2} S^2  & (A-\frac{12I}{L^2})CS  &  -\frac{6I}{L}S & -(AC^2+\frac{12I}{L^2}S^2) & -(A-\frac{12I}{L^2})CS &  -\frac{6I}{L}S \\
+ & AS^2 + \frac{12I}{L^2}C^2 & -\frac{6I}{L}S & -(A-\frac{12I}{L^2})CS & -(AS^2+\frac{12I}{L^2}C^2) &  -\frac{6I}{L}S \\
+ & & fI &  \frac{6I}{L}S & \frac{6I}{L}C & 2I \\
+ & & & (AC^2+\frac{12I}{L^2}S^2) & (A-\frac{12I}{L^2})CS & \frac{6I}{L}S\\
+ & & & & (AC^2+\frac{12I}{L^2}C^2) & -\frac{6I}{L}C \\
+ Symmetri & & & & & 4I \\
+\end{bmatrix} \\
+& \mathtt{Where: E=E-modul, I=Annet arealmoment, C=$\cos(\theta)$, S=$\sin(\theta)$} C=cos(\theta), S=\sin(\theta) \\
+\end{aligned}
+\end{equation}
+
+Dette vil ikke forbedre kjøretiden asymptotisk sett, men vil fjerne noen konstantledd.
+
+\paragraph*{}
+En annen ting jeg gjorde var å forbedre genereringen av den globale stivhetsmatrisen. Dette blir vanligvis gjort ved å først lage den fulle matrisen deretter, ved hjelp av grensebetingelser, redusere matrisen. For å unngå to operasjoner lagde jeg den reduserte matrisen direkte. Dette gjorde jeg ved å lage en konverteringsvektor, som mappet verdier fra den tenkte fulle til den reduserte globale stivhetsmatrisen.
+
+\paragraph*{}
+Det område jeg muligens kunne spare mest tid var å velge en god iterativ ligningsløser. Jeg lagde derfor en implementasjon av gauss-seidel. Det jeg så  var at ved så små matriser jeg opererte med var det lurest å gå for den direkte versjonen. Den neste funksjonaliteten jeg hadde tenkt å implementere i dette programmet var meshing, altså dele elementene inn i mindre biter. Da ville jeg ha fått et mye større likningssett å løse, som ville gjort at en iterativ metode kunne lønt seg. 
 
 
 \subsubsection{Tidsbruk}
@@ -356,3 +378,7 @@ Dele opp stivhetsmatrise og rotasjonsmatrise i 4 deler
 
 
   Det er en del måter å implementere gauss på. Jeg valgte å bruke partiell pivotering, hvor en eliminerer rad for rad men et såkalt pivot element. Dette elementet bør være så stort som mulig for å minske avrundingsfeil. 
+  
+  
+  navngiving
+  * Globalelementstivhetsmarise

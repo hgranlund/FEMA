@@ -42,7 +42,10 @@ contains
 
     call GlobalStiffness(GlobalStiffnessMatrix,Elms,Nodes,GTRGConverter,errorFlag)
     call PopulateLoads(LoadVector,Loads,GTRGConverter, errorflag)
-    call GaussSolver(GlobalStiffnessMatrix,LoadVector,DisplacementVector,RGSMLen,Errorflag)
+!   call GaussSolver(GlobalStiffnessMatrix,LoadVector,DisplacementVector,RGSMLen,Errorflag)
+
+    call GaussSeidel(GlobalStiffnessMatrix,LoadVector,DisplacementVector,RGSMLen,Errorflag)
+    print * , 'gaussseisel', DisplacementVector
 
     if (pr_switch>2)then
        print * ,''
