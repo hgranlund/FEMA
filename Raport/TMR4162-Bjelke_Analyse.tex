@@ -56,7 +56,10 @@ Teorien bak elementmetoden ble utarbeidet på 1940-tallet, men man så ikke den 
 Elementmetoden er i prinsippet en numerisk metode for å finne approksimasjoner til differensiallikninger. Den er ofte brukt innenfor en rekke felter: strømning, varmeleding, svinginger, elektriske felt og liknende. I denne oppgaven brukte jeg den for å løse styrkebergnegrer på en rammekonstruksjon. 
 
 \paragraph{}
-Elementmetoden går ut på å dele konstruksjonen inn i elementer, jo flere elementer jo mer nøyaktige resultater får man. For hvert element blir stivheten til elementet kalkulert. Stivheten er basert på e-modulen, arealet og det andre arealmomentet til elementet. Disse stivhetene blir så addert sammen for å finne systemets stivhet. Vi kan deretter bruke sammenhangen mellom stivhet(k), forskyvninger(v) og krefter(S) \eqref{eq:skv} til å kalkulere knutepunktenes forskyvninger.
+Elementmetoden går ut på å dele konstruksjonen inn i elementer, jo flere elementer jo mer nøyaktige resultater får man. Alle elementer har en node i hver ende. Selve rammekonstruksjonen blir representer av et nettverk av noder og elementer, hvor kreftene er festet til nodene. Det er i disse nodene verdier, som forskyving, krefter og momenter, blir kalkulert.
+
+\paragraph*{}
+For hvert element blir stivheten til elementet kalkulert. Stivheten er basert på e-modulen, arealet og det andre arealmomentet til elementet. Disse stivhetene blir så addert sammen for å finne systemets stivhet. Vi kan deretter bruke sammenhangen mellom stivhet(k), forskyvninger(v) og krefter(S) \eqref{eq:skv} til å kalkulere knutepunktenes forskyvninger.
 \begin{equation} \label{eq:skv}
 S=k*v
 \end{equation}
@@ -78,7 +81,7 @@ k  = \begin{bmatrix}
 
 
 
-Denne stivhetsmatrisen vil nå gjelde for lokalt for det enkelte elementet. Vi må derfor transformere matrisen slik at den gjelder globalt. Dette kan vi gjøre med en enkel rotasjonsmatrise \eqref{eq:Rot}. 
+Denne stivhetsmatrisen vil nå gjelde lokalt for det enkelte elementet. Vi må derfor transformere matrisen slik at den gjelder globalt. Dette kan vi gjøre med en enkel rotasjonsmatrise \eqref{eq:Rot}. 
 
 \begin{equation} \label{eq:Rot}
 R  = \begin{bmatrix}
@@ -93,29 +96,32 @@ R  = \begin{bmatrix}
 
 Vi kan enkelt transformere kreftene $S$ og forskyvningene $v$ ved sammenhengene:
 \begin{equation} \label{eq:roteq}
-S_G=RS_L  \text{ og } v_G=Rv_L 
+S_G=RS_L  \text{ , } v_G=Rv_L 
 \end{equation}
 
 Vi kan nå ved hjelp av \ref{eq:skv} og \ref{eq:roteq} finne en sammenheng mellom den globale $_G$ og den lokale $_L$ stivhetsmatrisen.
 
 \begin{equation}
-S_G=RS_L=Rk_Lv_L=Rk_LR^{-1}v_G=k_Gv_G 
-\end{equation}
-\begin{equation} \label{eq:klkg}
-k_G=Rk_LR^{-1}
+\begin{aligned}\label{eq:klkg}
+& S_G=RS_L=Rk_Lv_L=Rk_LR^{-1}v_G=k_Gv_G \\
+&k_G=Rk_LR^{-1}\\
+\end{aligned}
 \end{equation}
 
 \subsubsection{Global stivhetsmatrise}
-For å addere alle elementstivhetsmatrisene til en global stivhetsmatrise er det normalt å bruke en IEG-matrise. IEG-matrisen er en relasjon mellom elementene og det tilhørende nodeparret. Den globale stivhetsmatrisen holder på stivhetene til alle nodene i systemet, mens de enkelte elementstivhetsmatrise inneholder kun stivheten til sine to tilhørende noder. Når de skal adderes skal stivhetene til elementstivhetsmatrisene adderes inn i de tilhørende nodene i den globale stivhetsmatrisen. 
+Om vi studerer den lokale stivhetsmatrisen \ref{eq:Lstivhet} og likning \ref{eq:skv} ser vi at kolonne nummer $i$ beskriver stivheten til frihetsgraden $i$. Dette er også tilfelle for den globale stivhetsmatrisen. Den globale stivhetsmatrisen holder på stivhetene til alle nodene i systemet, mens den lokale stivhetsmatrise inneholder kun stivheten til sine to tilhørende noder. Når de adderes skal de lokale stivhetene adderes inn i de tilhørende stivhetene i den globale stivhetsmatrisen. Normalt brukes en IEG-matrise, som beskriver systemets topografi, til å addere stivhetene. IEG-matrisen er en relasjon mellom elementene og det tilhørende nodeparret.
+
+\paragraph*{}
+Vi kan let kalkulere størrelsen på den globale stivhetsmatrisene. Det første en bør merke seg er at alle stivhetsmatriser er symmetriske, noe som kan bevises ved Maxwells resiprositetssats. Dette her også en følge av newtons 3. lov, siden hver enkelt bjelke må være i likevekt. Det andre er at hver kolonne representerer en frihetsgrad. For å finne størrelsen på matrisen må en derfor beregne antall frihetsgrader til systemet.
 
 \subsubsection{Grensebetingelser}
-Nå står vi bare igjen med et lineært ligningssystem av typen $kv=S$, hvor forskyvningene $(v)$ er ukjente. Dette likningssystemet vil nå være uløselig, fordi stivhetsmatrisen $k$ er singulær. Denne singulariteten skyldes at vi enda ikke har sakt hvor konstruksjonen er fastbundet. For et system med 3 frihetsgrader per node trenger vi 3 fastbuende frihetsgrader. Når vi har innført disse grensebetingelsene vil systemet være løselig.
+Nå står vi bare igjen med et lineært ligningssystem av typen $kv=S$, hvor forskyvningene $(v)$ er ukjente. Dette likningssystemet vil nå være uløselig, fordi stivhetsmatrisen $k$ er singulær. Denne singulariteten skyldes at vi enda ikke har sakt hvor konstruksjonen er fastbundet. For et system med 3 frihetsgrader per node trenger vi 3 fastlåste frihetsgrader. Disse frihetsgradene kan innføres på to måter. Enten kan raden og kolonnen til frihetsgraden fjernes, ellers kan alle verdiene nulles ut bortsett fra diagonal-verdien som må være en. Når vi har innført disse grensebetingelsene vil systemet være løselig.
 
 \subsubsection{Elementkrefter}
 Når vi vil regne ut krefter på de forskjellige elementene kan vi igjen bruke ligning \ref{eq:skv}. Vi må nå huske at vi må transformere matrisene til det koordinatsystemet vi ønsker. 
 
 
-\subsection{Ligningsløser}'
+\subsection{Ligningsløser}
 Når man skal modellere mange fysiske og interiørmessigere problemer kan en nesten ikke unngå å løse store linear ligningssystem. Det finnes derfor mange forskjellige metoder å løse disse på og alle har visse fordeler og ulemper.
 Det finnes to kategorier av ligningsløsere: dirkete og iterative. De direkte løser settet eksakt, men bruker ofte lenger tid en en iterativ løser. Gauss metoden er et eksempel på en direkteløser. En iterativ løser finner en approksimasjon av løsningen, og kan ha problemer med konvergens i visse tilfeller. 
 
@@ -206,16 +212,19 @@ For å lage og dytte ut matriser på stakken brukes glPushMatrix() og glPopMatri
 
 
 \section{Programmet} 
-Dette programmet utfører en enkel styrkeberegning på en en rammekonstruksjon ved hjelp av elementmetoden. Programmet er bygget opp av to deler. Det første er en beregnende del, mens den andre er en visualiserende del. Beregningsdelen er skrevet i  Fortran 90 som ut i fra en inputfil utfører en elementanalyse. Resultatene av elementanalysen blir så sendt videre til den visualiserende delen. Denne delen er skrevet i c og viser frem resultatene. 
 
-\subsection{Beskrivelse} 
-Brogrammet
-\subsection{Bruk}
-\subsubsection{Installasjon }
+
+\subsection{Beskrivelse}
+Dette programmet utfører en enkel styrkeberegning på en en rammekonstruksjon ved hjelp av elementmetoden. Her blir hver bjelke omgjort til et element med 6 frihetsgrader. Analysen kan ta imot krefter eller momenter påsatt i nodene
+
+
+Programmet er bygget opp av to deler. Det første er en beregnende del, mens den andre er en visualiserende del. Beregningsdelen er skrevet i  Fortran 90 som ut i fra en inputfil utfører en elementanalyse. Resultatene av elementanalysen blir så sendt videre til den visualiserende delen. Denne delen er skrevet i c og viser frem resultatene. 
+\subsubsection{Bruk}
+\subsubsection{Installasjon}
 \subsubsection{Input filen}
 Input filen beskriver systemet som skal beregnes. Her skal det spesifiseres hvilke noder, elementer og laster som skal være med i kalkulasjonen. Hvilken benevning som brukes er valgfritt så lenge den er konsekvent. Input filen blir lest igjennom standard input enheten. Figur \ref{fig:input} viser et eksempel på en input fil.
 
-\begin{figure}\label{fig:input}
+\begin{figure}[h]\label{fig:input}
 \centering
 \includegraphics[scale=0.5]{input.png} 
 \caption{Eksempel på en input fil}
@@ -223,13 +232,66 @@ Input filen beskriver systemet som skal beregnes. Her skal det spesifiseres hvil
 
 
 \subsection{Fortran}
-Delen som er skrevet i fortran implementerer en enkel styrkeberegning basert på elementmetoden. 
-
+Delen som er skrevet i fortran implementerer en enkel styrkeberegning basert på elementmetoden. Her er det blant annet også implementert en Ligningsløser som baserer seg på gauss eliminasjon. Her har jeg hentet mye om oppbygging og strukturering fra Kolbein Bell sine notater \cite{KolbeinBellFortran} \cite{KolbeinBellProgram}.  
 
 
 \subsubsection{Struktur}
+Jeg har valgt å strukturere programmet inn i 5 moduler og et hovedprogram. Modulene og hovedprogrammet er delt inn følgende:
+
+\begin{description}
+\item[FEM] er navnet på hovedprogrammet mitt. Det er dette programmet som leser og skriver data til fil og kaller på metoder i modulen FEMMetods.
+\item[FEMMethods] er hovedmodulen. Dette er den eneste modulen hovedprogrammet bruker. Her finnes alle metoder som har med "finite element method" å gjøre. Hovedrutinen, som utfører styrkeberegningen, heter DoFEA.
+\item[FEMUtitity] er en hjelpemodul for FEMMethods. Her finnes alle rutiner som brukes av FEMMethods, men som ikke er koblet direkte opp med FEM. Her er rutiner som for eksempel nullstiler eller printer en matrise.
+\item[FEMTypes] er en modul som inneholder de forskjellige datatypene som brukes. De datatypene som brukes er element, joint og load.
+\item[FEMMath] er mattemodulen. Her finnes alle rutiner innenfor matematikk som for eksempel rutiner for å utføre gauss eliminasjon eller generere en rotasjonsmatrise.
+\end{description}
+
+\paragraph*{}
+Jeg har strukturert modulene og programmet som vist i figur \ref{fig:struktur}. Her ser vi at det er hovedprogrammet som tar for seg lesing og skriving til fil og kaller rutinen DoFEA i modulen FEMMethods. DoFEA gjør da de nødvendige kallene for å kalkulere krefter, momenter og forskyvninger på alle elementene. I figuren har jeg ikke tatt med kallene til rutiner som er ubetydelige for forståelsen en strukturen, som for eksempel rutinene i FEMUtility. 
+
+\begin{figure}[h]\label{fig:struktur}
+\centering
+\includegraphics[scale=0.31]{FEMAStructure.png} 
+\caption{Program strukturen}
+\end{figure}
+
+\paragraph*{}
+Datastrukturen jeg har brukt for å representere rammekonstruksjonen og elementene er ved hjelp av egendefinerte datatyper. Den infoen som må holdes på er data om noder, elementer og krefter. Dette har jeg valgt å strukturere ved hjelp av tre datatyper:
+
+\begin{description}
+\item[Node] inneholder info om plasseringen til noden, x og y koordinater, og hvilke frihetsgrader noden har.
+\item[Element] består av info som tilhører de enkelte elementene som blant annet E-modul, areal , rotasjon og hvilke noder den er koblet til.
+\item[Kraft] inneholder hvilken node og retning kraften har og størrelsen på kraften.
+\end{description} 
+
+Disse datatypene blir så lagret i tre lister, som blir modifisert og brukt igjennom hele program flyten. Selve programflyten er vist i figure \ref{fig:flytF}. 
+
+\begin{figure}[h]\label{fig:flytF}
+\centering
+\includegraphics[scale=0.5]{FEMModels.png} 
+\caption{Program flyten}
+\end{figure}
+
+Her vises også feilhåndterings flyten i programmet. Dette er implementert som anvist i Kolbein \cite{KolbeinBellProgram}, med et errorflagg. 
+
+\begin{align}
+& errorflag = 0 : ingen feilsituasjon er påvist \nonumber\\
+& errorflag < 0 : en feilsituasjon er påvist\nonumber\\
+& errorflag > 0 : en tvilsom situasjon er påvist\nonumber 
+\end{align}
+
+\paragraph*{}
+Et annet element jeg fant veldig nyttig fra Kolbein \cite{KolbeinBellProgram} var ideen bak variabelen pr_switch. Ideen er har at print svitsjen har en verdi mellom 0 og 10, hvor 10 printer alt og 0 ikke printer ut noe. Dette fant jeg veldig nyttig når jeg skulle feilsøke koden. Tanken er at print svitsjene aldri skal bli fjernet slit at det skal bli lett å feil søke koden ved en senere anledning.  
+
+
+
 \subsubsection{Program-analyse}
 \subsubsection{Optimaliseringer}
+lokal stivhetsmatrise med rotasjon
+
+generere redusert global stivhetsmatrse direkte
+
+
 \subsubsection{Tidsbruk}
 \subsubsection{Resultater}
 
@@ -240,6 +302,8 @@ Delen som er skrevet i fortran implementerer en enkel styrkeberegning basert på
 \subsubsection{Struktur}
 \subsubsection{Optimaliseringer}
 \subsubsection{Tidsbruk}
+
+gauss og genereiognav global
 \subsubsection{Visualisering}
 
 
@@ -287,5 +351,8 @@ Kolbein Bell, 2006, Fortran 90, NTNU
 \end{thebibliography}
 
 \end{document}
+
+Dele opp stivhetsmatrise og rotasjonsmatrise i 4 deler
+
 
   Det er en del måter å implementere gauss på. Jeg valgte å bruke partiell pivotering, hvor en eliminerer rad for rad men et såkalt pivot element. Dette elementet bør være så stort som mulig for å minske avrundingsfeil. 

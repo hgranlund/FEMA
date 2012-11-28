@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.9.4)  27 NOV 2012 22:42
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.9.4)  28 NOV 2012 01:46
 entering extended mode
  %&-line parsing enabled.
 **TMR4162-Bjelke_Analyse.tex
@@ -717,34 +717,115 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 \tf@toc=\write4
 \openout4 = `TMR4162-Bjelke_Analyse.toc'.
 
- [3] [4] [5]
+ [3]
+Overfull \hbox (2.96098pt too wide) in paragraph at lines 62--63
+\T1/lmr/m/n/10 finne sys-temets stivhet. Vi kan deretter bruke sam-men-hangen m
+el-lom stivhet(k), forskyvninger(v)
+ []
 
-LaTeX Warning: Reference `eq:gauss-seidel' on page 6 undefined on input line 14
-4.
+[4] [5]
 
-[6] <input.png, id=217, 980.66376pt x 332.24126pt>
+LaTeX Warning: Reference `eq:gauss-seidel' on page 6 undefined on input line 15
+0.
+
+[6] [7] <input.png, id=234, 980.66376pt x 332.24126pt>
 File: input.png Graphic file (type png)
  <use input.png>
-Overfull \hbox (72.077pt too wide) in paragraph at lines 218--219
+Overfull \hbox (72.077pt too wide) in paragraph at lines 229--230
  [][] 
  []
 
-[7] [8 <./input.png (PNG copy)>] [9] (./TMR4162-Bjelke_Analyse.aux)
+[8 <./input.png (PNG copy)>]
+<FEMAStructure.png, id=245, 1486.55376pt x 717.68124pt>
+File: FEMAStructure.png Graphic file (type png)
+
+<use FEMAStructure.png>
+Overfull \hbox (42.57323pt too wide) in paragraph at lines 254--255
+ [][] 
+ []
+
+<FEMModels.png, id=248, 907.39pt x 288.07625pt>
+File: FEMModels.png Graphic file (type png)
+ <use FEMModels.png>
+Overfull \hbox (35.44022pt too wide) in paragraph at lines 271--272
+ [][] 
+ []
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[9 <./FEMAStructure.png>]
+
+LaTeX Warning: Command \r invalid in math mode on input line 281.
+
+
+LaTeX Warning: Command \r invalid in math mode on input line 281.
+
+
+LaTeX Warning: Command \r invalid in math mode on input line 281.
+
+
+LaTeX Warning: Command \r invalid in math mode on input line 281.
+
+
+LaTeX Warning: Command \r invalid in math mode on input line 281.
+
+
+LaTeX Warning: Command \r invalid in math mode on input line 281.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.284 ...BellProgram} var ideen bak variabelen pr_
+                                                  switch. Ideen er har at pr...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+LaTeX Warning: Command \r invalid in math mode on input line 284.
+
+
+LaTeX Warning: Command \o invalid in math mode on input line 284.
+
+
+LaTeX Warning: Command \r invalid in math mode on input line 284.
+
+
+LaTeX Warning: Command \o invalid in math mode on input line 284.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.285 
+      
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+Overfull \hbox (1068.72345pt too wide) in paragraph at lines 284--285
+ \T1/lmr/m/n/10 Et an-net el-e-ment jeg fant veldig nyt-tig fra Kol-bein [[]] v
+ar ideen bak vari-abe-len pr$[]\OML/lmm/m/it/10 witch:Ideenerharatprintsvitsjen
+harenverdimellom\OT1/lmr/m/n/10 0\OML/lmm/m/it/10 og\OT1/lmr/m/n/10 10\OML/lmm/
+m/it/10 ; hvor\OT1/lmr/m/n/10 10\OML/lmm/m/it/10 printeraltog\OT1/lmr/m/n/10 0\
+OML/lmm/m/it/10 ikkeprinterutnoe:Dettefantjegveldignyttign\OT1/lmr/m/n/10 å\OML
+/lmm/m/it/10 rjegskullefeils\OT1/lmr/m/n/10 ø\OML/lmm/m/it/10 kekoden:Tankenera
+tprintsvitsjenealdriskalblifjernetslitatdetskalblilett\OT1/lmr/m/n/10 å\OML/lmm
+/m/it/10 feils\OT1/lmr/m/n/10 ø\OML/lmm/m/it/10 kekodenvedensenereanledning:$ 
+ []
+
+[10 <./FEMModels.png>] [11] (./TMR4162-Bjelke_Analyse.aux)
 
 LaTeX Warning: There were undefined references.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
  ) 
 Here is how much of TeX's memory you used:
- 7805 strings out of 495061
- 108182 string characters out of 1182622
- 203435 words of memory out of 3000000
- 10746 multiletter control sequences out of 15000+50000
+ 7826 strings out of 495061
+ 108493 string characters out of 1182622
+ 203542 words of memory out of 3000000
+ 10756 multiletter control sequences out of 15000+50000
  55980 words of font info for 56 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
- 38i,7n,58p,783b,319s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 38i,8n,58p,783b,372s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/en
 c/dvips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/s
 hare/texmf/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/share/texmf/fonts/enc/dvips/l
@@ -757,9 +838,9 @@ ts/type1/public/lm/lmmi7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb>
 re/texmf/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf/fonts/type1/public/lm
 /lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy7.pfb></usr/share/texmf
 /fonts/type1/public/lm/lmtt10.pfb>
-Output written on TMR4162-Bjelke_Analyse.pdf (9 pages, 316840 bytes).
+Output written on TMR4162-Bjelke_Analyse.pdf (11 pages, 405009 bytes).
 PDF statistics:
- 308 PDF objects out of 1000 (max. 8388607)
- 71 named destinations out of 1000 (max. 500000)
- 238 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 343 PDF objects out of 1000 (max. 8388607)
+ 80 named destinations out of 1000 (max. 500000)
+ 256 words of extra memory for PDF output out of 10000 (max. 10000000)
 

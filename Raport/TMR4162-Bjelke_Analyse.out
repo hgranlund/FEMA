@@ -10,9 +10,10 @@
 \BOOKMARK [3][-]{subsubsection.2.2.2}{Gauss-Seidel}{subsection.2.2}
 \BOOKMARK [2][-]{subsection.2.3}{OpenGL}{section.2}
 \BOOKMARK [1][-]{section.3}{Programmet}{}
-\BOOKMARK [2][-]{subsection.3.1}{Bruk}{section.3}
-\BOOKMARK [3][-]{subsubsection.3.1.1}{Installasjon }{subsection.3.1}
-\BOOKMARK [3][-]{subsubsection.3.1.2}{Input filen}{subsection.3.1}
+\BOOKMARK [2][-]{subsection.3.1}{Beskrivelse}{section.3}
+\BOOKMARK [3][-]{subsubsection.3.1.1}{Bruk}{subsection.3.1}
+\BOOKMARK [3][-]{subsubsection.3.1.2}{Installasjon}{subsection.3.1}
+\BOOKMARK [3][-]{subsubsection.3.1.3}{Input filen}{subsection.3.1}
 \BOOKMARK [2][-]{subsection.3.2}{Fortran}{section.3}
 \BOOKMARK [3][-]{subsubsection.3.2.1}{Struktur}{subsection.3.2}
 \BOOKMARK [3][-]{subsubsection.3.2.2}{Program-analyse}{subsection.3.2}
