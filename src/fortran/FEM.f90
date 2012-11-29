@@ -18,6 +18,7 @@ program FEM
      return
   end IF
   
+  !Start the FEA
   call DoFEA(DisplacementVector,Elms,Nodes,Loads, Errorflag)
   if (errorFlag .NE. 0 ) then 
      print *,'Errorflag = ' ,Errorflag
@@ -30,15 +31,8 @@ contains
     integer ::n, numberOfNodes, numberOfElm,numberOfLoads, file_in
     type (element) :: elm
 
-    file_in=10
-    open(unit=file_in, file='input.dat', iostat=errorFlag, status="old", action="read")
-    if ( errorFlag /= 0 ) then
-        open(unit=file_in, file='fortran/input.dat', iostat=errorFlag, status="old", action="read")
-            if ( errorFlag /= 0 ) then
-                stop "Error opening file_in"
-            end if
-    end if
 
+    file_in =5
 
     read(file_in,*,iostat=errorFlag) numberOfNodes, numberOfElm, numberOfLoads
     allocate (Nodes(numberOfNodes))
@@ -62,7 +56,7 @@ contains
     integer ::n, numberOfElm, numberOfLoads, file_out
 
       file_out=11
-      open(unit=file_out, file='FortranOutput.dat', iostat=errorFlag, status="unknown", action="write")
+      open(unit=file_out, file='FEMOutput.dat', iostat=errorFlag, status="unknown", action="write")
       if ( errorFlag /= 0 ) stop "Error opening file_out"
 
     numberOfLoads=size(Loads)

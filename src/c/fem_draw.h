@@ -9,14 +9,12 @@
 extern int numberOfElms, numberOfLoads;
 extern float scale,**beamCoord, **forceVector, **displacementVector , **loadVector;
 
-float momentFunction(float x, float moment, float Fy);
-void drawElements(void);
+
+void drawFrame(void);
 void drawMomentDiagrams(void);
 void drawShearDiagrams(void);
 void drawAxialForceDiagrams(void);
-void drawDiagramInit(void);
 void drawForces(void);
-void drawHeader(char* header);
-void drawNavigationMeny(void);
+void drawWindowInit(char* header);
 
 #endif

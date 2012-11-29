@@ -1,3 +1,11 @@
+/*******************************************************************************
+ fem_keyboard controls the keyboard 
+
+ Author: Simen Haugerud Granlund
+ Date modified: 29/11/12 
+*******************************************************************************/
+
+
 #include "fem_keyboard.h"
 #include <stdio.h>
 

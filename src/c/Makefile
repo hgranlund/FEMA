@@ -1,4 +1,4 @@
-OBJECTS = main.o fem_draw.o fem_keyboard.o fem_file_reader.o fem_math.o
+OBJECTS = FEMVis.o fem_draw.o fem_keyboard.o fem_file_reader.o draw_util.o fem_math.o 
 
 CFLAGS = -lglut -lGLU -lGL -lm
 

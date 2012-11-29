@@ -1,0 +1,26 @@
+\BOOKMARK [1][-]{section.1}{Innledning}{}
+\BOOKMARK [1][-]{section.2}{Teori}{}
+\BOOKMARK [2][-]{subsection.2.1}{Elementmetoden}{section.2}
+\BOOKMARK [3][-]{subsubsection.2.1.1}{Lokal stivhetsmatrise}{subsection.2.1}
+\BOOKMARK [3][-]{subsubsection.2.1.2}{Global stivhetsmatrise}{subsection.2.1}
+\BOOKMARK [3][-]{subsubsection.2.1.3}{Grensebetingelser}{subsection.2.1}
+\BOOKMARK [3][-]{subsubsection.2.1.4}{Elementkrefter}{subsection.2.1}
+\BOOKMARK [2][-]{subsection.2.2}{Ligningsl\370ser}{section.2}
+\BOOKMARK [3][-]{subsubsection.2.2.1}{Gauss}{subsection.2.2}
+\BOOKMARK [3][-]{subsubsection.2.2.2}{Gauss-Seidel}{subsection.2.2}
+\BOOKMARK [2][-]{subsection.2.3}{OpenGL}{section.2}
+\BOOKMARK [1][-]{section.3}{Programmet}{}
+\BOOKMARK [2][-]{subsection.3.1}{Beskrivelse}{section.3}
+\BOOKMARK [3][-]{subsubsection.3.1.1}{Installasjon}{subsection.3.1}
+\BOOKMARK [3][-]{subsubsection.3.1.2}{Bruk}{subsection.3.1}
+\BOOKMARK [3][-]{subsubsection.3.1.3}{Input filen}{subsection.3.1}
+\BOOKMARK [2][-]{subsection.3.2}{Fortran}{section.3}
+\BOOKMARK [3][-]{subsubsection.3.2.1}{Struktur}{subsection.3.2}
+\BOOKMARK [3][-]{subsubsection.3.2.2}{Program-analyse}{subsection.3.2}
+\BOOKMARK [3][-]{subsubsection.3.2.3}{Optimaliseringer og tidsbruk}{subsection.3.2}
+\BOOKMARK [3][-]{subsubsection.3.2.4}{Resultater}{subsection.3.2}
+\BOOKMARK [2][-]{subsection.3.3}{C}{section.3}
+\BOOKMARK [3][-]{subsubsection.3.3.1}{Struktur}{subsection.3.3}
+\BOOKMARK [3][-]{subsubsection.3.3.2}{Visualisering}{subsection.3.3}
+\BOOKMARK [1][-]{section.4}{Diskusjon}{}
+\BOOKMARK [1][-]{section.5}{Konklusjon}{}

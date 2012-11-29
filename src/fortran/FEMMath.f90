@@ -1,4 +1,10 @@
-
+  !###############################
+  ! FEMMath id a module that contains all the math routine used in FEM.
+  ! Here you find the GaussElimination and Gauss-Seidel implementations
+  !
+  ! Author: Simen Haugerud Granlund
+  ! Date modified: 29/11/12
+  !###############################
 
 module FEMMath
   implicit none
@@ -39,14 +45,13 @@ contains
           end if
        end do
 
-       ! Tester om matrisen er singulær
+       ! Test if the system is singular
        if (abs(A(k,k))< epsilon(A(k,k))) THEN
-          print *, 'Matrisen er singulær'
+          print *, '#### GaussElimination: System is singular'
           errorFlag = -5
           return
        end if
 
-       ! utfører radoperasjoner
        do  i= k+1, len
           akk=A(k,k)
           do j= k+1, len, 1                     
@@ -83,6 +88,7 @@ contains
     end do
   end subroutine BackwardSubstitution
 
+
   subroutine GaussSeidel(A,B,X,len,errorFlag)
     integer, intent(in) :: len
     integer, intent(inout) :: errorFlag
@@ -114,7 +120,7 @@ contains
         return 
       end if
     end do
-    print * , 'GaussSeidel fant ikke løsning'
+    print * , '###GaussSeidel: Found no solution '
     errorFlag =4
   end subroutine GaussSeidel
 
@@ -140,23 +146,23 @@ contains
   end function LengthBetweenPoints
 
 
+
   function RotationMatrix(cosT,sinT)
     real, intent(in) :: cosT, sinT 
 
     real :: RotationMatrix(6,6)
 
-    call NullifyMatrix(RotationMatrix)
-
-    RotationMatrix(3,3)=1
-    RotationMatrix(6,6)=1
+    RotationMatrix(:,:)=0
     RotationMatrix(1,1)=cosT
+    RotationMatrix(2,1)=-sinT
+    RotationMatrix(1,2)=sinT
     RotationMatrix(2,2)=cosT
+    RotationMatrix(3,3)=1
     RotationMatrix(4,4)=cosT
+    RotationMatrix(5,4)=-sinT
+    RotationMatrix(4,5)=sinT
     RotationMatrix(5,5)=cosT
-    RotationMatrix(1,2)=-sinT
-    RotationMatrix(2,1)=sinT
-    RotationMatrix(4,5)=-sinT
-    RotationMatrix(5,4)=sinT
+    RotationMatrix(6,6)=1
 
   end function RotationMatrix
 
@@ -174,8 +180,7 @@ contains
   end subroutine swapRow
 
 
-  ! swapRow bytter rad r1 med r2 i matrisen A og vektoren B
-
+  ! swapRowAB swao row r1 with r2 in both the matrix A and the vector B
   subroutine swapAB(A,B,r1,r2)
     real, intent(inout) :: A(:,:), B(:)
     integer, intent(in) :: r1,r2
@@ -188,13 +193,5 @@ contains
     B(r1)=swapB
   end subroutine swapAB
 
-  subroutine NullifyMatrix(Matrix)
-    real, intent(inout) :: Matrix(:,:) 
-
-    integer i,j
-
-    forall (i=lbound(Matrix,1):ubound(Matrix,1), j=lbound(Matrix,2):ubound(Matrix,2)) Matrix(i,j)=0
-    
-  end subroutine NullifyMatrix
 
 end module FEMMath

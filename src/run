@@ -1,5 +1,0 @@
-#!/bin/bash
-touch temp.dat
-./fortran/FEM
-./c/FEMVis 
-rm temp.dat

@@ -57,7 +57,8 @@ void readFile(char *filename)
         }
     }
     else {
-        printf("kunne ikke åpne fil %s: \n", filename);
+        printf("Could not open file: %s: \n", filename);
+        exit(-1);
     }
 
 }

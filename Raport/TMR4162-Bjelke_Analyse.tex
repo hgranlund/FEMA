@@ -221,9 +221,42 @@ For å lage og dytte ut matriser på stakken brukes glPushMatrix() og glPopMatri
 Dette programmet utfører en enkel styrkeberegning på en en rammekonstruksjon ved hjelp av elementmetoden. Her blir hver bjelke omgjort til et element med 6 frihetsgrader. Analysen kan ta imot krefter eller momenter påsatt i nodene
 
 
-Programmet er bygget opp av to deler. Det første er en beregnende del, mens den andre er en visualiserende del. Beregningsdelen er skrevet i  Fortran 90 som ut i fra en inputfil utfører en elementanalyse. Resultatene av elementanalysen blir så sendt videre til den visualiserende delen. Denne delen er skrevet i c og viser frem resultatene. 
-\subsubsection{Bruk}
+Programmet er bygget opp av to deler. Det første er en beregnende del, mens den andre er en visualiserende del. Beregningsdelen, programmet FEM, er skrevet i  Fortran 90. FEM leser en input fil og utfører en elementanalyse. Resultatene av elementanalysen blir så skrevet til FEMOutput.dat. Denne filen igjen lest av det visualiserende programmet, kalt FEMvis. Denne delen er skrevet i c og viser frem resultatene.
+
+
+
+
+
 \subsubsection{Installasjon}
+For å bygge programmet brukes kommandoene:
+
+\begin{verbatim}
+cd FEMA/src/;                 Gå til mappen FEMA/src.
+make;                         Bygger både Fortran og c code.
+\end{verbatim}
+
+\subsubsection{Bruk} 
+Jeg har laget to bash script til å kjøre programmet, som heter run og runWithInput. Disse finnes projectes root-mappe.  Run trenger ingen input fil, men bruker filen $/inputFiles/input.dat$ som standard input. Det det andre skripet krever en input fil. En del ferdiglagde input filer finnes i mappen $inputFiles$.
+Eksempler på bruk:
+
+\begin{verbatim}
+./run;
+
+./runWithInput < inputFiles/input2.dat
+\end{verbatim}
+
+Når kommandoene kjøres vil et resultatvindu åpnes. Dette vinduet kan kontrolleres med tastene: 
+
+\begin{itemize}
+\setlength{\itemsep}{0cm}%
+\setlength{\parskip}{0cm}%
+\item['I'] - Visualiserer inputen.
+\item['F'] - Viser Rammen.
+\item['M'] - Viser momentdiagrammer.
+\item['S'] - Viser Skjærkraft diagrammer
+\item['A'] - Viser Aksialkraft diagrammer.
+\end{itemize}
+
 \subsubsection{Input filen}
 Input filen beskriver systemet som skal beregnes. Her skal det spesifiseres hvilke noder, elementer og laster som skal være med i kalkulasjonen. Hvilken benevning som brukes er valgfritt så lenge den er konsekvent. Input filen blir lest igjennom standard input enheten. 
 ur \ref{fig:input} viser et eksempel på en input fil.
@@ -329,12 +362,11 @@ T(n) = \sum_{k=1}^{e} (k)*(12+12)= O(e)
 \end{equation}  
 
 \paragraph*{}
-Det område jeg muligens kunne spare mest tid var å velge en god iterativ ligningsløser. Jeg lagde derfor en implementasjon av gauss-seidel. Teoretisk sett tror jeg det ville vært lurest å gå for en iterativ ligningsløser som Gauss-Seidel. Grunnen til dette er at stivhetsmatrisen som oftest vil være spinkel, siden de fleste frihetsgradene ikke er avhengig av hverandre. De enkelte nodene er kun avhengig av de nærliggende nodene som gjør at vi vil få mage null-verdier i matrisen. Vi vil også få en sterk og alltid utfylt diagonal. Dette er to elementer som er svært positivt for konvergeringen til Gauss-Seidel. Det vil allikevel lønne seg å bruke Gauss eliminasjon på små matriser. Programmet vil derfor, avhengig av størrelsen på stivhetsmatrisen, velge hvilken ligningsløser som er best. 
+Det område jeg muligens kunne spare mest tid var å velge en god iterativ ligningsløser. Jeg lagde derfor en implementasjon av gauss-seidel. Teoretisk sett er det lurest å gå for en iterativ ligningsløser som Gauss-Seidel. Grunnen til dette er at stivhetsmatrisen som oftest vil være spinkel, siden de fleste frihetsgradene ikke er avhengig av hverandre. De enkelte nodene er kun avhengig av de nærliggende nodene som gjør at vi, som oftest, vil få mage null-verdier i matrisen. Vi vil også få en sterk og alltid utfylt diagonal. Dette er to elementer som er svært positivt for konvergeringen til Gauss-Seidel. Det vil allikevel lønne seg å bruke Gauss eliminasjon på små matriser. Programmet vil derfor, avhengig av størrelsen på stivhetsmatrisen, velge hvilken ligningsløser som er best. 
 
 \paragraph*{}
-En annen ting som er vært å peke på når det gjelder Fortran, er hvordan matriser traverseres. Fortran bygger matriser i en lang minneblokk med kolonnene etterhandene. Det vil derfor være lurt å traversere kolonne for kolonne. 
-
-
+En annen ting som er vært å peke på når det gjelder Fortran, er minnehåndtering. Her kan man for eksempel se på hvordan matriser er lagret. Fortran lagrer matriser i en minneblokk med kolonnene etterhandene. Det vil derfor være lurt å traversere kolonne for kolonne.
+ Med tanke på minnehåndtering har jeg valgt å lese hele input filen inn i minne instedet får å lese/skrive til en fil under programutføringen. Dette gjør at koden blir hurtigere siden vi ikke trenger å lese/skrive fra disk, men kan lese rett fra ram. Ulempen med dette er, om dataen skulle bli enormt stor, at vi bruker for mye minne. Denne risken har jeg valgt å utelate med tanke på dagens datamaskiner har store mengder med minne. Jeg har heler valgt å bruke deallocate på data jeg vet jeg ikke får bruk for lenger.
 
 
 
@@ -378,7 +410,7 @@ Sammenhangen mellom enhetene og de viktigste rutinene er vist i
 \end{figure}     
 
 \begin{description}
-\item[main.c:] Dette er hovedenheten. Her initialiseres glut ved å sette rutiner som kaller ved tastatur input, omforming av vindu, tegning og liknende. 
+\item[FEMVis.c:] Dette er hovedenheten og inneholder main metoden. Her initialiseres glut ved å sette rutiner som kaller ved tastatur input, omforming av vindu, tegning og liknende. 
 \item[fem\_file\_reader.c:] Her leses input filen.
 \item[keyboard:] Denne enhten inneholder funksjonaliteten som styrer tastatur input.
 \item[fem\_draw.c:] Enheten inneholder alle tegnefunksjoner. Hovedfunksjonene er her tegning av diagrammene og bjelkene. Disse kaller igjen videre på mindre spesifikke rutiner som tegning av text, piler osv.
@@ -412,7 +444,16 @@ For å representere diagrammene valgte jeg å bruke en fargefunksjon og en farge
 
 \section{Diskusjon}
 
+
+
+
 hvorfor jeg valte ting: gauss, innpt stdin  presition, interations
+
+Plotte likningsløser
+
+hvofor valgte jeg å ikke meshe
+
+
 
 \section{Konklusjon}
 
@@ -423,6 +464,7 @@ Tankesettet er også anderledes når du programmerer i språk av lavere orden en
 
 \paragraph*{}
 ting jeg ville gjort videre
+
 
 \paragraph{}
 Avslutningsvis vil jeg si at jeg lærte mye under dette prosjektet. Jeg likte veldig godt den frie oppgavestilen som gjorde at jeg kunne velge noe jeg fant motiverende og som passet til mine studier. Det er også mye læring i praktisk arbeid og nå føler jeg at jeg har en vis innsikt i prosedyreorienterte verden og språkene Fortran og C

@@ -1,15 +1,16 @@
-
-  module FEMTypes
   !###############################
-  ! FEMTypes inneholder data typer brukt i FEM
+  ! FEMTypes inneholder data typer brukt i FEM. 
+  ! What the values stands for is written in readme.md
   !
   ! Author: Simen Haugerud Granlund
-  ! Date/version: 02-11-12/ 1.0
+  ! Date modified: 29/11/12
   !###############################
+
+  module FEMTypes
 
   use FEMUtility
     implicit none
-    integer , parameter ::  DOF=3 !     ! DOF= Degrace of freedom. Maksimalt antall frihaetsgrader per node
+    integer , parameter ::  DOF=3 !     ! DOF= Degrace of freedom. Maximum number of DOF in each node
 
     type  element
        real :: e,a,i,l, cosT , sinT, ForceVector(DOF*2), Displacement(DOF*2)
@@ -18,7 +19,7 @@
 
     type  node 
        real :: x,y
-       integer :: GDOF(DOF)
+       integer :: GDOF(DOF)              ! Describes that DOF the node has
     end type node
      
     type  load
