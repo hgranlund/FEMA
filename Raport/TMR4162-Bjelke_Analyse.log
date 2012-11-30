@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.9.4)  29 NOV 2012 20:32
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.9.4)  30 NOV 2012 05:30
 entering extended mode
  %&-line parsing enabled.
 **TMR4162-Bjelke_Analyse.tex
@@ -709,9 +709,9 @@ Overfull \hbox (42.57323pt too wide) in paragraph at lines 292--293
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<FEMModels.png, id=230, 907.39pt x 288.07625pt>
-File: FEMModels.png Graphic file (type png)
- <use FEMModels.png>
+<FEMFlowChart.png, id=230, 907.39pt x 288.07625pt>
+File: FEMFlowChart.png Graphic file (type png)
+ <use FEMFlowChart.png>
 Overfull \hbox (35.44022pt too wide) in paragraph at lines 310--311
  [][] 
  []
@@ -743,44 +743,38 @@ LaTeX Font Info:    Try loading font information for OT1+lmtt on input line 351
 .
  (/usr/share/texmf/tex/latex/lm/ot1lmtt.fd
 File: ot1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-) [11 <./FEMModels.png>]
-LaTeX Font Info:    Try loading font information for OMS+lmr on input line 379.
+) [11 <./FEMFlowChart.png>]
+LaTeX Font Info:    Try loading font information for OMS+lmr on input line 377.
 
  (/usr/share/texmf/tex/latex/lm/omslmr.fd
 File: omslmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `OMS/lmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 379.
+(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 377.
 
 <CStructure.png, id=264, 701.62125pt x 584.1825pt>
 File: CStructure.png Graphic file (type png)
  <use CStructure.png>
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[12] <momentdiagram.png, id=272, 1002.74625pt x 901.3675pt>
+[12] [13 <./CStructure.png>]
+<momentdiagram.png, id=279, 1002.74625pt x 901.3675pt>
 File: momentdiagram.png Graphic file (type png)
-
-<use momentdiagram.png>
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-<FargeFunksjon.png, id=274, 671.50874pt x 353.32pt>
+ <use momentdiagram.png>
+<FargeFunksjon.png, id=281, 671.50874pt x 353.32pt>
 File: FargeFunksjon.png Graphic file (type png)
  <use FargeFunksjon.png>
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[13 <./CStructure.png>] [14 <./momentdiagram.png (PNG copy)>] [15 <./FargeFunks
-jon.png>] (./TMR4162-Bjelke_Analyse.aux)
+[14 <./momentdiagram.png (PNG copy)>] [15 <./FargeFunksjon.png>]
+(./TMR4162-Bjelke_Analyse.aux)
 
 LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
  6527 strings out of 495061
- 89684 string characters out of 1182622
- 173172 words of memory out of 3000000
+ 89699 string characters out of 1182622
+ 172172 words of memory out of 3000000
  9451 multiletter control sequences out of 15000+50000
  67243 words of font info for 67 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
@@ -799,7 +793,7 @@ m/lmr5.pfb></usr/share/texmf/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf/f
 onts/type1/public/lm/lmr9.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pf
 b></usr/share/texmf/fonts/type1/public/lm/lmsy7.pfb></usr/share/texmf/fonts/typ
 e1/public/lm/lmtt10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt9.pfb>
-Output written on TMR4162-Bjelke_Analyse.pdf (15 pages, 575543 bytes).
+Output written on TMR4162-Bjelke_Analyse.pdf (15 pages, 574481 bytes).
 PDF statistics:
  381 PDF objects out of 1000 (max. 8388607)
  91 named destinations out of 1000 (max. 500000)

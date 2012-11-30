@@ -1,5 +1,4 @@
 #!/bin/bash
-touch FEMOutput.dat
 ./src/fortran/FEM <inputFiles/input.dat
 ./src/c/FEMVis 
 rm FEMOutput.dat

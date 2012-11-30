@@ -77,19 +77,23 @@
  void drawFrame(void)
  {
  	glPushMatrix();
- 	int i = 0;
- 	float lineWith=7;
+ 	int i;
  	femScale();
  	glRotatef(0, 0.0, 0.0, 0.1);
- 	glLineWidth (lineWith);
+ 	glLineWidth (7);
  	glBegin (GL_LINES);
- 	glColor3f (0.0, 0.0, 0.0);
+ 	glColor3f (0.2, 0.2, 0.2);
  	for (i = 0; i < numberOfElms; ++i)
  	{
  		glVertex2f (beamCoord[i][0],beamCoord[i][1]);
  		glVertex2f (beamCoord[i][2], beamCoord[i][3]);
  	} 
- 	glEnd ();
+ 	glEnd();
+ 	for (i = 0; i < numberOfElms; ++i)
+ 	{
+ 		drawFilledCircle(beamCoord[i][0], beamCoord[i][1], 0.025, 100, black);
+ 		drawFilledCircle(beamCoord[i][2], beamCoord[i][3], 0.025, 100, black);
+ 	} 
  	glPopMatrix();
  }
 
@@ -132,13 +136,13 @@
 
  	for (i = 0; i < numberOfLoads; ++i)
  	{
- 		y=loadVector[i][2]-0.5;
  		x=loadVector[i][1]-0.5;
+ 		y=loadVector[i][2]-0.5;
  		glPushMatrix();
  		setColor(red);
  		glLineWidth(1);
  		femScale();
- 		glTranslatef(x,y +0.03, 0);
+ 		glTranslatef(x,y+0.03, 0);
  		dof= loadVector[i][0];
  		switch (dof)
  		{
@@ -152,13 +156,13 @@
  			case 3:
  			glLineWidth(1);
  			glRotatef(90, 0, 0, 0.1);
- 			drawCircle(0, 0.05, 0.08, 50, black);
+ 			drawCircle(0,0 , 0.08, 50, red);
  			drawArrow(0.08, 0, 0);
  			default:
  			break;
  		}
- 		sprintf(s,"%5F %s", loadVector[i][3], "N");
- 		drawString(s, 0.05, 0.05, black);
+ 		sprintf(s,"%4.3F %s", loadVector[i][3], "N");
+ 		drawNumber(s, 0.13, 0.13, black);
  		glPopMatrix();
  	}
  }
@@ -225,13 +229,17 @@
  	for (i = 0; i < numberOfElms; ++i)
  	{
  		if (abs(forceVector[i][1])>abs(biggestShear)){
- 			biggestShear=forceVector[i][1];
+ 			biggestShear=abs(forceVector[i][1]);
  		}
  	}
  	for (i = 0; i < numberOfElms; ++i)
  	{
  		glPushMatrix();
- 		Fy=forceVector[i][4]/biggestShear/4;
+ 		 Fy=forceVector[i][4];
+ 		if (abs(Fy) <biggestShear/scale +20){
+ 				Fy=0;
+ 			}
+ 		Fy=Fy/biggestShear/4;
  		pervec[0]=beamCoord[i][2]-beamCoord[i][0];
  		pervec[1]=beamCoord[i][3]-beamCoord[i][1];
  		xMax = lengthOfVector(pervec);
@@ -271,7 +279,12 @@
  	for (i = 0; i < numberOfElms; ++i)
  	{
  		glPushMatrix();
- 		Fx=forceVector[i][0]/biggestNormal/4;
+ 		Fx=forceVector[i][0];
+
+ 		if (abs(Fx) <biggestNormal/scale + 20){
+ 				Fx=0;
+ 			}
+ 		Fx=Fx/biggestNormal/4;
  		pervec[0]=beamCoord[i][2]-beamCoord[i][0];
  		pervec[1]=beamCoord[i][3]-beamCoord[i][1];
  		beamRotation=vectorRotation(pervec);

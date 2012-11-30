@@ -1,3 +1,17 @@
+!###############################
+!FEM is the main program. It used the FEMMethods module to implement the Finite element method.
+!  
+!Some notation: 
+! G = Global, L= Local, DOF = Degrees Of Freedom, Elm = Element,
+! S=Stifness, FEM = FiniteElementMethod
+!
+!
+! Author: Simen Haugerud Granlund
+! Date modified: 29/11/12
+!###############################
+
+
+
 program FEM
   use FEMMethods
   implicit none
@@ -18,8 +32,8 @@ program FEM
      return
   end IF
   
-  !Start the FEA
-  call DoFEA(DisplacementVector,Elms,Nodes,Loads, Errorflag)
+  !Start the FEM
+  call DoFEM(DisplacementVector,Elms,Nodes,Loads, Errorflag)
   if (errorFlag .NE. 0 ) then 
      print *,'Errorflag = ' ,Errorflag
      stop
@@ -42,6 +56,7 @@ contains
     read (file_in,*, iostat=errorFlag) (Elms(n)%e,Elms(n)%a,Elms(n)%i,Elms(n)%node1,Elms(n)%node2,n=1,numberOfElm)
     read (file_in,*, iostat=errorFlag) (Loads(n),n=1,numberOfLoads)
     if ( errorFlag /= 0 ) stop "Read error in file file_in"
+
 
     if (pr_switch >= 5 ) then 
        print *,'ReadInput:'
@@ -75,10 +90,16 @@ contains
     end do
     do n=1,numberOfLoads
       write (file_out,fmt="( I15 F15.4 F15.4 F15.4)",iostat=errorFlag), Loads(n)%DOF, Nodes(Loads(n)%nodeNr)%x, &
-      &Nodes(Loads(n)%nodeNr)%y, Loads(n)%value
+      & Nodes(Loads(n)%nodeNr)%y, Loads(n)%value
     end do
     
     if ( errorFlag /= 0 ) stop "Write error in file file_out" 
+
+
+    if (allocated(Elms)) deallocate(Elms, stat=errorFlag)
+    if (allocated(Loads)) deallocate(Loads, stat=errorFlag)
+    if (allocated(Nodes)) deallocate(Nodes, stat=errorFlag)
+    if (errorFlag /= 0) print *, "Deallocation request denied"
 
   end Subroutine WriteOutput
 

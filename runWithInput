@@ -1,7 +1,6 @@
 #!/bin/bash
 
 exec 3<&0 
-touch FEMOutput.dat
 ./src/fortran/FEM <&3
 ./src/c/FEMVis 
-rm FEMtranOutput.dat
+rm FEMOutput.dat

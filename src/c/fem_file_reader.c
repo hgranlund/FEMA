@@ -47,8 +47,8 @@ void readFile(char *filename)
         loadVector=malloc(numberOfLoads * sizeof(float*));
         for (i = 0; i < numberOfLoads; i++)
         {
-            loadVector[i]=malloc(6*sizeof(float));
-            for ( j = 0; j < 6; j++)
+            loadVector[i]=malloc(4*sizeof(float));
+            for ( j = 0; j < 4; j++)
             {
                 fscanf(file,"%f", &loadVector[i][j]);
             }

@@ -26,6 +26,19 @@ void drawString (char *s, float x, float y, struct RGB rgb)
 	glPopAttrib();
 }
 
+void drawNumber (char *s, float x, float y, struct RGB rgb)
+{
+	int i;
+
+	glPushAttrib(GL_ENABLE_BIT); 
+	setColor(rgb);
+	glRasterPos2f(x, y);
+
+	for (i = 0; i < strlen(s); i++)
+		glutBitmapCharacter (GLUT_BITMAP_HELVETICA_10, s[i]);
+	glPopAttrib();
+}
+
 
 
 void drawLine(float x1, float y1, float x2, float y2, struct RGB rgb)
@@ -58,6 +71,7 @@ void drawCircle(float cx, float cy, float r, int segments, struct RGB rgb)
 { 
 	glPushAttrib(GL_ENABLE_BIT); 
 	setColor(rgb);
+	glLineWidth(0.5);
 	float theta = (2 * 3.1415/ (float)segments); 
 	float c = cosf(theta);
 	float s = sinf(theta);
@@ -74,8 +88,37 @@ void drawCircle(float cx, float cy, float r, int segments, struct RGB rgb)
 		x = c * x - s * y;
 		y = s * t + c * y;
 	} 
+
 	glEnd(); 
+	glPopAttrib();
 }
+
+void drawFilledCircle(float cx, float cy, float r, int segments, struct RGB rgb) 
+{ 
+	glPushAttrib(GL_ENABLE_BIT); 
+	setColor(rgb);
+	glLineWidth(0.5);
+	float theta = (2 * 3.1415/ (float)segments); 
+	float c = cosf(theta);
+	float s = sinf(theta);
+	float t;
+	int i;
+	float x = r;
+	float y = 0; 
+
+	glBegin(GL_POLYGON); 
+	for(i = 0; i < segments; i++) 
+	{ 
+		glVertex2f(x + cx, y + cy); 
+		t = x;
+		x = c * x - s * y;
+		y = s * t + c * y;
+	} 
+
+	glEnd(); 
+	glPopAttrib();
+}
+
 void drawSymboleWithCircle(float x, float y, char *s, struct RGB rgb)
 {
 	glPushAttrib(GL_ENABLE_BIT); 

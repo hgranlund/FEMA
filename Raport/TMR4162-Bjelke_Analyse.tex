@@ -42,10 +42,10 @@ Simen Haugerud Granlund, Trondheim 2012.
 
 \section{Innledning}
 \paragraph{}
-Jeg valgte å ta oppgaven "ramme analyse". Grunnen til dette er at jeg synes teorien rundt finite element analyses (FEA) er mye mer interessent og passer bedre til mitt studie enn Poisson-likningen. Jeg valgte også å legge til flere elementer i oppgaven. Oppgaven presiserte at vi bare trengte 2 frihetsgrader per bjelke, samt at vi kun trengte å presentere resultater for bøyemomentet. Jeg valgte å bruke 6 frihetsgrader per bjelke, slik at jeg fikk meg både  vertikal og horisontal forskyvninger og rotasjon. De resultatene jeg ville skulle vises var; Moment diagram, skjærkraft diagram, Normalkraft diagram og starttilstanden. Til dette trenger programmet å regne ut Momenter og normale og aksielle krefter til alle bjelker.
+Jeg valgte å ta oppgaven "ramme analyse". Grunnen til dette er at jeg synes teorien rundt finite element method (FEM) er mye mer interessent og passer bedre til mitt studie enn Poisson-likningen. Jeg valgte også å legge til flere elementer i oppgaven. Oppgaven presiserte at vi bare trengte 2 frihetsgrader per bjelke, samt at vi kun trengte å presentere resultater for bøyemomentet. Jeg valgte å bruke 6 frihetsgrader per bjelke. Da fikk jeg verdier for både vertikal og horisontal forskyvninger, samt rotasjon. De resultatene jeg ville vise var; Moment diagram, skjærkraft diagram, Normalkraft diagram og starttilstanden. 
 
 \paragraph{}
-Det jeg ville legge mest vekt må under oppgaven var god struktur av koden slik at jeg enkelt kan utvide med nye funksjonaliteter. Med en god struktur er det enkelt å sette seg inn i koden og en slipper å strukturere mye på nytt om en vil legge til nye funksjonaliteter. Jeg liker generelt ikke mye kommentarer i koden. Koden skal være leselig og forstålig uten en hel haug av kommentarer. Selvfølgelig er det steder hvor kommentarer er passende, men generelt holder det med god struktur og navngiving.
+Det jeg vil legge mest vekt må under oppgaven er god struktur, slik at jeg enkelt kan utvide med nye funksjonaliteter. DA er det også enkelt å sette seg inn i koden, man slipper å strukturere  om mye på koden. Jeg liker generelt ikke mye kommentarer i koden. Koden skal være leselig og forstålig uten alt for mye kommentarer.
 
 
 \section{Teori}
@@ -55,10 +55,10 @@ Her har jeg tenkt å kort beskrive de teoriene som er brukt i programmet. Jeg vi
 
 \subsection{Elementmetoden}
 Teorien bak elementmetoden ble utarbeidet på 1940-tallet, men man så ikke den store nytteverdien av den før datamaskinen kom til verden. Det første programmet som implementerte elementmetoden var NASTRAN skrevet i Fortran i 1965 \cite{wikinastran}.
-Elementmetoden er i prinsippet en numerisk metode for å finne approksimasjoner til differensiallikninger. Den er ofte brukt innenfor en rekke felter: strømning, varmeleding, svinginger, elektriske felt og liknende. I denne oppgaven brukte jeg den for å løse styrkebergnegrer på en rammekonstruksjon. 
+Elementmetoden er i prinsippet en numerisk metode for å finne approksimasjoner til differensiallikninger. Den er brukt innenfor en rekke felter: strømning, varmeleding, svinginger, elektriske felt og liknende. I denne oppgaven bruker jeg den for å løse styrkebergnegrer på en rammekonstruksjon. 
 
 \paragraph*{}
-Elementmetoden går ut på å dele konstruksjonen inn i elementer, jo flere elementer jo mer nøyaktige resultater får man. Alle elementer har en node i hver ende. Selve rammekonstruksjonen blir representer av et nettverk av noder og elementer, hvor kreftene er festet til nodene. Det er i disse nodene verdier, som forskyving, krefter og momenter, blir kalkulert.
+Elementmetoden går ut på å dele konstruksjonen inn i elementer, jo flere elementer jo mer nøyaktige resultater får man. Alle elementer har et vist antall noder. Selve rammekonstruksjonen blir representer av et nettverk av noder og elementer, hvor kreftene er festet til nodene. Det er i disse nodene verdier, som forskyving, krefter og momenter, blir kalkulert.
 
 \paragraph*{}
 For hvert element blir stivheten til elementet kalkulert. Stivheten er basert på e-modulen, arealet og det andre arealmomentet til elementet. Disse stivhetene blir så addert sammen for å finne systemets stivhet. Vi kan deretter bruke sammenhangen mellom stivhet(k), forskyvninger(v) og krefter(S) \eqref{eq:skv} til å kalkulere knutepunktenes forskyvninger.
@@ -112,13 +112,13 @@ Vi kan nå ved hjelp av \ref{eq:skv} og \ref{eq:roteq} finne en sammenheng mello
 \end{equation}
 
 \subsubsection{Global stivhetsmatrise}
-Om vi studerer den lokale stivhetsmatrisen \ref{eq:Lstivhet} og likning \ref{eq:skv} ser vi at kolonne nummer $i$ beskriver stivheten til frihetsgraden $i$. Dette er også tilfelle for den globale stivhetsmatrisen. Den globale stivhetsmatrisen holder på stivhetene til alle nodene i systemet, mens den lokale stivhetsmatrise inneholder kun stivheten til sine to tilhørende noder. Når de adderes skal de lokale stivhetene adderes inn i de tilhørende stivhetene i den globale stivhetsmatrisen. Normalt brukes en IEG-matrise, som beskriver systemets topografi, til å addere stivhetene. IEG-matrisen er en relasjon mellom elementene og det tilhørende nodeparret.
+Om vi studerer den lokale stivhetsmatrisen \ref{eq:Lstivhet} og likning \ref{eq:skv} ser vi at kolonne nummer $i$ beskriver stivheten til frihetsgraden $i$. Dette er også tilfelle for den globale stivhetsmatrisen. Den globale stivhetsmatrisen holder på stivhetene til alle nodene i systemet, mens den lokale stivhetsmatrise inneholder kun stivheten til sine tilhørende noder. Når de adderes, skal de lokale stivhetene adderes inn i de tilhørende stivhetene i den globale stivhetsmatrisen. Normalt brukes en IEG-matrise, som beskriver systemets topografi, til å addere stivhetene sammen. IEG-matrisen er en relasjon mellom elementene og det tilhørende nodeparret.
 
 \paragraph*{}
-Vi kan let kalkulere størrelsen på den globale stivhetsmatrisene. Det første en bør merke seg er at alle stivhetsmatriser er symmetriske, noe som kan bevises ved Maxwells resiprositetssats. Dette her også en følge av newtons 3. lov, siden hver enkelt bjelke må være i likevekt. Det andre er at hver kolonne representerer en frihetsgrad. For å finne størrelsen på matrisen må en derfor beregne antall frihetsgrader til systemet.
+Vi kan lett kalkulere størrelsen på den globale stivhetsmatrisene. Det første en bør merke seg er at alle stivhetsmatriser er symmetriske, noe som kan bevises ved Maxwells resiprositetssats. Dette her også en følge av newtons 3. lov, siden hver enkelt bjelke må være i likevekt. Det andre er at hver kolonne representerer en frihetsgrad. For å finne størrelsen på matrisen må en derfor beregne antall frihetsgrader til systemet.
 
 \subsubsection{Grensebetingelser}
-Nå står vi bare igjen med et lineært ligningssystem av typen $kv=S$, hvor forskyvningene $(v)$ er ukjente. Dette likningssystemet vil nå være uløselig, fordi stivhetsmatrisen $k$ er singulær. Denne singulariteten skyldes at vi enda ikke har sakt hvor konstruksjonen er fastbundet. For et system med 3 frihetsgrader per node trenger vi 3 fastlåste frihetsgrader. Disse frihetsgradene kan innføres på to måter. Enten kan raden og kolonnen til frihetsgraden fjernes, ellers kan alle verdiene nulles ut bortsett fra diagonal-verdien som må være en. Når vi har innført disse grensebetingelsene vil systemet være løselig.
+Nå står vi bare igjen med et lineært ligningssystem av typen $kv=S$, hvor forskyvningene $(v)$ er ukjente. Dette likningssystemet vil nå være uløselig, fordi stivhetsmatrisen $k$ er singulær. Denne singulariteten skyldes at vi enda ikke har sakt hvor konstruksjonen er fastbundet, vi har ingen grensebetingelser. For et system med 3 frihetsgrader per node trenger vi 3 fastlåste frihetsgrader. Disse frihetsgradene kan innføres på to måter. Enten kan raden og kolonnen til frihetsgraden fjernes, ellers kan alle verdiene nulles ut bortsett fra diagonal-verdien som må være en. Når vi har innført disse grensebetingelsene vil systemet være løselig.
 
 \subsubsection{Elementkrefter}
 Når vi vil regne ut krefter på de forskjellige elementene kan vi igjen bruke ligning \ref{eq:skv}. Vi må nå huske at vi må transformere matrisene til det koordinatsystemet vi ønsker. 
@@ -158,7 +158,7 @@ Gauss-seidel er en iterativ ligningsløser, som fungerer best på spinkle matris
 
 Her kan vi ikke finne kjøretiden på samme måte som ved en direkteløser, siden vi hele tiden kan forbedre resultatet ved å kjøre en iterasjon til. Vi må derfor se på konvergens, parallellitet og hvilken nøyaktighet man skal ha. Det finnes noen enkle konvergeringsregler for Gauss-Seidel, som sier at metoden garantert konvergerer om:
 \begin{enumerate}
-\item Matrisen (A) er strengt eller uavvendelige diagonalt dominerende.
+\item Matrisen (A) er strengtsasssm eller uavvendelige diagonalt dominerende.
 \item Matrisen (A) er positive bestemt (Positive-definite)
 \end{enumerate}
 
@@ -279,13 +279,13 @@ Jeg har valgt å strukturere programmet inn i 5 moduler og et hovedprogram. Modu
 \begin{description}
 \item[FEM] er navnet på hovedprogrammet mitt. Det er dette programmet som leser og skriver data til fil og kaller på metoder i modulen FEMMetods.
 \item[FEMMethods] er hovedmodulen. Dette er den eneste modulen hovedprogrammet bruker. Her finnes alle metoder som har med "finite element method" å gjøre. Hovedrutinen, som utfører styrkeberegningen, heter DoFEA.
-\item[FEMUtitity] er en hjelpemodul for FEMMethods. Her finnes alle rutiner som brukes av FEMMethods, men som ikke er koblet direkte opp med FEM. Her er rutiner som for eksempel nullstiler eller printer en matrise.
+\item[FEMUtility] er en hjelpemodul for FEMMethods. Her finnes mange støtterutiner for de mer essensielle rutinene som finnes i FEMMethods. Her er rutiner som for eksempel nullstiler eller printer en matrise.
 \item[FEMTypes] er en modul som inneholder de forskjellige datatypene som brukes. De datatypene som brukes er element, joint og load.
 \item[FEMMath] er mattemodulen. Her finnes alle rutiner innenfor matematikk som for eksempel rutiner for å utføre gauss eliminasjon eller generere en rotasjonsmatrise.
 \end{description}
 
 \paragraph*{}
-Jeg har strukturert modulene og programmet som vist i figur \ref{fig:struktur}. Her ser vi at det er hovedprogrammet som tar for seg lesing og skriving til fil og kaller rutinen DoFEA i modulen FEMMethods. DoFEA gjør da de nødvendige kallene for å kalkulere krefter, momenter og forskyvninger på alle elementene. I figuren har jeg ikke tatt med kallene til rutiner som er ubetydelige for forståelsen en strukturen, som for eksempel rutinene i FEMUtility. 
+Jeg har strukturert modulene og programmet som vist i figur \ref{fig:struktur}. Her ser vi at det er hovedprogrammet som tar for seg lesing og skriving til fil og kaller rutinen DoFEA i modulen FEMMethods. DoFEA gjør da de nødvendige kallene for å kalkulere krefter, momenter og forskyvninger på alle elementene. I figuren har jeg ikke tatt med kallene til rutiner som er ubetydelige for forståelsen en strukturen.
 
 \begin{figure}[h]
 \centering
@@ -307,7 +307,7 @@ Disse datatypene blir så lagret i tre lister, som blir modifisert og brukt igje
 
 \begin{figure}[h]
 \centering
-\includegraphics[scale=0.5]{FEMModels.png} 
+\includegraphics[scale=0.5]{FEMFlowChart.png} 
 \caption{Program flyten}
 \label{fig:flytF}
 \end{figure}
@@ -339,7 +339,7 @@ Den første enkle justeringen jeg gjorde var å kalkulere den globale elementsti
 
 \begin{equation} 
 \begin{aligned}
-& k_{with rotation} = \frac{E}{L} * \\ 
+& k_{global Element Stivhet} = \frac{E}{L} * \\ 
 &\begin{bmatrix}
 AC^2+\frac{12I}{L^2} S^2  & (A-\frac{12I}{L^2})CS  &  -\frac{6I}{L}S & -(AC^2+\frac{12I}{L^2}S^2) & -(A-\frac{12I}{L^2})CS &  -\frac{6I}{L}S \\
  & AS^2 + \frac{12I}{L^2}C^2 & -\frac{6I}{L}S & -(A-\frac{12I}{L^2})CS & -(AS^2+\frac{12I}{L^2}C^2) &  -\frac{6I}{L}S \\

@@ -1,4 +1,4 @@
-OBJECTS = FEMUtility.o FEMMath.o FEMTypes.o FEMMethods.o FEM.o 
+OBJECTS = FEMTypes.o FEMUtility.o FEMMath.o  FEMMethods.o FEM.o 
 
 #FFLAGS = -g
 
