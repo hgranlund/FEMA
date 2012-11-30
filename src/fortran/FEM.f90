@@ -55,7 +55,37 @@ contains
     read (file_in,*,iostat=errorFlag) (Nodes(n), n=1,numberOfNodes)
     read (file_in,*, iostat=errorFlag) (Elms(n)%e,Elms(n)%a,Elms(n)%i,Elms(n)%node1,Elms(n)%node2,n=1,numberOfElm)
     read (file_in,*, iostat=errorFlag) (Loads(n),n=1,numberOfLoads)
-    if ( errorFlag /= 0 ) stop "Read error in file file_in"
+    if ( errorFlag /= 0 ) stop "Something wrong with input file"
+
+
+    !Testing the input file data
+    do n=1,numberOfLoads
+      if (Loads(n)%nodeNr>numberOfNodes)then 
+        print * , 'Load is pointing to a nonexistent node'
+        errorFlag = -4
+        return;
+      end if
+      if ( Loads(n)%DOF >3) then
+        print *, 'FEM does not support more then 3 DOF'
+        errorFlag=-4 
+      end if
+    end do
+
+    do n=1,numberOfElm
+      if (Elms(n)%node1>numberOfNodes)then 
+        print * , 'Load is pointing to a nonexistent node'
+        errorFlag = -4
+        return;
+         end if
+      if ( Elms(n)%node2>numberOfNodes ) then
+        print * , 'Load is pointing to a nonexistent node'
+        errorFlag = -4
+        return;
+      end if
+
+    end do
+
+  
 
 
     if (pr_switch >= 5 ) then 
@@ -93,13 +123,10 @@ contains
       & Nodes(Loads(n)%nodeNr)%y, Loads(n)%value
     end do
     
-    if ( errorFlag /= 0 ) stop "Write error in file file_out" 
+    if ( errorFlag /= 0 ) stop "Cant make FEMOutput.dat" 
 
 
-    if (allocated(Elms)) deallocate(Elms, stat=errorFlag)
-    if (allocated(Loads)) deallocate(Loads, stat=errorFlag)
-    if (allocated(Nodes)) deallocate(Nodes, stat=errorFlag)
-    if (errorFlag /= 0) print *, "Deallocation request denied"
+
 
   end Subroutine WriteOutput
 

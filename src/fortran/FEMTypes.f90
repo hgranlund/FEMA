@@ -8,7 +8,7 @@
 
   module FEMTypes
     implicit none
-    integer , parameter :: pr_switch=10
+    integer , parameter :: pr_switch=0
     integer , parameter ::  DOF=3 !     ! Maximum number of DOF in each node
 
     type  element
