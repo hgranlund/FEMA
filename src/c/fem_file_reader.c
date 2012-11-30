@@ -11,7 +11,7 @@ void readFile(char *filename)
     file = fopen(filename, "r");
 
     if (file != NULL){
-        printf("leser fil: %s\n", filename);
+        printf("Reading file: %s\n", filename);
         int  i, j;
         fscanf(file ,"%d %d %f", &numberOfElms, &numberOfLoads, &scale);
         beamCoord=malloc(numberOfElms * sizeof(float*));
