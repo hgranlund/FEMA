@@ -163,9 +163,7 @@ contains
           Elms(i)%Displacement(j)=DisplacementVector(GTRGConverter(((Elms(i)%node1-1)*DOF) +j))
           Elms(i)%Displacement(j+3)=DisplacementVector(GTRGConverter(((Elms(i)%node2-1)*DOF) +j) )
        end do
-       print * , Elms(i)%ForceVector
        call CalculateLoadsOnElement(Elms(i))
-       print * , Elms(i)%ForceVector
        call TestInfAndNaN(Elms(i)%ForceVector, errorflag)
         if (errorFlag < 0) then
           print *, 'Got NaN in the ForceVector in element ', i
