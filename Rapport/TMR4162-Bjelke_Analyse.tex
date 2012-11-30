@@ -1,0 +1,493 @@
+\documentclass[10pt,a4paper, norsk]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage[norsk]{babel}
+\usepackage{geometry, lmodern}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{url}
+\usepackage{color}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black]{hyperref}
+\author{Simen Haugerud Granlund}
+\title{TMR4162 - Ramme Analyse}
+
+\hypersetup{
+pdfauthor = {Simen Haugerud Granlund},
+pdftitle = {TMR4162 - Ramme Analyse},
+pdfsubject = {},
+pdfkeywords = {},
+pdfcreator = {} } 
+
+\begin{document}
+\maketitle
+
+\thispagestyle{empty} 	%fjerner sidetall på første side
+\newpage %\end{titlepage}
+
+\begin{abstract}
+Dette notatet er laget som en ledd av en innlevering i faget TMR4162 - Prosedyreorientert Programering i 2012. Det inneholder teori og informasjon om et program, kalt FEMA, som utfører en enkel styrkeberegning på en rammekonstruksjon. Programmet kan lastes ned via \url{https://github.com/hgranlund/FEMA}.
+\end{abstract}
+
+\begin{flushright}
+Simen Haugerud Granlund, Trondheim 2012.
+\end{flushright}
+\newpage
+
+
+\tableofcontents
+\newpage
+
+
+\section{Innledning}
+\paragraph{}
+Jeg valgte å ta oppgaven "ramme analyse". Grunnen til dette er at jeg synes teorien rundt finite element method (FEM) er mye mer interessent og passer bedre til mitt studie enn Poisson-likningen. Jeg valgte også å legge til flere elementer i oppgaven. Oppgaven presiserte at vi bare trengte 2 frihetsgrader per bjelke, samt at vi kun trengte å presentere resultater for bøyemomentet. Jeg valgte å bruke 6 frihetsgrader per bjelke. Da fikk jeg verdier for både vertikal og horisontal forskyvninger, samt rotasjon. De resultatene jeg ville vise var; Moment diagram, skjærkraft diagram, Normalkraft diagram og starttilstanden. 
+
+\paragraph{}
+Det jeg vil legge mest vekt må under oppgaven er god struktur, slik at jeg enkelt kan utvide med nye funksjonaliteter. DA er det også enkelt å sette seg inn i koden, man slipper å strukturere  om mye på koden. Jeg liker generelt ikke mye kommentarer i koden. Koden skal være leselig og forstålig uten alt for mye kommentarer.
+
+
+\section{Teori}
+
+Her har jeg tenkt å kort beskrive de teoriene som er brukt i programmet. Jeg vil kun ta med de prinsippene, likningene og matrisene jeg brukte i koden og ikke beskrive i detalj hvordan jeg kan frem til dem basert på lærebøker. 
+
+
+\subsection{Elementmetoden}
+Teorien bak elementmetoden ble utarbeidet på 1940-tallet, men man så ikke den store nytteverdien av den før datamaskinen kom til verden. Det første programmet som implementerte elementmetoden var NASTRAN skrevet i Fortran i 1965 \cite{wikinastran}.
+Elementmetoden er i prinsippet en numerisk metode for å finne approksimasjoner til differensiallikninger. Den er brukt innenfor en rekke felter: strømning, varmeleding, svinginger, elektriske felt og liknende. I denne oppgaven bruker jeg den for å løse styrkebergnegrer på en rammekonstruksjon. 
+
+\paragraph*{}
+Elementmetoden går ut på å dele konstruksjonen inn i elementer, jo flere elementer jo mer nøyaktige resultater får man. Alle elementer har et vist antall noder. Selve rammekonstruksjonen blir representer av et nettverk av noder og elementer, hvor kreftene er festet til nodene. Det er i disse nodene verdier, som forskyving, krefter og momenter, blir kalkulert.
+
+\paragraph*{}
+For hvert element blir stivheten til elementet kalkulert. Stivheten er basert på e-modulen, arealet og det andre arealmomentet til elementet. Disse stivhetene blir så addert sammen for å finne systemets stivhet. Vi kan deretter bruke sammenhangen mellom stivhet(k), forskyvninger(v) og krefter(S) \eqref{eq:skv} til å kalkulere knutepunktenes forskyvninger.
+
+\begin{equation} \label{eq:skv}
+S=k*v
+\end{equation}
+
+\subsubsection{Lokal stivhetsmatrise}
+For å regne ut den lokale stivheten til et element kan en bruke stivhetsmatrisen \eqref{eq:Lstivhet}. 
+
+\begin{equation} \label{eq:Lstivhet}
+k  = \begin{bmatrix} 
+\frac{EA}{L} & 0 & 0 & -\frac{EA}{L} & 0 & 0 \\
+0 	& \frac{12EI}{L^3} & -\frac{6EI}{L^2} & 0 & -\frac{12EI}{L^3} & -\frac{6EI}{L^2} \\
+0 	&	-\frac{6EI}{L^2} 	& 	\frac{4EI}{L} & 0 & \frac{6EI}{L^2} 	& 	\frac{2EI}{L}\\
+-\frac{EA}{L} & 0 & 0 & \frac{EA}{L} & 0 & 0 \\
+0 	& -\frac{12EI}{L^3} & \frac{6EI}{L^2} & 0 & \frac{12EI}{L^3} & \frac{6EI}{L^2} \\
+0 & -\frac{6EI}{L^2} & \frac{2EI}{L} &0& \frac{6EI}{L^2} & \frac{4EI}{L}
+\end{bmatrix}
+\end{equation}
+
+
+
+
+Denne stivhetsmatrisen vil nå gjelde lokalt for det enkelte elementet. Vi må derfor transformere matrisen slik at den gjelder globalt. Dette kan vi gjøre med en enkel rotasjonsmatrise \eqref{eq:Rot}. 
+
+\begin{equation} \label{eq:Rot}
+R  = \begin{bmatrix}
+\cos \theta & -\sin \theta &   0&0&0&0\\[3pt]
+\sin \theta & \cos \theta  & 0&0&0&0\\[3pt]
+0 &0 & 1&0&0&0\\
+0&0&0&\cos \theta & -\sin \theta&   0 \\[3pt]
+0&0&0&\sin \theta & \cos \theta  & 0\\[3pt]
+0&0&0&0 &0 & 1\\
+\end{bmatrix} 
+\end{equation}
+
+Vi kan enkelt transformere kreftene $S$ og forskyvningene $v$ ved sammenhengene:
+\begin{equation} \label{eq:roteq}
+S_G=RS_L  \text{ , } v_G=Rv_L 
+\end{equation}
+
+Vi kan nå ved hjelp av \ref{eq:skv} og \ref{eq:roteq} finne en sammenheng mellom den globale $_G$ og den lokale $_L$ stivhetsmatrisen.
+
+\begin{equation}
+\begin{aligned}\label{eq:klkg}
+& S_G=RS_L=Rk_Lv_L=Rk_LR^{-1}v_G=k_Gv_G \\
+&k_G=Rk_LR^{-1}\\
+\end{aligned}
+\end{equation}
+
+\subsubsection{Global stivhetsmatrise}
+Om vi studerer den lokale stivhetsmatrisen \ref{eq:Lstivhet} og likning \ref{eq:skv} ser vi at kolonne nummer $i$ beskriver stivheten til frihetsgraden $i$. Dette er også tilfelle for den globale stivhetsmatrisen. Den globale stivhetsmatrisen holder på stivhetene til alle nodene i systemet, mens den lokale stivhetsmatrise inneholder kun stivheten til sine tilhørende noder. Når de adderes, skal de lokale stivhetene adderes inn i de tilhørende stivhetene i den globale stivhetsmatrisen. Normalt brukes en IEG-matrise, som beskriver systemets topografi, til å addere stivhetene sammen. IEG-matrisen er en relasjon mellom elementene og det tilhørende nodeparret.
+
+\paragraph*{}
+Vi kan lett kalkulere størrelsen på den globale stivhetsmatrisene. Det første en bør merke seg er at alle stivhetsmatriser er symmetriske, noe som kan bevises ved Maxwells resiprositetssats. Dette her også en følge av newtons 3. lov, siden hver enkelt bjelke må være i likevekt. Det andre er at hver kolonne representerer en frihetsgrad. For å finne størrelsen på matrisen må en derfor beregne antall frihetsgrader til systemet.
+
+\subsubsection{Grensebetingelser}
+Nå står vi bare igjen med et lineært ligningssystem av typen $kv=S$, hvor forskyvningene $(v)$ er ukjente. Dette likningssystemet vil nå være uløselig, fordi stivhetsmatrisen $k$ er singulær. Denne singulariteten skyldes at vi enda ikke har sakt hvor konstruksjonen er fastbundet, vi har ingen grensebetingelser. For et system med 3 frihetsgrader per node trenger vi 3 fastlåste frihetsgrader. Disse frihetsgradene kan innføres på to måter. Enten kan raden og kolonnen til frihetsgraden fjernes, ellers kan alle verdiene nulles ut bortsett fra diagonal-verdien som må være en. Når vi har innført disse grensebetingelsene vil systemet være løselig.
+
+\subsubsection{Elementkrefter}
+Når vi vil regne ut krefter på de forskjellige elementene kan vi igjen bruke ligning \ref{eq:skv}. Vi må nå huske at vi må transformere matrisene til det koordinatsystemet vi ønsker. 
+
+
+\subsection{Ligningsløser}
+Når man skal modellere mange fysiske og interiørmessigere problemer kan en nesten ikke unngå å løse store linear ligningssystem. Det finnes derfor mange forskjellige metoder å løse disse på og alle har visse fordeler og ulemper.
+Det finnes to kategorier av ligningsløsere: dirkete og iterative. De direkte løser settet eksakt, men bruker ofte lenger tid en en iterativ løser. Gauss metoden er et eksempel på en direkteløser. En iterativ løser finner en approksimasjon av løsningen, og kan ha problemer med konvergens i visse tilfeller. 
+
+\subsubsection{Gauss}
+
+Gauss metoden består av to deler. Den ene er eliminasjon, hvor du utfører elementære rad operasjoner til du for en triangulær form. Deretter gjøres en tilbakesubstitusjon for å finne x-verdiene. De finnes i hovedsak 3 forskjellige rad operasjoner:
+\begin{enumerate}
+\item Multiplisere en rad med et tall som ikke er null.
+\item Addere to rader
+\item Bytte om to rader
+\end{enumerate}
+
+Kjøretiden til gauss kan kalkuleres ut i fra antall iterasjoner som gjøres. Om vi antar det er $n$ likninger som skal løses kan kjøretiden kalkuleres som vist i \eqref{eq:gausstid}.
+
+\begin{equation} \label{eq:gausstid}
+E(n) = \sum_{k=1}^{n-1} (n-k) + 2 \sum_{k=1}^{n-1} (n-k)(n-k-1) = O(n^3)
+\end{equation}
+
+På samme måte kan vi kalkulere kjøretiden til tilbakesubstitusjonen:
+\begin{equation} \label{eq:gaussseideltid}
+T(n) = 2\sum_{i=1}^{n} (n-i) + n = O(n^2)
+\end{equation}
+
+
+\subsubsection{Gauss-Seidel}
+Gauss-seidel er en iterativ ligningsløser, som fungerer best på spinkle matriser. Den har en iterativ del, beskrevet i likning \ref{eq:gauss-seidel}. I hver iterasjon bruker Gauss-Seidel  den forrige utregnede verdien, som gjør at den ikke kan kjøre parallelt (på normalt vis). 
+ 
+ \begin{equation} \label{seideliterater}
+   x_j^{m+1} = \frac{1}{a_{jj}}  (b_j - \sum_{k=1}^{j-1} a_{jk} x_k^{m+1} - \sum_{k=j+1}^n a_{jk}x^m)
+ \end{equation}
+
+Her kan vi ikke finne kjøretiden på samme måte som ved en direkteløser, siden vi hele tiden kan forbedre resultatet ved å kjøre en iterasjon til. Vi må derfor se på konvergens, parallellitet og hvilken nøyaktighet man skal ha. Det finnes noen enkle konvergeringsregler for Gauss-Seidel, som sier at metoden garantert konvergerer om:
+\begin{enumerate}
+\item Matrisen (A) er strengtsasssm eller uavvendelige diagonalt dominerende.
+\item Matrisen (A) er positive bestemt (Positive-definite)
+\end{enumerate}
+
+
+
+\subsection{OpenGL}
+Opengl er et API for å rendre 2d og 3d grafikk. Mange av kallene går rett på GPU'en, slik at vi får økt ytelsen. Strukturen er bygget opp som en tilstandsmaskin, hvor vi hele tiden forandrer tilstanden til programmet. Vi kan for eksempel sette hvilken farge eller linjetykkelse som skal brukes videre, ved kommandoene glColor3f() og glLineWith().
+
+\paragraph{}
+OpenGL opererer med en stakk av 3 matriser, hvor en på hver matrise kan utføre operasjoner som rotasjoner, forskyvninger og skaleringer. Hver gang en matrise operasjon blir kalt blir den utført på den gjeldene matrisen og matrisene lenger nede i stakken blir ikke påvirket. De forskjellige operasjonene er standard matrise operasjoner, hvor matrisen blir multiplisert med en operasjons matrise.
+
+\begin{equation}
+glRotate(\theta	,x,y,z)  = \begin{bmatrix}
+1 & 0&  0 &0 \\
+0   &\cos \theta &  -\sin \theta &0\\
+0 &  \sin \theta   & \cos \theta &0\\
+0&0&0&1
+\end{bmatrix} * \begin{bmatrix}
+\cos \theta  & 0 &  \sin \theta &0\\
+0  & 1  & 0 & 0\\
+-\sin \theta &  0 &  \cos \theta  &0\\
+0&0&0&1
+\end{bmatrix} 
+*
+\begin{bmatrix}
+\cos \theta & -\sin \theta &   0 &0\\[3pt]
+\sin \theta & \cos \theta  & 0 &0\\[3pt]
+0 &0 & 1 &0\\
+0&0&0&1\\
+\end{bmatrix}
+\end{equation}
+\begin{equation}
+glScale(x,y,z)=
+\begin{bmatrix}
+x &0&0&0\\
+0&y&0&0\\
+0&0&x&0\\
+0&0&0&1
+\end{bmatrix}
+\end{equation}
+\begin{equation}
+glTranslate(x,y,z)=
+\begin{bmatrix}
+1 &0&0&x\\
+0&1&0&y\\
+0&0&1&z\\
+0&0&0&1
+\end{bmatrix}
+\end{equation}
+
+For å lage og dytte ut matriser på stakken brukes glPushMatrix() og glPopMatrix(). Når du har hentet ut en matrise kan du utføre rutiner på denne. Modellmatrisen er den mest essensielle matrisen, her kan du utføre rutiner som å tegne streker, polygoner og lignende. 
+
+
+
+
+\section{Programmet} 
+
+
+\subsection{Beskrivelse}
+Dette programmet utfører en enkel styrkeberegning på en en rammekonstruksjon ved hjelp av elementmetoden. Her blir hver bjelke omgjort til et element med 6 frihetsgrader. Analysen kan ta imot krefter eller momenter påsatt i nodene
+
+
+Programmet er bygget opp av to deler. Det første er en beregnende del, mens den andre er en visualiserende del. Beregningsdelen, programmet FEM, er skrevet i  Fortran 90. FEM leser en input fil og utfører en elementanalyse. Resultatene av elementanalysen blir så skrevet til FEMOutput.dat. Denne filen igjen lest av det visualiserende programmet, kalt FEMvis. Denne delen er skrevet i c og viser frem resultatene.
+
+
+
+
+
+\subsubsection{Installasjon}
+For å bygge programmet brukes kommandoene:
+
+\begin{verbatim}
+cd FEMA/src/;                 Gå til mappen FEMA/src.
+make;                         Bygger både Fortran og c code.
+\end{verbatim}
+
+\subsubsection{Bruk} 
+Jeg har laget to bash script til å kjøre programmet, som heter run og runWithInput. Disse finnes projectes root-mappe.  Run trenger ingen input fil, men bruker filen $/inputFiles/input.dat$ som standard input. Det det andre skripet krever en input fil. En del ferdiglagde input filer finnes i mappen $inputFiles/$.
+Eksempler på bruk:
+
+\begin{verbatim}
+./run;
+
+./runWithInput < inputFiles/input2.dat
+\end{verbatim}
+
+Når kommandoene kjøres vil et resultatvindu åpnes. Dette vinduet kan kontrolleres med tastene: 
+
+\begin{itemize}
+\setlength{\itemsep}{0cm}%
+\setlength{\parskip}{0cm}%
+\item['I'] - Visualiserer inputen.
+\item['F'] - Viser Rammen.
+\item['M'] - Viser momentdiagrammer.
+\item['S'] - Viser Skjærkraft diagrammer
+\item['A'] - Viser Aksialkraft diagrammer.
+\end{itemize}
+
+\subsubsection{Input filen}
+Input filen beskriver systemet som skal beregnes. Her skal det spesifiseres hvilke noder, elementer og laster som skal være med i kalkulasjonen. Hvilken benevning som brukes er valgfritt så lenge den er konsekvent. Input filen blir lest igjennom standard input enheten. 
+ur \ref{fig:input} viser et eksempel på en input fil.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{input.png} 
+\caption{Eksempel på en input fil}
+\label{fig:input}
+\end{figure}
+
+
+\subsection{Fortran}
+Delen som er skrevet i Fortran implementerer en enkel styrkeberegning basert på elementmetoden. Her er det blant annet også implementert en Ligningsløser som baserer seg på gauss eliminasjon. I Fortran delen har jeg hentet mye info om oppbygging og strukturering fra Kolbein Bell sine notater \cite{KolbeinBellFortran} \cite{KolbeinBellProgram}.  
+
+
+\subsubsection{Struktur}
+Jeg har valgt å strukturere programmet inn i 5 moduler og et hovedprogram. Modulene og hovedprogrammet er delt inn følgende:
+
+\begin{itemize}
+\item[FEM] er navnet på hovedprogrammet mitt. Det er dette programmet som leser og skriver data til fil og kaller på metoder i modulen FEMMetods.
+\item[FEMMethods] er hovedmodulen. Dette er den eneste modulen hovedprogrammet bruker. Her finnes alle metoder som har med "finite element method" å gjøre. Hovedrutinen, som utfører styrkeberegningen, heter DoFEM.
+\item[FEMUtility] er en hjelpemodul for FEMMethods. Her finnes mange støtterutiner for de mer essensielle rutinene som finnes i FEMMethods. Her er rutiner som for eksempel nullstiler eller printer en matrise.
+\item[FEMTypes] er en modul som inneholder de forskjellige datatypene som brukes. De datatypene som brukes er element, joint og load.
+\item[FEMMath] er mattemodulen. Her finnes alle rutiner innenfor matematikk som for eksempel rutiner for å utføre Gauss eliminasjon, Gauss-Seidel eller generere en rotasjonsmatrise.
+\end{itemize}
+
+\paragraph*{}
+Jeg har strukturert modulene og programmet som vist i figur \ref{fig:struktur}. Her ser vi at det er hovedprogrammet som tar for seg lesing og skriving til fil og kaller rutinen DoFEM i modulen FEMMethods. DoFEM gjør da de nødvendige kallene for å kalkulere krefter, momenter og forskyvninger på alle elementene. I figuren har jeg ikke tatt med kallene til rutiner som er ubetydelige for forståelsen en strukturen.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.31]{FEMAStructure.png} 
+\caption{Program strukturen}
+\label{fig:struktur}
+\end{figure}
+
+\paragraph*{}
+Datastrukturen jeg har brukt for å representere rammekonstruksjonen og elementene er ved hjelp av egendefinerte datatyper. Den infoen som må holdes på er data om noder, elementer og krefter. Dette har jeg valgt å strukturere ved hjelp av tre datatyper:
+
+\begin{itemize}
+\item[Joint] inneholder info om plasseringen til noden, x og y koordinater, og hvilke frihetsgrader noden har.
+\item[Element] består av info som tilhører de enkelte elementene som blant annet E-modul, areal , rotasjon og hvilke noder den er koblet til.
+\item[Load] inneholder hvilken node og retning kraften har og størrelsen på kraften.
+\end{itemize} 
+
+Disse datatypene blir så lagret i tre lister, som blir modifisert og brukt igjennom hele program flyten. Selve programflyten er vist i figure \ref{fig:flytF}. 
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{FEMFlowChart.png} 
+\caption{Program flyten}
+\label{fig:flytF}
+\end{figure}
+
+Her vises også feilhåndterings-flyten i programmet. Dette er implementert som anvist i Kolbein \cite{KolbeinBellProgram}, med et errorflagg.Flagget brukes slik:
+
+\begin{align}
+& errorflag = 0 : ingen feilsituasjon er påvist \nonumber\\
+& errorflag < 0 : en feilsituasjon er påvist\nonumber\\
+& errorflag > 0 : en tvilsom situasjon er påvist\nonumber 
+\end{align}
+
+\paragraph*{}
+Et annet element jeg fant veldig nyttig fra Kolbein \cite{KolbeinBellProgram} var ideen bak variabelen $pr_switch$. Ideen er at print svitsjen har en verdi mellom 0 og 10, hvor 10 printer alt og 0 ikke printer noe. Dette fant jeg veldig nyttig når jeg skulle feilsøke koden. Tanken er at print svitsjene aldri skal bli fjernet slit at det skal bli lett å feilsøke koden ved en senere anledning.  
+
+
+
+\subsubsection{Diskusjon rundet Optimaliseringer og tidsbruk}
+Når vi skal se på den asymptotiske kjøretiden til programmet, er det 2 algoritmer vi må tenke på. Den ene er ligningsløseren, mens den andre er generering av den globale stivhetsmatrisen. Om vi angir $n$ til å være grader av frihet i kunstaksjonen og $e$ til å være antall elementer, kan vi kalkulere kjøretiden. Kjøretiden til Gauss eliminasjonen er vist i \eqref{eq:gausstid}. For stivhetsmatrisen blir alle elementene iterert over og For hvert element addert inn i hovedmatrisen. Kjøretiden blir derfor:
+
+\begin{equation} \label{eq:en3}
+T(n) = \sum_{k=1}^{e} (k)*(konstant) \sum_{j=1}^{n} (j)(j)(konstant) = O(e*n^2)
+\end{equation}  
+
+
+Den første enkle justeringen jeg gjorde var å kalkulere den globale elementstivhetsmatrisen direkte. Vanligvis ville denne matrisen blitt laget ved å bruke likning \ref{eq:Lstivhet} og \ref{eq:Rot} på formen $k_G=R*k_L*R^T$. Det vil si at vi trenger å gjøre to matrisemultiplikasjoner og en transponering, for å få rotert matrisen. Jeg valgte da å kalkulere denne, på forhånd, slik at $k_G$ blir. 
+
+\begin{equation} 
+\begin{aligned}
+& k_{global Element Stivhet} = \frac{E}{L} * \\ 
+&\begin{bmatrix}
+AC^2+\frac{12I}{L^2} S^2  & (A-\frac{12I}{L^2})CS  &  -\frac{6I}{L}S & -(AC^2+\frac{12I}{L^2}S^2) & -(A-\frac{12I}{L^2})CS &  -\frac{6I}{L}S \\
+ & AS^2 + \frac{12I}{L^2}C^2 & -\frac{6I}{L}S & -(A-\frac{12I}{L^2})CS & -(AS^2+\frac{12I}{L^2}C^2) &  -\frac{6I}{L}S \\
+ & & fI &  \frac{6I}{L}S & \frac{6I}{L}C & 2I \\
+ & & & (AC^2+\frac{12I}{L^2}S^2) & (A-\frac{12I}{L^2})CS & \frac{6I}{L}S\\
+ & & & & (AC^2+\frac{12I}{L^2}C^2) & -\frac{6I}{L}C \\
+ Symmetri & & & & & 4I \\
+\end{bmatrix} \\
+& \mathtt{ Where: E=E-modul, I=Annet arealmoment, } C=cos(\theta), S=\sin(\theta) \\
+\end{aligned}
+\end{equation}
+
+Dette vil ikke forbedre kjøretiden asymptotisk sett, men vil fjerne noen konstantledd.
+
+\paragraph*{}
+En annen ting jeg gjorde var å forbedre genereringen av den globale stivhetsmatrisen. Dette blir vanligvis gjort ved å først lage den fulle matrisen deretter, ved hjelp av grensebetingelser, redusere matrisen. For å unngå to operasjoner lagde jeg den reduserte matrisen direkte. Dette gjorde jeg ved å lage en konverteringsvektor, som mappet verdier fra den tenkte fulle til den reduserte globale stivhetsmatrisen. Jeg laget også en konverteringsvektor fra de de enkelte elementstivhetsmatrisene til den globale stivhetsmatrisen. Dette gjorde at jeg ikke trengte å iterere igjennom hele den globale stivhetsmatrisen hver gang en elementmatrise skulle adderes. Dette vil si at kjøretiden på å lage den globale stivhetsmatrisen gikk fra \eqref{eq:en3} til\eqref{eq:e}
+
+\begin{equation} \label{eq:e}
+T(n) = \sum_{k=1}^{e} (k)*(konstant)= O(e)
+\end{equation}  
+
+\paragraph*{}
+Det område jeg muligens kunne spare mest tid var å velge en god iterativ ligningsløser. Jeg lagde derfor en implementasjon av gauss-seidel. Teoretisk sett er det lurest å gå for en iterativ ligningsløser som Gauss-Seidel. Grunnen til dette er at stivhetsmatrisen som oftest vil være spinkel, siden de fleste frihetsgradene ikke er avhengig av hverandre. De enkelte nodene er kun avhengig av de nærliggende nodene som gjør at vi, som oftest, vil få mage null-verdier i matrisen. Vi vil også få en sterk og alltid utfylt diagonal. Dette er to elementer som er svært positivt for konvergeringen til Gauss-Seidel. Det vil allikevel lønne seg å bruke Gauss eliminasjon på små matriser. Programmet vil derfor, avhengig av størrelsen på stivhetsmatrisen, velge hvilken ligningsløser som er best. 
+Den avgjørende verdien hvor Gauss-Seidel tar igjen Gauss eliminasjon har jeg ikke hatt mulighet til å se på enda. For å gjøre en slik analyse ville jeg vært nøtt til å få et større datasett. Dette kunne vært gjort ved å meshe opp konstruksjonen i mindre deler. I mitt program kunne dette gjøres ved å innføre et vist antall noder, med 3 frihetsgrader, i hver av bjelkene. 
+
+\paragraph*{}
+En annen ting som er vært å peke på når det gjelder Fortran, er minnehåndtering. Her kan man for eksempel se på hvordan matriser er lagret. Fortran lagrer matriser i en minneblokk med kolonnene etterhandene. Det vil derfor være lurt å traversere kolonne for kolonne.
+ Med tanke på minnehåndtering har jeg valgt å lese hele input filen inn i minne instedet får å lese/skrive til en fil under programutføringen. Dette gjør at koden blir hurtigere siden vi ikke trenger å lese/skrive fra disk, men kan lese rett fra ram. Ulempen med dette er, om dataen skulle bli enormt stor, at vi bruker for mye minne. Denne risken har jeg valgt å utelate med tanke på dagens datamaskiner har store mengder med minne. Jeg har heler valgt å bruke deallocate på data jeg vet jeg ikke får bruk for lenger.
+
+
+
+\subsubsection{Resultater}
+De resultatene Fortran produserer er verdier på hver enkelt node. Disse verdiene er:
+
+\begin{itemize}
+\item Forskyvning i i x og y-retning.
+\item Rotasjon om punktet.
+\item Kraft i x og y-retning.
+\item Moment om noen. 
+\end{itemize}
+
+Ut i fra disse verdiene kan moment, skjær og normalkraft diagrammer bli kalkulert. Rammens plassering etter kraft påføring kan også bli vist. Det Fortran skiver i outpufilen er ikke ment å være leselig for mennesker, men er brukt for å lette arbeidet til visualiseringsprogrammet. Det som blir skrevet er:
+
+
+\begin{itemize}
+\item Hjelpevariable som; antall elementer og laster, samt den største koordinatverdien.
+\item En liste med alle node koordinatene til elementene.
+\item En liste med kreftene og momentene til elementene
+\item En liste med forskyvningene til elementene.
+\item En liste med de påførte kreftene.
+\end{itemize}
+
+Basert på disse  verdiene kan resultatene bli visualisert.
+
+
+\subsection{C}
+Denne delen av programmet visualiserer resultantene fra Fortran med en enkel brukerintetaksjon. Dette blir implementert ved hjelp av OpenGL og biblioteket glut. 
+
+\subsubsection{Struktur}
+Selve program-flyten er bygget opp etter glut, hvor du har en mainloop som kontrollerer flyten. Her blir alt av tegning, tastatur input og omforming av vinduet kontrollert. Når jeg programmerer liker jeg å ha programmet delt opp, så jeg har også her valgt å strukturere koden i flere enheter. 
+Sammenhangen mellom enhetene og de viktigste rutinene er vist i 
+ figur \ref{fig:cStruktur}.
+
+\begin{figure}[h] 
+\centering
+\includegraphics[scale=0.35]{CStructure.png} 
+\caption{En oversikt over sammenhengen mellom enhetene og de tilhørende hovedfunksjonene i C}
+\label{fig:cStruktur}
+\end{figure}     
+
+\begin{description}
+\item[FEMVis.c:] Dette er hovedenheten og inneholder main metoden. Her initialiseres glut ved å sette rutiner som kaller ved tastatur input, omforming av vindu, tegning og liknende. 
+\item[fem\_file\_reader.c:] Her leses input filen.
+\item[keyboard:] Denne enhten inneholder funksjonaliteten som styrer tastatur input.
+\item[fem\_draw.c:] Enheten inneholder alle tegnefunksjoner. Hovedfunksjonene er her tegning av diagrammene og bjelkene. Disse kaller igjen videre på mindre spesifikke rutiner som tegning av text, piler osv.
+\item[fem\_math.c:] Dette er matte enheten, og inneholder alle rutiner som har med matematikk å gjøre. 
+\end{description}
+
+\paragraph*{	}
+Et annet element i struktureringen av et c program er header filen som gjør koden mer oversiktlig å lesbar. Header filen kan sammenliknes med et interface fra objektorientert programmering. Her kan det defineres variable, rutiner, funksjoner og liknende. Denne filen blir lest av preprosessoren og gjør at kompilatoren for mer informasjon om deklarasjonene i filen. Fordelene med dette er at vi ikke trenger å inkludere kildekode, men bare header filen for å kunne bruke biblioteker.
+
+
+\subsubsection{Visualisering}
+Visualiseringen av elementanalysen har flere tilstander som styres av tastaturkommandoer. Disse tilstandene er visning av input, rammen, moment diagram, skjærkraft diagram og aksialkraft diagram. Visningen av momentdiagrammene vises i figur \ref{fig:momenD}. Her vises også navigasjonsmenyen nederst i venstre hjørne.
+
+
+\begin{figure}[h] 
+\centering
+\includegraphics[scale=0.26]{momentdiagram.png} 
+\caption{Visualiseringen av momentdiagramemne fra C}
+\label{fig:momenD}
+\end{figure} 
+
+
+For å representere diagrammene valgte jeg å bruke en fargefunksjon og en fargeindikator. En fargefunksjon er en funksjon genererer en farge basert på en verdi, hvor min returnerte en rgb-verdi. Fargemodellen rgb baserer seg på og blande, blå, grønn og rød, til ønsket farge. På figur \ref{fig:farge} ser vi hvordan min farge funksjon varierer. Måten jeg gjorde dette på var å først lage en rgb-verdi basert på de stiplede linjene, forså å klemme verdiene inn i den grå boksen.
+
+\begin{figure}[h] 
+\centering
+\includegraphics[scale=0.5]{FargeFunksjon.png}  
+\caption{Dette er fargefunksjonen. Den grå boksen viser funksjonens gyldighetsområde. }
+\label{fig:farge}
+\end{figure} 
+
+
+\section{Konklusjon}
+
+I løpet av dette prosjektet har jeg lært mye om prosedyreorientert programmering og språkene Fortran og C. Ved prosedyreorientert programmering var det et nytt tankesett som var den største forandringen. Før var jeg vant til å programmere objektorientert, hvor tenkesette gitt ut på å dele koden opp i objekter og gjøre operasjoner på diss. Tankesette ved prosedyreorientert programmering  går mer på pipe et datasett gjennom forskjellige rutiner for å oppnå ønsket resultat. Etter at jeg nå har blitt kjent med prosedyreorienter programmering ser jeg at begge verdenene har sine fordeler og ulemper. 
+ 
+\paragraph{} 
+Tankesettet er også anderledes når du programmerer i språk av lavere orden enn det jeg vanligvis her programmert. Nå tenker man ikke lenger på datastrukturer som hash-map, sett, eller lenkede lister, men på minneblokker og pekere. For dette prosjektet tenkte jeg ikke på en matrise eller vektor som en minneblokk med en innebygget aksesseringsfunkjson. De nye tankemønstretere tror jeg kommer godt med i videre programmering. Jeg vil ha en bedre forståelse av hva som skjer på minne og bit nivå.  
+
+
+
+\paragraph{}
+Avslutningsvis vil jeg si at jeg lærte mye under dette prosjektet. Jeg likte veldig godt den frie oppgavestilen som gjorde at jeg kunne velge noe jeg fant motiverende og som passet til mine studier. Det er også mye læring i praktisk arbeid og nå føler jeg at jeg har en vis innsikt i prosedyreorienterte verden og språkene Fortran og C
+
+
+\begin{thebibliography}{9}
+
+\bibitem{waloen}
+  Åge Ø. Waløen,
+  1995, 
+  Dimensjonering ved hjelp av elementmetoden, NTNU
+ 
+\bibitem{FEM}
+	Dyryl L. Logen, 2011, A First Course in the Finite Element Method
+	
+\bibitem{kreyzig}
+Erwin Kreyszig, 2006, Advanced Engineering Mathematics, 9th Edition
+
+\bibitem{KolbeinBellProgram}
+Kolbein Bell, 2007, Programutvikling (Teknisk, prosedyreorientert programmering), NTNU
+
+\bibitem{KolbeinBellFortran}
+Kolbein Bell, 2006, Fortran 90, NTNU
+
+\bibitem{wikinastran}
+  Wikipedia,
+  \url{http://en.wikipedia.org/wiki/Finite_element_method}
+  
+
+\end{thebibliography}
+
+\end{document}
+
+Dele opp stivhetsmatrise og rotasjonsmatrise i 4 deler
+
+
+  Det er en del måter å implementere gauss på. Jeg valgte å bruke partiell pivotering, hvor en eliminerer rad for rad men et såkalt pivot element. Dette elementet bør være så stort som mulig for å minske avrundingsfeil. 
+  
+  
+  navngiving
+  * Globalelementstivhetsmarise
