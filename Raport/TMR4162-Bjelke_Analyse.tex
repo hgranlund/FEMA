@@ -150,7 +150,7 @@ T(n) = 2\sum_{i=1}^{n} (n-i) + n = O(n^2)
 
 
 \subsubsection{Gauss-Seidel}
-Gauss-seidel er en iterativ ligningsløser, som fungerer best på spinkle matriser. Den har en iterativ del, beskrevet i likning \ref{eq:gauss-seidel}. I hver iterasjon bruker Gauss-Seidel  den forrige utregnede verdien, som gjør at den ikke kan kjøre parallelt. 
+Gauss-seidel er en iterativ ligningsløser, som fungerer best på spinkle matriser. Den har en iterativ del, beskrevet i likning \ref{eq:gauss-seidel}. I hver iterasjon bruker Gauss-Seidel  den forrige utregnede verdien, som gjør at den ikke kan kjøre parallelt (på normalt vis). 
  
  \begin{equation} \label{seideliterater}
    x_j^{m+1} = \frac{1}{a_{jj}}  (b_j - \sum_{k=1}^{j-1} a_{jk} x_k^{m+1} - \sum_{k=j+1}^n a_{jk}x^m)
@@ -168,7 +168,7 @@ Her kan vi ikke finne kjøretiden på samme måte som ved en direkteløser, side
 Opengl er et API for å rendre 2d og 3d grafikk. Mange av kallene går rett på GPU'en, slik at vi får økt ytelsen. Strukturen er bygget opp som en tilstandsmaskin, hvor vi hele tiden forandrer tilstanden til programmet. Vi kan for eksempel sette hvilken farge eller linjetykkelse som skal brukes videre, ved kommandoene glColor3f() og glLineWith().
 
 \paragraph{}
-OpenGL opererer med en stakk av 3 matriser, hvor do på hver matrise kan utføre rotasjoner, forskyvninger og skaleringer. Hver gang en matrise operasjon blir kalt blir den utført på den gjeldene matrisen. De forskjellige operasjonene er standard matrise operasjoner, hvor matrisen blir multiplisert med en operasjons matrise.
+OpenGL opererer med en stakk av 3 matriser, hvor en på hver matrise kan utføre operasjoner som rotasjoner, forskyvninger og skaleringer. Hver gang en matrise operasjon blir kalt blir den utført på den gjeldene matrisen og matrisene lenger nede i stakken blir ikke påvirket. De forskjellige operasjonene er standard matrise operasjoner, hvor matrisen blir multiplisert med en operasjons matrise.
 
 \begin{equation}
 glRotate(\theta	,x,y,z)  = \begin{bmatrix}
@@ -236,7 +236,7 @@ make;                         Bygger både Fortran og c code.
 \end{verbatim}
 
 \subsubsection{Bruk} 
-Jeg har laget to bash script til å kjøre programmet, som heter run og runWithInput. Disse finnes projectes root-mappe.  Run trenger ingen input fil, men bruker filen $/inputFiles/input.dat$ som standard input. Det det andre skripet krever en input fil. En del ferdiglagde input filer finnes i mappen $inputFiles$.
+Jeg har laget to bash script til å kjøre programmet, som heter run og runWithInput. Disse finnes projectes root-mappe.  Run trenger ingen input fil, men bruker filen $/inputFiles/input.dat$ som standard input. Det det andre skripet krever en input fil. En del ferdiglagde input filer finnes i mappen $inputFiles/$.
 Eksempler på bruk:
 
 \begin{verbatim}
@@ -270,22 +270,22 @@ ur \ref{fig:input} viser et eksempel på en input fil.
 
 
 \subsection{Fortran}
-Delen som er skrevet i Fortran implementerer en enkel styrkeberegning basert på elementmetoden. Her er det blant annet også implementert en Ligningsløser som baserer seg på gauss eliminasjon. Her har jeg hentet mye om oppbygging og strukturering fra Kolbein Bell sine notater \cite{KolbeinBellFortran} \cite{KolbeinBellProgram}.  
+Delen som er skrevet i Fortran implementerer en enkel styrkeberegning basert på elementmetoden. Her er det blant annet også implementert en Ligningsløser som baserer seg på gauss eliminasjon. I Fortran delen har jeg hentet mye info om oppbygging og strukturering fra Kolbein Bell sine notater \cite{KolbeinBellFortran} \cite{KolbeinBellProgram}.  
 
 
 \subsubsection{Struktur}
 Jeg har valgt å strukturere programmet inn i 5 moduler og et hovedprogram. Modulene og hovedprogrammet er delt inn følgende:
 
-\begin{description}
+\begin{itemize}
 \item[FEM] er navnet på hovedprogrammet mitt. Det er dette programmet som leser og skriver data til fil og kaller på metoder i modulen FEMMetods.
-\item[FEMMethods] er hovedmodulen. Dette er den eneste modulen hovedprogrammet bruker. Her finnes alle metoder som har med "finite element method" å gjøre. Hovedrutinen, som utfører styrkeberegningen, heter DoFEA.
+\item[FEMMethods] er hovedmodulen. Dette er den eneste modulen hovedprogrammet bruker. Her finnes alle metoder som har med "finite element method" å gjøre. Hovedrutinen, som utfører styrkeberegningen, heter DoFEM.
 \item[FEMUtility] er en hjelpemodul for FEMMethods. Her finnes mange støtterutiner for de mer essensielle rutinene som finnes i FEMMethods. Her er rutiner som for eksempel nullstiler eller printer en matrise.
 \item[FEMTypes] er en modul som inneholder de forskjellige datatypene som brukes. De datatypene som brukes er element, joint og load.
-\item[FEMMath] er mattemodulen. Her finnes alle rutiner innenfor matematikk som for eksempel rutiner for å utføre gauss eliminasjon eller generere en rotasjonsmatrise.
-\end{description}
+\item[FEMMath] er mattemodulen. Her finnes alle rutiner innenfor matematikk som for eksempel rutiner for å utføre Gauss eliminasjon, Gauss-Seidel eller generere en rotasjonsmatrise.
+\end{itemize}
 
 \paragraph*{}
-Jeg har strukturert modulene og programmet som vist i figur \ref{fig:struktur}. Her ser vi at det er hovedprogrammet som tar for seg lesing og skriving til fil og kaller rutinen DoFEA i modulen FEMMethods. DoFEA gjør da de nødvendige kallene for å kalkulere krefter, momenter og forskyvninger på alle elementene. I figuren har jeg ikke tatt med kallene til rutiner som er ubetydelige for forståelsen en strukturen.
+Jeg har strukturert modulene og programmet som vist i figur \ref{fig:struktur}. Her ser vi at det er hovedprogrammet som tar for seg lesing og skriving til fil og kaller rutinen DoFEM i modulen FEMMethods. DoFEM gjør da de nødvendige kallene for å kalkulere krefter, momenter og forskyvninger på alle elementene. I figuren har jeg ikke tatt med kallene til rutiner som er ubetydelige for forståelsen en strukturen.
 
 \begin{figure}[h]
 \centering
@@ -297,11 +297,11 @@ Jeg har strukturert modulene og programmet som vist i figur \ref{fig:struktur}. 
 \paragraph*{}
 Datastrukturen jeg har brukt for å representere rammekonstruksjonen og elementene er ved hjelp av egendefinerte datatyper. Den infoen som må holdes på er data om noder, elementer og krefter. Dette har jeg valgt å strukturere ved hjelp av tre datatyper:
 
-\begin{description}
-\item[Node] inneholder info om plasseringen til noden, x og y koordinater, og hvilke frihetsgrader noden har.
+\begin{itemize}
+\item[Joint] inneholder info om plasseringen til noden, x og y koordinater, og hvilke frihetsgrader noden har.
 \item[Element] består av info som tilhører de enkelte elementene som blant annet E-modul, areal , rotasjon og hvilke noder den er koblet til.
-\item[Kraft] inneholder hvilken node og retning kraften har og størrelsen på kraften.
-\end{description} 
+\item[Load] inneholder hvilken node og retning kraften har og størrelsen på kraften.
+\end{itemize} 
 
 Disse datatypene blir så lagret i tre lister, som blir modifisert og brukt igjennom hele program flyten. Selve programflyten er vist i figure \ref{fig:flytF}. 
 
@@ -312,7 +312,7 @@ Disse datatypene blir så lagret i tre lister, som blir modifisert og brukt igje
 \label{fig:flytF}
 \end{figure}
 
-Her vises også feilhåndterings flyten i programmet. Dette er implementert som anvist i Kolbein \cite{KolbeinBellProgram}, med et errorflagg. 
+Her vises også feilhåndterings-flyten i programmet. Dette er implementert som anvist i Kolbein \cite{KolbeinBellProgram}, med et errorflagg.Flagget brukes slik:
 
 \begin{align}
 & errorflag = 0 : ingen feilsituasjon er påvist \nonumber\\
@@ -321,17 +321,15 @@ Her vises også feilhåndterings flyten i programmet. Dette er implementert som 
 \end{align}
 
 \paragraph*{}
-Et annet element jeg fant veldig nyttig fra Kolbein \cite{KolbeinBellProgram} var ideen bak variabelen $pr_switch$. Ideen er har at print svitsjen har en verdi mellom 0 og 10, hvor 10 printer alt og 0 ikke printer ut noe. Dette fant jeg veldig nyttig når jeg skulle feilsøke koden. Tanken er at print svitsjene aldri skal bli fjernet slit at det skal bli lett å feil søke koden ved en senere anledning.  
+Et annet element jeg fant veldig nyttig fra Kolbein \cite{KolbeinBellProgram} var ideen bak variabelen $pr_switch$. Ideen er at print svitsjen har en verdi mellom 0 og 10, hvor 10 printer alt og 0 ikke printer noe. Dette fant jeg veldig nyttig når jeg skulle feilsøke koden. Tanken er at print svitsjene aldri skal bli fjernet slit at det skal bli lett å feilsøke koden ved en senere anledning.  
 
 
 
-\subsubsection{Program-analyse}
-
-\subsubsection{Optimaliseringer og tidsbruk}
+\subsubsection{Diskusjon rundet Optimaliseringer og tidsbruk}
 Når vi skal se på den asymptotiske kjøretiden til programmet, er det 2 algoritmer vi må tenke på. Den ene er ligningsløseren, mens den andre er generering av den globale stivhetsmatrisen. Om vi angir $n$ til å være grader av frihet i kunstaksjonen og $e$ til å være antall elementer, kan vi kalkulere kjøretiden. Kjøretiden til Gauss eliminasjonen er vist i \eqref{eq:gausstid}. For stivhetsmatrisen blir alle elementene iterert over og For hvert element addert inn i hovedmatrisen. Kjøretiden blir derfor:
 
 \begin{equation} \label{eq:en3}
-T(n) = \sum_{k=1}^{e} (k)*(12+12+12+24+24) \sum_{k=1}^{n} (n-k)(n-k) = O(e*n^2)
+T(n) = \sum_{k=1}^{e} (k)*(konstant) \sum_{j=1}^{n} (j)(j)(konstant) = O(e*n^2)
 \end{equation}  
 
 
@@ -355,14 +353,15 @@ AC^2+\frac{12I}{L^2} S^2  & (A-\frac{12I}{L^2})CS  &  -\frac{6I}{L}S & -(AC^2+\f
 Dette vil ikke forbedre kjøretiden asymptotisk sett, men vil fjerne noen konstantledd.
 
 \paragraph*{}
-En annen ting jeg gjorde var å forbedre genereringen av den globale stivhetsmatrisen. Dette blir vanligvis gjort ved å først lage den fulle matrisen deretter, ved hjelp av grensebetingelser, redusere matrisen. For å unngå to operasjoner lagde jeg den reduserte matrisen direkte. Dette gjorde jeg ved å lage en konverteringsvektor, som mappet verdier fra den tenkte fulle til den reduserte globale stivhetsmatrisen. Jeg laget også en konverteringsvektor fra de de enkelte elementstivhetsmatrisene til den globale stivhetsmatrisen. Dette gjorde at jeg ikke trengte å iterere igjennom hele den globale stivhetsmatrisen hver gang jeg en elementmatrise skulle adderes. Dette vil si at kjøretiden på å lage den globale stivhetsmatrisen gikk fra \eqref{eq:en3} til\eqref{eq:e}
+En annen ting jeg gjorde var å forbedre genereringen av den globale stivhetsmatrisen. Dette blir vanligvis gjort ved å først lage den fulle matrisen deretter, ved hjelp av grensebetingelser, redusere matrisen. For å unngå to operasjoner lagde jeg den reduserte matrisen direkte. Dette gjorde jeg ved å lage en konverteringsvektor, som mappet verdier fra den tenkte fulle til den reduserte globale stivhetsmatrisen. Jeg laget også en konverteringsvektor fra de de enkelte elementstivhetsmatrisene til den globale stivhetsmatrisen. Dette gjorde at jeg ikke trengte å iterere igjennom hele den globale stivhetsmatrisen hver gang en elementmatrise skulle adderes. Dette vil si at kjøretiden på å lage den globale stivhetsmatrisen gikk fra \eqref{eq:en3} til\eqref{eq:e}
 
 \begin{equation} \label{eq:e}
-T(n) = \sum_{k=1}^{e} (k)*(12+12)= O(e)
+T(n) = \sum_{k=1}^{e} (k)*(konstant)= O(e)
 \end{equation}  
 
 \paragraph*{}
 Det område jeg muligens kunne spare mest tid var å velge en god iterativ ligningsløser. Jeg lagde derfor en implementasjon av gauss-seidel. Teoretisk sett er det lurest å gå for en iterativ ligningsløser som Gauss-Seidel. Grunnen til dette er at stivhetsmatrisen som oftest vil være spinkel, siden de fleste frihetsgradene ikke er avhengig av hverandre. De enkelte nodene er kun avhengig av de nærliggende nodene som gjør at vi, som oftest, vil få mage null-verdier i matrisen. Vi vil også få en sterk og alltid utfylt diagonal. Dette er to elementer som er svært positivt for konvergeringen til Gauss-Seidel. Det vil allikevel lønne seg å bruke Gauss eliminasjon på små matriser. Programmet vil derfor, avhengig av størrelsen på stivhetsmatrisen, velge hvilken ligningsløser som er best. 
+Den avgjørende verdien hvor Gauss-Seidel tar igjen Gauss eliminasjon har jeg ikke hatt mulighet til å se på enda. For å gjøre en slik analyse ville jeg vært nøtt til å få et større datasett. Dette kunne vært gjort ved å meshe opp konstruksjonen i mindre deler. I mitt program kunne dette gjøres ved å innføre et vist antall noder, med 3 frihetsgrader, i hver av bjelkene. 
 
 \paragraph*{}
 En annen ting som er vært å peke på når det gjelder Fortran, er minnehåndtering. Her kan man for eksempel se på hvordan matriser er lagret. Fortran lagrer matriser i en minneblokk med kolonnene etterhandene. Det vil derfor være lurt å traversere kolonne for kolonne.
@@ -380,7 +379,7 @@ De resultatene Fortran produserer er verdier på hver enkelt node. Disse verdien
 \item Moment om noen. 
 \end{itemize}
 
-Uti fra disse verdiene kan moment, skjær og normalkraft diagrammer bli kalkulert. Rammens plassering etter kraft påføring kan også bli vist. Det Fortran skiver i outpufilen er ikke ment å være leselig for mennesker, men er brukt for å lette arbeidet til visualiseringsprogrammet. Det som blir skrevet er:
+Ut i fra disse verdiene kan moment, skjær og normalkraft diagrammer bli kalkulert. Rammens plassering etter kraft påføring kan også bli vist. Det Fortran skiver i outpufilen er ikke ment å være leselig for mennesker, men er brukt for å lette arbeidet til visualiseringsprogrammet. Det som blir skrevet er:
 
 
 \begin{itemize}
@@ -395,12 +394,12 @@ Basert på disse  verdiene kan resultatene bli visualisert.
 
 
 \subsection{C}
-Denne delen av programmet visualiserer resultatnene fra Fortran med en enkel brukerinteraksjon. Dette blir implementert ved hjelp av OpenGL og biblioteket glut. 
+Denne delen av programmet visualiserer resultantene fra Fortran med en enkel brukerintetaksjon. Dette blir implementert ved hjelp av OpenGL og biblioteket glut. 
 
 \subsubsection{Struktur}
 Selve program-flyten er bygget opp etter glut, hvor du har en mainloop som kontrollerer flyten. Her blir alt av tegning, tastatur input og omforming av vinduet kontrollert. Når jeg programmerer liker jeg å ha programmet delt opp, så jeg har også her valgt å strukturere koden i flere enheter. 
 Sammenhangen mellom enhetene og de viktigste rutinene er vist i 
- figur \ref{fig:cStruktur}
+ figur \ref{fig:cStruktur}.
 
 \begin{figure}[h] 
 \centering
@@ -418,7 +417,7 @@ Sammenhangen mellom enhetene og de viktigste rutinene er vist i
 \end{description}
 
 \paragraph*{	}
-Et annet element i struktureringen av et c program er header filen som gjør koden mer oversiktlig å lesbar. Header filen kan sammenliknes med et interface fra objektorientert programmering. Her kan det defineres variable, rutiner, funksjoner , stricts og liknende. Denne filen blir lest av preprosessoren og gjør at kompilatoren for mer informasjon om deklareringene. Fordelene med dette er at vi ikke trenger å inkludere kildekode, men bare header filen for å kunne bruke biblioteker.
+Et annet element i struktureringen av et c program er header filen som gjør koden mer oversiktlig å lesbar. Header filen kan sammenliknes med et interface fra objektorientert programmering. Her kan det defineres variable, rutiner, funksjoner og liknende. Denne filen blir lest av preprosessoren og gjør at kompilatoren for mer informasjon om deklarasjonene i filen. Fordelene med dette er at vi ikke trenger å inkludere kildekode, men bare header filen for å kunne bruke biblioteker.
 
 
 \subsubsection{Visualisering}
@@ -442,18 +441,6 @@ For å representere diagrammene valgte jeg å bruke en fargefunksjon og en farge
 \label{fig:farge}
 \end{figure} 
 
-\section{Diskusjon}
-
-
-
-
-hvorfor jeg valte ting: gauss, innpt stdin  presition, interations
-
-Plotte likningsløser
-
-hvofor valgte jeg å ikke meshe
-
-
 
 \section{Konklusjon}
 
@@ -462,8 +449,6 @@ I løpet av dette prosjektet har jeg lært mye om prosedyreorientert programmeri
 \paragraph{} 
 Tankesettet er også anderledes når du programmerer i språk av lavere orden enn det jeg vanligvis her programmert. Nå tenker man ikke lenger på datastrukturer som hash-map, sett, eller lenkede lister, men på minneblokker og pekere. For dette prosjektet tenkte jeg ikke på en matrise eller vektor som en minneblokk med en innebygget aksesseringsfunkjson. De nye tankemønstretere tror jeg kommer godt med i videre programmering. Jeg vil ha en bedre forståelse av hva som skjer på minne og bit nivå.  
 
-\paragraph*{}
-ting jeg ville gjort videre
 
 
 \paragraph{}

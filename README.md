@@ -1,27 +1,54 @@
 # FEMA
 
 
-Simple Finite  Analysis for calculating loads in frame structures.
+
 
 
 ## Beskrivelse
-Programmer kalkulerer krefter og forskyvninger på en bjelke kontruksjon. Hver bjelke har 6 grader av frihet. 
+Simple Finite element Method for calculating loads in frame structures. It uses Fortran to do the calculations and c to visualusere the result.
 
 
-## input.dat
-Inputfilen skal inneholde all nødvendig data for å gjøre en FEA. Inputfilen er bygget opp på denne måten:
+## Installation
+To download the project use:
 
-* AntallNoder, AntallElementer, AntallKrefter
-* Liste med Noder med format: 
-
-	x-verdi, y-verdi, frihet i x-retning, frihet i y-retning, rotasjonsfrihet
+	git clone https://github.com/hgranlund/FEMA.git
 	
-* Liste med Elementer med format:
+To build use the commands:
 
-	E-modul,Areal, I, node1, node2
+	cd src/;
+	make;
+
+
+## Usage
+To run the program you can use 2 commands:
+
+The first use a standard input file located in inputfiles/input.dat, the second takes a input file as input:
+
+	./run
 	
-* Liste med krefter, med format:
+Or
+
+	./runWithInput < inputFiles/input3.dat
+
+
+## Input filen
+The input file contains a set of values described in below.
+
+	number of nodes,  number of elements, noumber of loads
 	
-	NodeNummer, WhatDegreeOfFreedom (x=1,y=2,r=3), Value 
+List of nodes:
+
+
+	x-value, y-value, DOF in x,y, rotation (0 or 1)
+ List of elements:
+
+
+	E-modul,Areal, Inertia, node1, node2
+	
+List of loads:
+
+	
+	Node number, WhatDegreeOfFreedom (x=1,y=2,r=3), Value 
+
 	
 	
