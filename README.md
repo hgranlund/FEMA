@@ -31,7 +31,7 @@ Or
 	./runWithInput < inputFiles/input3.dat
 
 
-## Input filen
+## The Input file
 The input file contains a set of values described in below.
 
 	number of nodes,  number of elements, noumber of loads
